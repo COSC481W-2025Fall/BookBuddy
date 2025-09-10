@@ -87,10 +87,12 @@ TO RUN:
 
 make sure you have a my sql database called bookbuddy (is case sensative) with password password
 
-in your project folder WITH docker ope and engine running run  docker compose up -d
+in your project folder WITH docker OPEN and engine running run  docker compose up -d
 
 docker ps    checks sql connection
 
  cd frontend
 
  npm run dev
+
+ run sring boot backend in java 17
