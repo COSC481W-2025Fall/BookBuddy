@@ -81,4 +81,16 @@ mvn clean install
  docker build -t bookbuddy . 
 
 docker compose up --build
- 
+
+
+TO RUN:
+
+make sure you have a my sql database called bookbuddy (is case sensative) with password password
+
+in your project folder WITH docker ope and engine running run  docker compose up -d
+
+docker ps    checks sql connection
+
+ cd frontend
+
+ npm run dev
