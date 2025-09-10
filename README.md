@@ -69,7 +69,7 @@ Set up maven run config:
 get docket set up after maven startup is configured:
 
 
-NPM INSTALL: PS C:\dev\bookbuddy\bookbuddy\frontend> npm install 
+NPM INSTALL: bookbuddy\frontend> npm install 
 
 
 frontend -> npm ci
