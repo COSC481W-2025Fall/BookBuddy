@@ -1,0 +1,1 @@
+export type AccountDto = { id?: number; name: string }
