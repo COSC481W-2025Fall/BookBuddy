@@ -11,6 +11,6 @@ if Path("bookbuddy/target/").exists():
     else:
         print("Windows Based Detected")
         os.system("cd bookbuddy")
-        os.system("start "" start.bat")
+        os.system("./start.bat")
 else:
     print("Come back after you have a /target build file")
