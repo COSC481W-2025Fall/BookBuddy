@@ -1,18 +1,34 @@
 import React, { useState } from "react";
 import "./css/login.css";
+import { getAccount } from "./api";
+import { AccountDto } from "./types";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [accountId, setAccountId] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [account, setAccount] = useState<AccountDto | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder: replace with real login API call once backend supports it
-    if (email && password) {
-      setMessage(`Logged in as ${email}`);
-    } else {
-      setMessage("Please enter email and password");
+    const id = Number(accountId);
+    if (!id) {
+      setMessage("Please enter a valid Account ID");
+      setAccount(null);
+      return;
+    }
+    try {
+      const fetchedAccount = await getAccount(id);
+      if (fetchedAccount) {
+        setAccount(fetchedAccount);
+        setMessage(`Logged in as account ID ${id}`);
+      } else {
+        setAccount(null);
+        setMessage("Account not found");
+      }
+    } catch (error) {
+      setAccount(null);
+      setMessage("Error fetching account");
     }
   };
 
@@ -21,12 +37,12 @@ const Login: React.FC = () => {
       <h2>Login</h2>
       <form onSubmit={handleSubmit} className="login-form">
         <label>
-          Email
+          Account ID
           <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="number"
+            name="accountId"
+            value={accountId}
+            onChange={(e) => setAccountId(e.target.value)}
             required
           />
         </label>
@@ -45,6 +61,7 @@ const Login: React.FC = () => {
         <button type="submit">Login</button>
       </form>
       {message && <p className="message">{message}</p>}
+      {account && <pre>{JSON.stringify(account, null, 2)}</pre>}
     </div>
   );
 };
