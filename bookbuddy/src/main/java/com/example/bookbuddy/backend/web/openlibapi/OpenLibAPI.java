@@ -1,23 +1,28 @@
 package com.example.bookbuddy.backend.web.openlibapi;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.example.bookbuddy.backend.web.search.JsonReturn;
-import Java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import java.net.http.HttpResponse;
 import org.springframework.web.bind.annotation.*;
 
 public class OpenLibAPI {
     // Create the base String and http client
-    private static String baseUrl = "https://openlibrary.org/search.json?";
-    private HttpClient httpClient;
+    private static final String baseUrl = "https://openlibrary.org/search.json?";
+    private final HttpClient httpClient;
+    private final ObjectMapper objectMapper;
+
+    public OpenLibAPI() {
+        httpClient = HttpClient.newHttpClient();
+        objectMapper = new ObjectMapper();
+    }
 
     // Pull search query from frontend, modify into new URL, pull data from API,
     // and return json to frontend
-    @RequestParam("/search/{query}")
+    @RequestBody("/search/{query}")
     public JsonReturn search(@PathVariable String query) {
         String q = query.replaceAll("\\s+", "+").trim();
         String fullUrl = baseUrl + "q=" + q;
@@ -28,8 +33,11 @@ public class OpenLibAPI {
                 .GET()
                 .build();
 
-        // Get response from API and return JSON response to frontend
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        return objectMapper.readValue(response.body(), JsonReturn.class);
+        // Get response from API and return JSON response to frontend. Catch errors and throw RuntimeException
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {throw new RuntimeException("API request failed: " + response.statusCode());}
+            return objectMapper.readValue(response.body(), JsonReturn.class);
+        } catch (IOException | InterruptedException e) {throw new RuntimeException("Fetch or Parse Failed", e);}
     }
 }
