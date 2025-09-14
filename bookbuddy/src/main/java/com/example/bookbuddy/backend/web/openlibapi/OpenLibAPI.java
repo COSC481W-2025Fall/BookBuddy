@@ -9,6 +9,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/openlib")
 public class OpenLibAPI {
     // Create the base String and http client
     private static final String baseUrl = "https://openlibrary.org/search.json?";
@@ -22,8 +24,8 @@ public class OpenLibAPI {
 
     // Pull search query from frontend, modify into new URL, pull data from API,
     // and return json to frontend
-    @RequestBody("/search/{query}")
-    public JsonReturn search(@PathVariable String query) {
+    @GetMapping("/search/{query}")
+    public JsonReturn search(@PathVariable("query") String query) {
         String q = query.replaceAll("\\s+", "+").trim();
         String fullUrl = baseUrl + "q=" + q;
 
@@ -36,8 +38,13 @@ public class OpenLibAPI {
         // Get response from API and return JSON response to frontend. Catch errors and throw RuntimeException
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200) {throw new RuntimeException("API request failed: " + response.statusCode());}
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("API request failed: " + response.statusCode());
+            }
             return objectMapper.readValue(response.body(), JsonReturn.class);
-        } catch (IOException | InterruptedException e) {throw new RuntimeException("Fetch or Parse Failed", e);}
+        } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Fetch or Parse Failed", e);
+        }
     }
 }
