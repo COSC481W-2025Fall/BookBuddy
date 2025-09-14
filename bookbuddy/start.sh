@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd bookbuddy
+
 # Find the latest jar in target/
 LATEST_JAR=$(ls -t target/*.jar | head -n 1)
 
