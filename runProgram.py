@@ -6,10 +6,11 @@ from pathlib import Path
 
 if Path("bookbuddy/target/").exists():
     if os.name == "posix":
-        print("Unix Based (mac/windows) Detected")
+        print("Unix Based (mac/linux) Detected")
         os.system("bash ./bookbuddy/start.sh")
     else:
         print("Windows Based Detected")
-        os.system("bookbuddy/start.bat")
+        os.system("cd bookbuddy
+         os.system("start.bat")
 else:
     print("Come back after you have a /target build file")
