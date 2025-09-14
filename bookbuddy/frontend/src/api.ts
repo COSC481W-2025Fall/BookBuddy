@@ -20,8 +20,8 @@ export async function addAccount(body: AccountDto): Promise<AccountDto> {
   return res.json()
 }
 
-export async function getAccount(id: number): Promise<AccountDto> {
-  const res = await fetch(`${BASE}/Account/getAccount/${id}`)
+export async function getAccount(username: string): Promise<AccountDto> {
+  const res = await fetch(`${BASE}/Account/getAccount/${username}`)
   if (!res.ok) throw new Error(`Get failed: ${res.status}`)
   return res.json()
 }
@@ -36,5 +36,3 @@ export async function addBook(body: BookSearchDto): Promise<BookSearchDto> {
     if (!res.ok) throw new Error(`Book addition failed: ${res.status}`)
     return res.json()
 }
-
-
