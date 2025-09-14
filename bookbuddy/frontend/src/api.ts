@@ -26,4 +26,15 @@ export async function getAccount(id: number): Promise<AccountDto> {
   return res.json()
 }
 
+// this is where we are adding a book
+export async function addBook(body: BookSearchDto): Promise<BookSearchDto> {
+    const res = await fetch(`${BASE}/Account/addAccount`, { //<-- WE NEED TO CHANGE THIS BEN right?
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+    })
+    if (!res.ok) throw new Error(`Book addition failed: ${res.status}`)
+    return res.json()
+}
+
 

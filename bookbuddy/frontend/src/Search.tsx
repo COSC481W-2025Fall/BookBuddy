@@ -1,69 +1,45 @@
 import React, { useState } from 'react'
-import { addAccount, getAccount, ping } from './api'
+import {addAccount, addBook, getAccount, ping} from './api'
 import type { AccountDto } from './types'
+import type {BookSearchDto} from  './types'
 
 
 export default function Search() {
-    const [SearchInput, setSearch] = useState('')
+    const [title, settitle] = useState('')
+    const [name, setName] = useState('')
+    const [created, setCreated] = useState<BookSearchDto | null>(null)
+    const [lookupId, setLookupId] = useState<string>('')
+    const [found, setFound] = useState<BookSearchDto | null>(null)
+    const [status, setStatus] = useState<string>('')
 
 
 
 
-
-  /*  // Form submission handler to add a new Account
-    const doAdd = async (e: React.FormEvent) => {
+    const doAddBook = async (e: React.FormEvent) => {
         e.preventDefault()
         setStatus('creating…')
         try {
-            const p = await addAccount({ name })
+            const p = await addBook({ title })
+            // i don't think we need any of this
             setCreated(p)
             setStatus('created ✅')
             setName('')
         } catch (e: any) {
-            setStatus(e.message ?? 'create failed')
+            setStatus(e.message ?? 'createbook failed')
         }
-    } */
+    }
 
-  /*  // Fetch a Account by ID
-    const doGet = async () => {
-        setStatus('fetching…')
-        try {
-            const id = Number(lookupId)
-            if (!Number.isFinite(id)) throw new Error('enter a valid numeric id')
-            const p = await getAccount(id)
-            setFound(p)
-            setStatus('fetched ✅')
-        } catch (e: any) {
-            setStatus(e.message ?? 'get failed')
-            setFound(null)
-        }
-    }*/
-
-
-        // this is the bare bones for sending our form however we figure out how to do that
-    /*
-    const doAdd = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setStatus('creating…')
-        try {
-            const p = await addAccount({ name })
-            setCreated(p)
-            setStatus('created ✅')
-            setName('')
-        } catch (e: any) {
-            setStatus(e.message ?? 'create failed')
-        }
-    }*/
-
+    // returns the most basic search box and onces user hits button then it adds the string to the functions and
+    // sends stirng to back end (maybe)
     return (
         <div style={{ maxWidth: 720, margin: '2rem auto', fontFamily: 'ui-sans-serif, system-ui' }}>
-            <h1>THe search will go here </h1>
-            <form>
+            <h1>THE BOOK SEARCH  </h1>
+            <form onSubmit={doAddBook}>
                 <label>
                     Please enter a book you would like to add to your collection
                     <input
-                        value={SearchInput}
-                        onChange={(e) => setSearch(e.target.value)}
+                        value={title}
+                        onChange={(e) => settitle(e.target.value)}
                         placeholder="Book to search "
                         style={{ display: 'block', marginTop: 8, width: '100%' }}
                         required
@@ -71,9 +47,6 @@ export default function Search() {
                 </label>
                 <button type="submit" style={{ marginTop: 12 }}>Add book to collection </button>
             </form>
-
-
-
         </div>
     )
 }
