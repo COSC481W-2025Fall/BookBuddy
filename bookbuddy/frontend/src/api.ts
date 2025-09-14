@@ -1,4 +1,5 @@
 import type { AccountDto } from './types'
+import type {BookSearchDto} from  './types'
 
 // proxy means we call relative paths, Vite forwards to 8080
 const BASE = ''
@@ -24,3 +25,5 @@ export async function getAccount(id: number): Promise<AccountDto> {
   if (!res.ok) throw new Error(`Get failed: ${res.status}`)
   return res.json()
 }
+
+
