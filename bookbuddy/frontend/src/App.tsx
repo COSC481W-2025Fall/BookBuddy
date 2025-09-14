@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { addAccount, getAccount, ping } from './api'
 import type { AccountDto } from './types'
+import Login from './login'
 
 export default function App() {
   const [name, setName] = useState('')
@@ -8,6 +9,7 @@ export default function App() {
   const [lookupId, setLookupId] = useState<string>('')
   const [found, setFound] = useState<AccountDto | null>(null)
   const [status, setStatus] = useState<string>('')
+  const [showLogin, setShowLogin] = useState(false)
 
 
   // Simple health check function
@@ -26,7 +28,11 @@ export default function App() {
     e.preventDefault()
     setStatus('creating…')
     try {
-      const p = await addAccount({ name })
+      const p = await addAccount({
+        name,
+        email: '',
+        password: ''
+      })
       setCreated(p)
       setStatus('created ✅')
       setName('')
@@ -48,6 +54,10 @@ export default function App() {
       setStatus(e.message ?? 'get failed')
       setFound(null)
     }
+  }
+
+  if (showLogin) {
+    return <Login />
   }
 
   return (
@@ -102,6 +112,21 @@ export default function App() {
             </pre>
           )}
         </div>
+      </section>
+      <section style={{ marginTop: 24, textAlign: 'center' }}>
+        <button
+          onClick={() => setShowLogin(true)}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#007BFF',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 6,
+            cursor: 'pointer',
+          }}
+          >
+            Go to Login
+          </button>
       </section>
     </div>
   )
