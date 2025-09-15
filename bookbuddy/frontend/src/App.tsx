@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import { addAccount, getAccount, ping } from './api'
 import type { AccountDto } from './types'
 import Login from './login'
+import Signup from "./signup";
+
 
 export default function App() {
   const [name, setName] = useState('')
+  const [password, setPassword] = useState('')
   const [created, setCreated] = useState<AccountDto | null>(null)
   const [lookupId, setLookupId] = useState<string>('')
   const [found, setFound] = useState<AccountDto | null>(null)
@@ -30,8 +33,7 @@ export default function App() {
     try {
       const p = await addAccount({
         name,
-        email: '',
-        password: ''
+        password
       })
       setCreated(p)
       setStatus('created ✅')

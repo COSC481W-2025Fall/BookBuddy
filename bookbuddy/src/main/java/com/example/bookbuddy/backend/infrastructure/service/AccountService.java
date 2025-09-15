@@ -17,7 +17,9 @@ public class AccountService {
 
 
     public AccountDto createAccount(AccountDto accountDto) {
-
+        if (accountRepository.existsByName(accountDto.name)){
+            throw new IllegalArgumentException("Account name already exists");
+        }
         Account newAccount = AccountMapper.INSTANCE.convertToAccount(accountDto);
         this.accountRepository.save(newAccount);
         return AccountMapper.INSTANCE.convertToDto(newAccount);
