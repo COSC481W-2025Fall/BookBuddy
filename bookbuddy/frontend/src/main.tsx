@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import Myroute from "./myroute"
+import Myroute from "./Myroute"
 
 
 const root = createRoot(document.getElementById('root')!)

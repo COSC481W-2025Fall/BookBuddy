@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./login";
 import Signup from "./signup";
-import Search from "./search";  // ✅ make sure this file exists
+import Search from "./Search";  // ✅ make sure this file exists
 import App from "./App";
 
 export default function Myroute() {

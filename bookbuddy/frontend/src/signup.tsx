@@ -29,7 +29,11 @@ const SignupForm: React.FC = () => {
      }
 
      // Call API
-     const result = await addAccount({accountData});
+     const result = await addAccount({
+       accountData: "",
+       name: "",
+       password: ""
+     });
 
 
 

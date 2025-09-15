@@ -49,7 +49,7 @@ export default function App() {
     try {
       const id = Number(lookupId)
       if (!Number.isFinite(id)) throw new Error('enter a valid numeric id')
-      const p = await getAccount(id)
+      const p = await getAccount(name)
       setFound(p)
       setStatus('fetched ✅')
     } catch (e: any) {
