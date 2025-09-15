@@ -63,32 +63,50 @@ A website like goodReads. Where the user can review books and get recommendation
 [I'm a Computer Science major with experience in Java,Python and AWS. I plan to be helping with both frontend and backend in the development process and also deployment and the database.]
 
 To run this project locally, you need to have the following software installed:
+
 JDK 17
+
 Node.js
+
 MySQL Server Workbench
+
 Git
 
 To set up the local database:
+
 Open MySQL Server and create a new server by hitting the +
+
 For Connection Name: bookbuddy
+
 For password: password
+
 with default options for everything else, note the case because it matters.
 
 
 git clone https://github.com/COSC481W-2025Fall/BookBuddy.git
+
 cd BookBuddy/bookbuddy/frontend
 
 npm install
+
 npm ci
+
 cd .. (So you are now in the bookbuddy directory)
+
 MAKE SURE DOCKER IS OPEN AND ON NOW
+
 mvn clean install
+
 docker build -t bookbuddy .
+
 docker compose up --build
+
 mvn clean package
+
 cd .. (So now you are in the BookBuddy directory (Yes I know the same folder name is bad))
 
 Now just run the python script to start all the services needed!
+
 python3 runProgram.py
 
 You can now go to http://localhost:5173/ and see the book buddy website
