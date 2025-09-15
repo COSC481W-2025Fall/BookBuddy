@@ -2,12 +2,25 @@ import React, { useState } from "react";
 import "./css/login.css";
 import { getAccount } from "./api";
 import { AccountDto } from "./types";
+import { useNavigate } from 'react-router-dom'
 
-const Login: React.FC = () => {
+
+
+const Login: React.FC = () => {const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [account, setAccount] = useState<AccountDto | null>(null);
+
+
+
+  const handleRedirectToSignup = () => {
+  // Redirect to signup page
+
+
+  navigate('/signup');
+
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,10 +71,13 @@ const Login: React.FC = () => {
         </label>
 
         <button type="submit">Login</button>
+
       </form>
       {message && <p className="message">{message}</p>}
       {account && <pre>{JSON.stringify(account, null, 2)}</pre>}
+      <button id="signup" type="button" onClick={handleRedirectToSignup}>Signup</button>
     </div>
+
   );
 };
 

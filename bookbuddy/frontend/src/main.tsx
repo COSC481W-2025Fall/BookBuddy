@@ -1,10 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App'
+import Myroute from "./myroute"
+
 
 const root = createRoot(document.getElementById('root')!)
 root.render(
   <StrictMode>
-    <App />
+    <Myroute />   {/* 👈 must be capitalized */}
   </StrictMode>
 )
