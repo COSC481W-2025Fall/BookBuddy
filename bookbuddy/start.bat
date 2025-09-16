@@ -3,7 +3,7 @@
 cd bookbuddy
 
 :: Start docker
-start docker compose up --build
+::start docker compose up --build
 
 :: Start backend
 :: Hard coded for now

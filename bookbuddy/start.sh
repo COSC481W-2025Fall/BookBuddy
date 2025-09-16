@@ -6,7 +6,7 @@ cd bookbuddy
 LATEST_JAR=$(ls -t target/*.jar | head -n 1)
 
 # start docker
-docker compose up --build &
+#docker compose up --build &
 
 # start backend
 java -jar "$LATEST_JAR" &
