@@ -34,10 +34,12 @@ const Login: React.FC = () => {const navigate = useNavigate();
       if (fetchedAccount && fetchedAccount.password === password) {
         setAccount(fetchedAccount);
         setMessage(`Logged in as username ${username}`);
+        navigate("/search");
       } else {
         setAccount(null);
         setMessage("Invalid username or password");
       }
+
     } catch (error) {
       setAccount(null);
       setMessage("Error");
