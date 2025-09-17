@@ -12,7 +12,8 @@ export default defineConfig({
     proxy: {
       '/Account': 'http://localhost:8080',
         '/Book': 'http://localhost:8080',
-        '/login': 'http://localhost:8080'
+        '/login': 'http://localhost:8080',
+        '/openlib': 'http://localhost:8080',
     }
   }
 })
