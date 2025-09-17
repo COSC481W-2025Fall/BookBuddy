@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./css/login.css";
 import { getAccount } from "./api";
-import { AccountDto } from "./types";
+import { AccountDto } from "./types/AccountDto";
+import { LoginDto } from "./types/LoginDto";
 import { useNavigate } from 'react-router-dom'
 
 

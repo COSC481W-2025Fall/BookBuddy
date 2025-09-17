@@ -10,7 +10,9 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/Account': 'http://localhost:8080'
+      '/Account': 'http://localhost:8080',
+        '/Book': 'http://localhost:8080',
+        '/Login': 'http://localhost:8080'
     }
   }
 })

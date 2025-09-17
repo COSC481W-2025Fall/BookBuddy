@@ -5,6 +5,7 @@ import com.example.bookbuddy.backend.domain.model.Account;
 import com.example.bookbuddy.backend.domain.repository.AccountRepository;
 import com.example.bookbuddy.backend.web.dto.AccountDto;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class AccountService {
@@ -15,11 +16,19 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-
     public AccountDto createAccount(AccountDto accountDto) {
-        if (accountRepository.existsByName(accountDto.name)){
-            throw new IllegalArgumentException("Account name already exists");
+        // Validate input
+        if (accountDto == null || !StringUtils.hasText(accountDto.name) || !StringUtils.hasText(accountDto.password)) {
+            throw new IllegalArgumentException("Username and password must not be empty");
         }
+
+        accountDto.name = accountDto.name.trim();
+
+        // Duplicate username -> treat as a business conflict, not a 500
+        if (accountRepository.existsByName(accountDto.name)) {
+            throw new IllegalStateException("Account name already exists");
+        }
+
         Account newAccount = AccountMapper.INSTANCE.convertToAccount(accountDto);
         this.accountRepository.save(newAccount);
         return AccountMapper.INSTANCE.convertToDto(newAccount);

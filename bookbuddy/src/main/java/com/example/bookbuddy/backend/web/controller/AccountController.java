@@ -28,10 +28,28 @@ public class AccountController {
         return new ResponseEntity<>(retrievedAccount, HttpStatus.OK);
 
     }
+//    @GetMapping("/getAccount")
+//    public ResponseEntity<AccountDto> getAccount(@RequestBody String name, String password) {
+//        AccountDto retrievedAccount = AccountService.getAccountById(accountId);
+//        return new ResponseEntity<>(retrievedAccount, HttpStatus.OK);
+//
+//    }
+
 
     @GetMapping("/ping")
     public String ping() {
         return "App is running!";
+    }
+
+    // Map duplicate name and validation errors to proper HTTP codes
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleConflict(IllegalStateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
 }

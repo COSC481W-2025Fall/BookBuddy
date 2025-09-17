@@ -1,14 +1,15 @@
 package com.example.bookbuddy.backend.domain.model;
 
+
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "account")
-public class Account {
+@Table(name = "login")
+public class Login {
 
     @Id // Primary Key:
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long accountId;
+    private Long loginId;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -16,26 +17,19 @@ public class Account {
     @Column(nullable = false)
     private String password;
 
-    public Account() {}
+    public Login() {}
 
-    public Account(String name, String password) {
+    public Login(String name, String password) {
         this.name = name;
         this.password = password;
     }
 
-    public String getPassword(){
-        return this.password;
-    }
-    public void setPassword(String password){
-        this.password = password;
+    public Long getLoginId() {
+        return loginId;
     }
 
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setLoginId(Long loginId) {
+        this.loginId = loginId;
     }
 
     public String getName() {
@@ -44,5 +38,13 @@ public class Account {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

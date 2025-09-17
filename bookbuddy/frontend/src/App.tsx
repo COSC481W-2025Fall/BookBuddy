@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { addAccount, getAccount, ping } from './api'
-import type { AccountDto } from './types'
+import type { AccountDto } from './types/AccountDto'
 import Login from './login'
 import Signup from "./signup";
 
@@ -37,7 +37,7 @@ export default function App() {
       })
       setCreated(p)
       setStatus('created ✅')
-      setName('')
+      // setName('')
     } catch (e: any) {
       setStatus(e.message ?? 'create failed')
     }
