@@ -8,7 +8,7 @@ public class Book {
     @Id // Primary Key:
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-
+    @Column(nullable = true)
     private String isbn;
 
     @Column(nullable = false)
