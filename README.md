@@ -16,27 +16,34 @@ No communication.
 Absence due to poor planning or “forgetting” (meetings are the same time every week).
 Repeated absences may also be categorized as unexcused.
 Acceptable absences include: medical, work, conflicting classes, family emergency, or other extremely important matters.
+
 AI Usage
 Absolute zero vibe coding.
 AI can be used for debugging, troubleshooting, and small code snippets when stuck.
 Members must be able to fully understand and explain their code if asked.
+
 Ethics Policy
 Unsafe GitHub/programming practices or project deletion will result in:
 Mandatory education on proper practices.
 A written summary showing understanding of correct practices.
+
 Language Policy
 English
+
 Code/Work Modification Guidelines
 Members may modify another team member’s code/work only if:
 They have consent from the code creator, or
 The code creator is not completing their code promptly.
+
 Face Mask Policy
 None
+
 Grade Requirement (B- or Higher)
 To receive a B- or higher, a member must:
 Not exceed 2 unexcused absences.
 Contribute productive, functional, and well-commented code.
 Not be a repeat offender of using AI solely to write code.
+
 📖 Project Description
 A website like goodReads. Where the user can review books and get recommendations for books as well.
 
