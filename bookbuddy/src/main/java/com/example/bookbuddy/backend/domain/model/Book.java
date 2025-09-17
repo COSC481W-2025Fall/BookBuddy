@@ -4,20 +4,25 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "book")
 public class Book {
+//    @Id
+    @Column(nullable = true)
+    private String isbn;
+
     @Id
-    private Long isbn;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // auto-increment
+    private Long id;
 
     @Column(nullable = false)
     private String bookname;
 
     @Column(nullable = false)
     private String author;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String genre;
 
     public Book() {}
 
-    public Book(Long isbn, String bookname, String author, String genre) {
+    public Book(String isbn, String bookname, String author, String genre) {
         this.isbn = isbn;
         this.bookname = bookname;
         this.author = author;
@@ -26,11 +31,11 @@ public class Book {
 
     // Getters and setters for MapStruct and JPA
 
-    public Long getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(Long isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 

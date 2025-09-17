@@ -2,25 +2,25 @@ package com.example.bookbuddy.backend.web.dto;
 
 public class BookDto {
 
-    private Long isbn;
+    private String isbn;
     private String bookname;
     private String author;
     private String genre;
 
     public BookDto() {}
 
-    public BookDto(Long isbn, String bookname, String author, String genre) {
+    public BookDto(String isbn, String bookname, String author, String genre) {
         this.isbn = isbn;
         this.bookname = bookname;
         this.author = author;
         this.genre = genre;
     }
 
-    public Long getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(Long isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
