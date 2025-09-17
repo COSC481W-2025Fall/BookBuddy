@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { addAccount, getAccount, ping } from './api'
 import type { AccountDto } from './types/AccountDto'
 import Login from './login'
-import Signup from "./signup";
-
+import Signup from './signup'
+import Search from './Search'
 
 export default function App() {
   const [name, setName] = useState('')
