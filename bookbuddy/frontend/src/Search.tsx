@@ -19,7 +19,7 @@ export default function Search() {
         e.preventDefault()
         setStatus('creating…')
         try {
-            const p = await addBook({ title })
+            const p = await addBook({bookname:string})
             // i don't think we need any of this
             setCreated(p)
             setStatus('created ✅')

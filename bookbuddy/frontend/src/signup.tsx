@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAccount } from "./api";
-import type { AccountDto } from "./types";
+import type { AccountDto } from "./types/AccountDto";
 
 const SignupForm: React.FC = () => {
     const navigate = useNavigate();

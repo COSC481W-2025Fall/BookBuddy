@@ -43,18 +43,16 @@ export async function addBook(body: BookDto): Promise<BookDto> {
     if (!res.ok) throw new Error(`Book addition failed: ${res.status}`)
     return res.json()
 }
-export async function addLogin(body: LoginDto): Promise<LoginDto> {
-
-
-    const res = await fetch(`${BASE}/Login/attemptLogin…`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+export async function addLogin(body: LoginDto): Promise<boolean> {
+    const res = await fetch(`${BASE}/login/attemptLogin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
-    })
-    if (!res.ok) {
-        const details = await res.text().catch(() => '')
-        throw new Error(`Login failed: ${res.status}${details ? ' - ' + details : ''}`)
-    }
-    return res.json()
+    });
+
+    if (!res.ok) return false;
+
+    const txt = await res.text();
+    return txt.trim() === "1";
 }
 

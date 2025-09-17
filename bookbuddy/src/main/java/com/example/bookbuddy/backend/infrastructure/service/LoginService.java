@@ -21,10 +21,7 @@ public class LoginService {
     }
 
 
-    public Boolean sendLoginRequest(Login login) {
-        return accountRepository.findByNameAndPassword(
-                login.getName(),
-                login.getPassword()
-        ).isPresent();
-    }
+    public Boolean sendLoginRequest(String name, String password) {
+        return accountRepository.findByNameAndPassword(name, password).isPresent();
+}
 }

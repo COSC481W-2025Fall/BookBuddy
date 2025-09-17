@@ -4,14 +4,12 @@ import com.example.bookbuddy.backend.domain.mapper.LoginMapper;
 import com.example.bookbuddy.backend.domain.model.Login;
 import com.example.bookbuddy.backend.infrastructure.service.LoginService;
 import com.example.bookbuddy.backend.web.dto.LoginDto;
-import org.mapstruct.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
-
 public class LoginController {
 
     public LoginService loginService;
@@ -21,16 +19,16 @@ public class LoginController {
     }
 
     @PostMapping("/attemptLogin")
-    public ResponseEntity<LoginDto> addLogin(@RequestBody LoginDto loginDto) {
-        Login login = LoginMapper.INSTANCE.convertToLogin(loginDto);
-        Boolean loginExists = this.loginService.sendLoginRequest(login);
-        if(loginExists) {
-            return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<String> addLogin(@RequestBody LoginDto loginDto) {
+        boolean accountExists = this.loginService.sendLoginRequest(
+                loginDto.getName(),    // 👈 directly use fields
+                loginDto.getPassword()
+        );
+
+        if (accountExists) {
+            return ResponseEntity.ok("1");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("0");
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
-
 }
