@@ -53,7 +53,7 @@ Not be a repeat offender of using AI solely to write code.
 
 📖 Project Description
 
-A website like goodReads. Where the user can review books and get recommendations for books as well.
+A website like goodReads. Where the user can have a personal library and get recommendations for books as well.
 
 🙌 Team Member Bios
 🧑 Ben
@@ -74,8 +74,7 @@ A website like goodReads. Where the user can review books and get recommendation
 🧑 Noah
 [I am a computer science student major and a senior in my last year at Eastern Michigan University. I have experience using Java, Python, and SQL. I am a part of the backend team for BetterReads as well as the Documentation Specialist, which is responsible for verifying code is well documented as well as taking notes during weekly meetings.]
 
-🧑 DuJuan
-[I'm a Computer Science major with experience in Java,Python and AWS. I plan to be helping with both frontend and backend in the development process and also deployment and the database.]
+Running the Project
 
 To run this project locally, you need to have the following software installed:
 
