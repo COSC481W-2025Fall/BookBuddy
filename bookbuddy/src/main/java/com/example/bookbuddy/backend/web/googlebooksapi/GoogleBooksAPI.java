@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/googlebooks")
 public class GoogleBooksAPI {
     //The API Key and the base api url that does the actual request
-    private static final String API_KEY = "AIzaSyDOSZtEaGtDya1YYpfo8XBumXN4FJCaNWE";
+    private static final String API_KEY = "MUST_USE_API_KEY";
     private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
     private final HttpClient httpClient;
