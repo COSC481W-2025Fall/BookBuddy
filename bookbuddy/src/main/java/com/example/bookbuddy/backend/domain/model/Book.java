@@ -6,17 +6,15 @@ import jakarta.persistence.*;
 public class Book {
 
     @Id // Primary Key:
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String isbn;
 
     @Column(nullable = false)
     private String bookname;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String author;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String genre;
 
     public Book() {}

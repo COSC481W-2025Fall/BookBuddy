@@ -13,24 +13,24 @@ export default function Search() {
         setStatus("searching…");
 
         try {
-            const searchRes = await fetch(`${BASE}/openlib/search/${encodeURIComponent(title)}`);
+            const searchRes = await fetch(`${BASE}/googlebooks/search/${encodeURIComponent(title)}`);
             if (!searchRes.ok) throw new Error(`Search failed: ${searchRes.status}`);
 
             const data = await searchRes.json();
 
             if (!data.docs || data.docs.length === 0) {
-                setStatus("No results found ❌");
+                setStatus("No results found ");
                 return;
             }
 
-            const first = data.docs[0];
+            const first = data.docs[0]; // already in your Doc format
 
-            // Match BookDto in backend
+            // Matches BookDto in backend exactly
             const newBook: BookDto = {
-                bookname: first.title,
-                author: first.author_name ? first.author_name[0] : "Unknown",
-                isbn: "null",
-                genre: "Unknown",  // ✅ default to prevent DB error
+                bookname: first.bookname ?? "Unknown",
+                author: first.author ?? "Unknown",
+                isbn: first.isbn ?? "Unknown",
+                genre: first.genre ?? "Unknown",
             };
 
             setStatus("adding…");
@@ -44,7 +44,7 @@ export default function Search() {
                 return res.json();
             });
 
-            console.log("✅ Book saved to DB:", added);
+            console.log(" Book saved to DB:", added);
             setStatus(`Book added: ${added.bookname} by ${added.author}`);
         } catch (e: any) {
             setStatus(e.message ?? "createbook failed");
