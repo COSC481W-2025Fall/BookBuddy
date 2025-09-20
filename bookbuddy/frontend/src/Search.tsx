@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { addBook } from './api'
 import type { BookDto } from './types/BookDto'
 
-const BASE = ''
+const BASE = '' // keep empty, proxy or relative path handles backend
 
 export default function Search() {
     const [title, setTitle] = useState('')
@@ -23,9 +22,9 @@ export default function Search() {
                 return;
             }
 
-            const first = data.docs[0]; // already in your Doc format
+            const first = data.docs[0]; // backend Doc format
 
-            // Matches BookDto in backend exactly
+            // ✅ matches BookDto in backend
             const newBook: BookDto = {
                 bookname: first.bookname ?? "Unknown",
                 author: first.author ?? "Unknown",
@@ -35,7 +34,7 @@ export default function Search() {
 
             setStatus("adding…");
 
-            const added = await fetch("/Book/addBook", {
+            const added = await fetch(`${BASE}/Book/addBook`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newBook),
@@ -47,10 +46,9 @@ export default function Search() {
             console.log(" Book saved to DB:", added);
             setStatus(`Book added: ${added.bookname} by ${added.author}`);
         } catch (e: any) {
-            setStatus(e.message ?? "createbook failed");
+            setStatus(e.message ?? "create book failed");
         }
     };
-
 
     return (
         <div style={{ maxWidth: 720, margin: '2rem auto', fontFamily: 'ui-sans-serif, system-ui' }}>
