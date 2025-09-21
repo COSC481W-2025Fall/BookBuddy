@@ -15,5 +15,12 @@ export default defineConfig({
         '/login': 'http://localhost:8080',
         '/openlib': 'http://localhost:8080',
     }
-  }
+  },
+  test: {
+    coverage: {
+      enabled: true, // Enable coverage
+      reporter: ['text', 'html', 'lcov'], // Configure desired reporters
+      // Other coverage options like include, exclude, etc.
+    },
+  },
 })
