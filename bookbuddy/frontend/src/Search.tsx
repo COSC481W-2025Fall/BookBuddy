@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { addBook } from './api'
 import type { BookDto } from './types/BookDto'
 
-const BASE = ''
+const BASE = '' // keep empty, proxy or relative path handles backend
 
 export default function Search() {
     const [title, setTitle] = useState('')
@@ -13,29 +12,29 @@ export default function Search() {
         setStatus("searching…");
 
         try {
-            const searchRes = await fetch(`${BASE}/openlib/search/${encodeURIComponent(title)}`);
+            const searchRes = await fetch(`${BASE}/googlebooks/search/${encodeURIComponent(title)}`);
             if (!searchRes.ok) throw new Error(`Search failed: ${searchRes.status}`);
 
             const data = await searchRes.json();
 
             if (!data.docs || data.docs.length === 0) {
-                setStatus("No results found ❌");
+                setStatus("No results found ");
                 return;
             }
 
-            const first = data.docs[0];
+            const first = data.docs[0]; // backend Doc format
 
-            // Match BookDto in backend
+            // ✅ matches BookDto in backend
             const newBook: BookDto = {
-                bookname: first.title,
-                author: first.author_name ? first.author_name[0] : "Unknown",
-                isbn: "null",
-                genre: "Unknown",  // ✅ default to prevent DB error
+                bookname: first.bookname ?? "Unknown",
+                author: first.author ?? "Unknown",
+                isbn: first.isbn ?? "Unknown",
+                genre: first.genre ?? "Unknown",
             };
 
             setStatus("adding…");
 
-            const added = await fetch("/Book/addBook", {
+            const added = await fetch(`${BASE}/Book/addBook`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newBook),
@@ -44,13 +43,12 @@ export default function Search() {
                 return res.json();
             });
 
-            console.log("✅ Book saved to DB:", added);
+            console.log(" Book saved to DB:", added);
             setStatus(`Book added: ${added.bookname} by ${added.author}`);
         } catch (e: any) {
-            setStatus(e.message ?? "createbook failed");
+            setStatus(e.message ?? "create book failed");
         }
     };
-
 
     return (
         <div style={{ maxWidth: 720, margin: '2rem auto', fontFamily: 'ui-sans-serif, system-ui' }}>
