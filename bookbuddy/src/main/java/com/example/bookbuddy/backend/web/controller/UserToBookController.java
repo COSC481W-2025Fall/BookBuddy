@@ -1,65 +1,59 @@
 package com.example.bookbuddy.backend.web.controller;
 
+import com.example.bookbuddy.backend.domain.model.Account;
 import com.example.bookbuddy.backend.domain.model.Book;
 import com.example.bookbuddy.backend.domain.model.UserToBook;
+import com.example.bookbuddy.backend.domain.repository.AccountRepository;
 import com.example.bookbuddy.backend.domain.repository.BookRepository;
 import com.example.bookbuddy.backend.domain.repository.UserToBookRepository;
 import com.example.bookbuddy.backend.web.dto.BookDto;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * UserToBookController manages the association between users and books.
- *
- * Provides endpoints for:
- *  - Adding a book to the current logged-in user's library
- *
- * It ensures that the book exists in the main Book table
- * and then creates a mapping entry in the UserToBook table.
+ * Controller for managing the relationship between users and books.
+ * - Ensures a user is logged in
+ * - Adds the book to the `book` table if it doesn’t exist
+ * - Creates a mapping entry in the `user_to_book` table
  */
-
 @RestController
 @RequestMapping("/books")
 public class UserToBookController {
 
     private final BookRepository bookRepository;
     private final UserToBookRepository userToBookRepository;
+    private final AccountRepository accountRepository;
 
-    public UserToBookController(BookRepository bookRepository, UserToBookRepository userToBookRepository) {
+    public UserToBookController(BookRepository bookRepository,
+                                UserToBookRepository userToBookRepository,
+                                AccountRepository accountRepository) {
         this.bookRepository = bookRepository;
         this.userToBookRepository = userToBookRepository;
+        this.accountRepository = accountRepository;
     }
 
-    /**
-     * POST /books/add
-     * Adds a book to the logged-in user’s personal library.
-     *
-     * Workflow:
-     *  1. Verify that the user is logged in via session (must have userId).
-     *  2. Ensure the book exists in the central Book table (insert if missing).
-     *  3. Create a link in UserToBook to associate this user with the book.
-     *
-     * @param bookDto Book data (ISBN, title, author, etc.) sent in the request body
-     * @param session The HTTP session to identify the current user
-     * @return success or error message
-     */
-
     @PostMapping("/add")
-    public String addBook(@RequestBody BookDto bookDto, HttpSession session) {
+    public ResponseEntity<?> addBook(@RequestBody BookDto bookDto, HttpSession session) {
+        // 1️⃣ Verify user is logged in
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
-            //User must be logged in, otherwise won't add
-            return "User not logged in";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
         }
 
-        // Ensure book exists in Book table if not adds it
-        bookRepository.findByIsbn(bookDto.getIsbn())
+        // 2️⃣ Load the Account
+        Account account = accountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // 3️⃣ Load or create the Book
+        Book book = bookRepository.findByIsbn(bookDto.getIsbn())
                 .orElseGet(() -> bookRepository.save(bookDto.toBook()));
 
-        // Insert into user_to_book
-        UserToBook link = new UserToBook(userId, bookDto.getIsbn());
+        // 4️⃣ Link the User + Book
+        UserToBook link = new UserToBook(account, book);
         userToBookRepository.save(link);
 
-        return "Book added for user " + userId;
+        return ResponseEntity.ok("Book added for user " + account.getName());
     }
 }

@@ -16,24 +16,27 @@ public class UserToBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // surrogate primary key
 
-    @Column(nullable = false)
-    private Long userId; //For the user who is actually logged in adding the book
+    // ✅ Many-to-One relationship to Account
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "account_id")
+    private Account account;
 
-    @Column(nullable = false)
-    private String isbn; //For the book that the user is wanting to add to their library
+    // ✅ Many-to-One relationship to Book
+    @ManyToOne
+    @JoinColumn(name = "isbn", nullable = false, referencedColumnName = "isbn")
+    private Book book;
 
-    //Constructors
     public UserToBook() {}
 
-    public UserToBook(Long userId, String isbn) {
-        this.userId = userId;
-        this.isbn = isbn;
+    public UserToBook(Account account, Book book) {
+        this.account = account;
+        this.book = book;
     }
-    //Getters and Setters
-    public Long getId() { return id; }
-    public Long getUserId() { return userId; }
-    public String getIsbn() { return isbn; }
 
-    public void setUserId(Long userId) { this.userId = userId; }
-    public void setIsbn(String isbn) { this.isbn = isbn; }
+    public Long getId() { return id; }
+    public Account getAccount() { return account; }
+    public Book getBook() { return book; }
+
+    public void setAccount(Account account) { this.account = account; }
+    public void setBook(Book book) { this.book = book; }
 }

@@ -13,7 +13,7 @@ export default function Search() {
         setStatus("searching…");
 
         try {
-            const searchRes = await fetch(`${BASE}/openlib/search/${encodeURIComponent(title)}`);
+            const searchRes = await fetch(`${BASE}/googlebooks/search/${encodeURIComponent(title)}`);
             if (!searchRes.ok) throw new Error(`Search failed: ${searchRes.status}`);
 
             const data = await searchRes.json();
@@ -25,17 +25,17 @@ export default function Search() {
 
             const first = data.docs[0];
 
-            // Match BookDto in backend
+            // Match backend BookDto exactly
             const newBook: BookDto = {
-                bookname: first.title,
-                author: first.author_name ? first.author_name[0] : "Unknown",
-                isbn: "null",
-                genre: "Unknown",  // ✅ default to prevent DB error
+                bookname: first.bookname ?? "Unknown",
+                author: first.author ?? "Unknown",
+                isbn: first.isbn ?? "Unknown",   // ✅ real ISBN now
+                genre: first.genre ?? "Unknown",
             };
 
             setStatus("adding…");
 
-            const added = await fetch("/Book/addBook", {
+            const added = await fetch("/books/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newBook),

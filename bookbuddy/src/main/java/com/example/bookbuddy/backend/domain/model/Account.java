@@ -6,8 +6,9 @@ import jakarta.persistence.*;
 @Table(name = "account")
 public class Account {
 
-    @Id // Primary Key:
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "account_id")
     private Long accountId;
 
     @Column(nullable = false, unique = true)

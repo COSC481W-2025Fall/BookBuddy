@@ -14,7 +14,7 @@ import java.util.Optional;
  * naming conventions (e.g., findByTitle, findByAuthor).
  */
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, String> {
 
     /**
      * Custom finder method that retrieves a Book by its ISBN.
