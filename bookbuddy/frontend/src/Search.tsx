@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, {startTransition, useState} from 'react'
 import type { BookDto } from './types/BookDto'
+import Book_display from "./Book_display";
 
 const BASE = '' // keep empty, proxy or relative path handles backend
 
 export default function Search() {
     const [title, setTitle] = useState('')
     const [status, setStatus] = useState<string>('')
+    const [book_results, Set_Book_results] = useState([])
 
     const doAddBook = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -22,6 +24,8 @@ export default function Search() {
                 return;
             }
 
+            // we may or may not need this
+            Set_Book_results(data.docs)
             const first = data.docs[0]; // backend Doc format
 
             // ✅ matches BookDto in backend
@@ -66,7 +70,7 @@ export default function Search() {
                 </label>
                 <button type="submit" style={{ marginTop: 12 }}>Search</button>
             </form>
-
+            <Book_display result={book_results}/>
             {status && <p style={{ marginTop: 16 }}>{status}</p>}
         </div>
     )
