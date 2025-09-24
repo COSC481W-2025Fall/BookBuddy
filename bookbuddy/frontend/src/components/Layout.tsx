@@ -1,12 +1,14 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";   // <- your sidebar component
+import "./Sidebar.css";
 
+// Layout component that adds the sidebar and whatever other page it is trying to show
 export default function Layout() {
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div className="bb-layout">
       <Sidebar />
-      <main style={{ flex: 1, padding: "1rem" }}>
+      <main className="bb-main" id="main" tabIndex={-1}>
         <Outlet />
       </main>
     </div>

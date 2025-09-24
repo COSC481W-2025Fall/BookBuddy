@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 
+// Sidebar component with navigation links
 export default function Sidebar() {
+  // State to manage sidebar visibility if wanted
   const [open, setOpen] = useState<boolean>(false);
 
+  //Defines the navigation links, can be added to later
   const links: { to: string; label: string }[] = [
     { to: "/", label: "Home" },
     { to: "/search", label: "Search" },
@@ -12,8 +15,10 @@ export default function Sidebar() {
     { to: "/login", label: "Sign Out" },
   ];
 
+  // Render the sidebar with navigation links
   return (
     <>
+    // Button to toggle sidebar visibility
       <button
         className="bb-sidebar_toggle"
         aria-label="Toggle navigation"
@@ -22,9 +27,10 @@ export default function Sidebar() {
         ☰
       </button>
 
+      // The sidebar navigation
       <nav className={`bb-sidebar ${open ? "open" : ""}`} aria-label="Main Navigation">
         <div className="bb-sidebar_brand">BookBuddy</div>
-
+        // Navigation links
         <ul className="bb-sidebar_links" role="menu">
           {links.map((l) => (
             <li key={l.to} role="none">
