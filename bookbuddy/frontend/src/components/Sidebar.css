@@ -71,6 +71,17 @@
   box-shadow: inset 3px 0 0 var(--bb-accent);
 }
 
+
+  .bb-main {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+
 .bb-sidebar_footer{
   font-size: .85rem;
   color: var(--bb-muted);
