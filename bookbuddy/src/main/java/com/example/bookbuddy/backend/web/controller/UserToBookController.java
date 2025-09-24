@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * - Ensures a user is logged in
  * - Adds the book to the `book` table if it doesn’t exist
  * - Creates a mapping entry in the `user_to_book` table
+ * - Tells the repository what entry to actually save
  */
 @RestController
 @RequestMapping("/books")
@@ -36,21 +37,21 @@ public class UserToBookController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addBook(@RequestBody BookDto bookDto, HttpSession session) {
-        // 1️⃣ Verify user is logged in
+        // Verify user is logged in and gets the signed in user's id'
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
         }
 
-        // 2️⃣ Load the Account
+        // Load the Account. finds user by id
         Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // 3️⃣ Load or create the Book
+        // Load or create the Book if not in database
         Book book = bookRepository.findByIsbn(bookDto.getIsbn())
                 .orElseGet(() -> bookRepository.save(bookDto.toBook()));
 
-        // 4️⃣ Link the User + Book
+        // Link the User + Book in the user_to_book table
         UserToBook link = new UserToBook(account, book);
         userToBookRepository.save(link);
 

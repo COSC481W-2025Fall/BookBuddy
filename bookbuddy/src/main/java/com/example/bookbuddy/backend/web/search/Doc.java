@@ -1,5 +1,8 @@
 package com.example.bookbuddy.backend.web.search;
 
+/*
+Changes made to take the json and turn it into java objects for the search results
+ */
 public class Doc {
     private String bookname;
     private String author;

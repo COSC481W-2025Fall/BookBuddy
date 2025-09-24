@@ -13,6 +13,7 @@ export default function Search() {
         setStatus("searching…");
 
         try {
+            //Changed to use the google books api instead of open library
             const searchRes = await fetch(`${BASE}/googlebooks/search/${encodeURIComponent(title)}`);
             if (!searchRes.ok) throw new Error(`Search failed: ${searchRes.status}`);
 

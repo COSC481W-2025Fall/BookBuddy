@@ -10,8 +10,6 @@ import java.util.Optional;
  * Extends JpaRepository to inherit standard CRUD operations:
  *  - save(), findById(), findAll(), deleteById(), etc.
  *
- * Additional query methods can be defined here following Spring Data JPA
- * naming conventions (e.g., findByTitle, findByAuthor).
  */
 
 public interface BookRepository extends JpaRepository<Book, String> {

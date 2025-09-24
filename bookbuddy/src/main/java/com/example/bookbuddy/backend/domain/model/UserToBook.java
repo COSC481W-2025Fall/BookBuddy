@@ -16,12 +16,12 @@ public class UserToBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // surrogate primary key
 
-    // ✅ Many-to-One relationship to Account
+    // Many-to-One relationship to Account
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "account_id")
     private Account account;
 
-    // ✅ Many-to-One relationship to Book
+    // Many-to-One relationship to Book
     @ManyToOne
     @JoinColumn(name = "isbn", nullable = false, referencedColumnName = "isbn")
     private Book book;

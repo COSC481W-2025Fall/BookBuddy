@@ -18,6 +18,10 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/*
+This is the Google Books API that does the actual api call that searches for books based on the user query
+ */
 @RestController
 @RequestMapping("/googlebooks")
 public class GoogleBooksAPI {
