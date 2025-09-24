@@ -18,7 +18,7 @@ export default function Sidebar() {
   // Render the sidebar with navigation links
   return (
     <>
-    // Button to toggle sidebar visibility
+    {/* // Button to toggle sidebar visibility */}
       <button
         className="bb-sidebar_toggle"
         aria-label="Toggle navigation"
@@ -27,10 +27,10 @@ export default function Sidebar() {
         ☰
       </button>
 
-      // The sidebar navigation
+      {/* // The sidebar navigation */}
       <nav className={`bb-sidebar ${open ? "open" : ""}`} aria-label="Main Navigation">
         <div className="bb-sidebar_brand">BookBuddy</div>
-        // Navigation links
+        {/* // Navigation links */}
         <ul className="bb-sidebar_links" role="menu">
           {links.map((l) => (
             <li key={l.to} role="none">
