@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Routes, Route } from "react-router-dom";
 import { MemoryRouter } from 'react-router-dom'
-import Login from './login';
+import Login from '../login';
 
 
 //import { cleanup } from '@testing-library/react';

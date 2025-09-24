@@ -17,10 +17,12 @@ export default defineConfig({
     }
   },
   test: {
-    coverage: {
-      enabled: true, // Enable coverage
-      reporter: ['text', 'html', 'lcov'], // Configure desired reporters
-      // Other coverage options like include, exclude, etc.
-    },
+      environment: 'jsdom',
+      globals: true,
+      coverage: {
+           enabled: true, // Enable coverage
+           reporter: ['text', 'html', 'lcov'], // Configure desired reporters
+           // Other coverage options like include, exclude, etc.
+      },
   },
 })
