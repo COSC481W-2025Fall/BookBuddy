@@ -1,36 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 
 export default function Sidebar() {
-    const links: { to: string; label: string }[] = [
-        {to: "/", label: "Home"},
-        { to: "/search", label: "Search" },
-        { to: "/library", label: "Library" },
-        { to: "/login", label: "Sign Out" },
-    ];
+  const [open, setOpen] = useState<boolean>(false);
 
-    return (
-        <nav className="bb-sidebar" aria-label="Main Navigation">
-            <div className="bb-sidebar_brand">BookBUddy</div>
+  const links: { to: string; label: string }[] = [
+    { to: "/", label: "Home" },
+    { to: "/search", label: "Search" },
+    { to: "/library", label: "Library" },
+    { to: "/login", label: "Sign Out" },
+  ];
 
-            <ul className="bb-sidebar_list">
-                {links.map((l) => (
-                    <li key={l.to} className="bb-sidebar_item">
-                        <NavLink
-                            to={l.to}
-                            end={l.to === "/"}
-                            className={({ isActive }) =>
-                                isActive ? "bb-link bb-link--active" : "bb-link"
-                            }
-                        >
-                            {l.label}
-                        </NavLink>
-                    </li>
-                ))}
-            </ul>
+  return (
+    <>
+      <button
+        className="bb-sidebar_toggle"
+        aria-label="Toggle navigation"
+        onClick={() => setOpen((s) => !s)}
+      >
+        ☰
+      </button>
 
-            <div className="bb-sidebar_footer">© 2024 BookBuddy</div>
-            </nav>
-    );
+      <nav className={`bb-sidebar ${open ? "open" : ""}`} aria-label="Main Navigation">
+        <div className="bb-sidebar_brand">BookBuddy</div>
+
+        <ul className="bb-sidebar_links" role="menu">
+          {links.map((l) => (
+            <li key={l.to} role="none">
+              <NavLink
+                to={l.to}
+                end={l.to === "/"}
+                className={({ isActive }) =>
+                  isActive ? "bb-link bb-link--active" : "bb-link"
+                }
+                role="menuitem"
+                onClick={() => setOpen(false)}
+              >
+                {l.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
+  );
 }
