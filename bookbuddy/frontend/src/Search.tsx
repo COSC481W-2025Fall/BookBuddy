@@ -7,7 +7,7 @@ const BASE = '' // keep empty, proxy or relative path handles backend
 export default function Search() {
     const [title, setTitle] = useState('')
     const [status, setStatus] = useState<string>('')
-    const [book_results, Set_Book_results] = useState([])
+    const [book_results, Set_Book_results] = useState([]) //--> Sets React hook to store the search results
 
     const doAddBook = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,7 +24,7 @@ export default function Search() {
                 return;
             }
 
-            // we may or may not need this
+            // updates the React hook and stores search results within hook to send it to Book_display.tsx
             Set_Book_results(data.docs)
             const first = data.docs[0]; // backend Doc format
 
@@ -73,6 +73,9 @@ export default function Search() {
             <Book_display result={book_results}/>
             {status && <p style={{ marginTop: 16 }}>{status}</p>}
         </div>
+        //idk how to do comments in the html part its typescript so its here
+        //so here, is the comment for line #73.
+        // This sends the book results as a prop to another file
     )
 }
 
