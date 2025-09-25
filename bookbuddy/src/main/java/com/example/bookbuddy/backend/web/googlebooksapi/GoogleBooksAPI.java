@@ -18,14 +18,10 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/*
-This is the Google Books API that does the actual api call that searches for books based on the user query
- */
 @RestController
 @RequestMapping("/googlebooks")
 public class GoogleBooksAPI {
-    private static final String API_KEY = "API_KEY_HERE";
+    private static final String API_KEY = "NOT TODAY ";
     private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
     private final HttpClient httpClient;
@@ -102,7 +98,7 @@ public class GoogleBooksAPI {
             }
 
             JsonReturn result = new JsonReturn();
-            result.setNumFound(docs.size());   // <-- changed from setNum_found
+            result.setNum_found(docs.size());
             result.setDocs(docs);
 
             return ResponseEntity.ok(result);

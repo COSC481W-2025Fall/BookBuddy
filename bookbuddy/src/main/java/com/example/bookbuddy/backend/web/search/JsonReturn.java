@@ -1,34 +1,21 @@
 package com.example.bookbuddy.backend.web.search;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JsonReturn {
-    private int start;
-    private int numFound;
-    private List<Doc> docs;   // uses your custom Doc class
+    @JsonProperty("num_found")
+    private int num_found;
 
-    // Getters and setters
-    public int getStart() {
-        return start;
-    }
+    @JsonProperty("docs")
+    private List<Doc> docs;
 
-    public void setStart(int start) {
-        this.start = start;
-    }
+    public int getNum_found() { return num_found; }
+    public List<Doc> getDocs() { return docs; }
 
-    public int getNumFound() {
-        return numFound;
-    }
-
-    public void setNumFound(int numFound) {
-        this.numFound = numFound;
-    }
-
-    public List<Doc> getDocs() {
-        return docs;
-    }
-
-    public void setDocs(List<Doc> docs) {
-        this.docs = docs;
-    }
+    public void setNum_found(int num_found) { this.num_found = num_found; }
+    public void setDocs(List<Doc> docs) { this.docs = docs; }
 }
