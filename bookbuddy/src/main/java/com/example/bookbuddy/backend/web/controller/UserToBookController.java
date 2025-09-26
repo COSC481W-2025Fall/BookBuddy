@@ -12,11 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+
 /**
  * Controller for managing the relationship between users and books.
  * - Ensures a user is logged in
  * - Adds the book to the `book` table if it doesn’t exist
  * - Creates a mapping entry in the `user_to_book` table
+ * - Returns the book object if successful for the frontend to display
  * - Tells the repository what entry to actually save
  */
 @RestController
@@ -56,5 +60,31 @@ public class UserToBookController {
         userToBookRepository.save(link);
 
         return ResponseEntity.ok("Book added for user " + account.getName());
+    }
+
+    /**
+     * Retrieves all books from the current logged-in user's library.
+     */
+    @GetMapping("/my-library")
+    public ResponseEntity<?> getMyLibrary(HttpSession session) {
+        // Verify user is logged in
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+        }
+
+        // Load the Account from the database
+        Account account = accountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Get all UserToBook mappings for this user
+        List<UserToBook> userBooks = userToBookRepository.findByAccount(account);
+
+        // Extract the Book objects
+        List<Book> books = userBooks.stream()
+                .map(UserToBook::getBook)
+                .toList();
+
+        return ResponseEntity.ok(books);
     }
 }

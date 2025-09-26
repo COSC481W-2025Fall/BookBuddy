@@ -26,7 +26,7 @@ export default function Book_display({ result }: { result: BookDto[] }) {
             };
 
             // sends item to backend
-            const added = await fetch(`${BASE}/Book/addBook`, {
+            const added = await fetch(`${BASE}/books/add`, {
                 //method of sending data
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
