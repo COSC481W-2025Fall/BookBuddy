@@ -8,30 +8,25 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/Book")
-
 public class BookController {
 
-    
-  
+    private final BookService bookService; // lowercase convention
 
-        public BookService BookService;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
-        public BookController(BookService BookService) {
-            this.BookService = BookService;
-        }
+    @PostMapping("/addBook")
+    public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
+        BookDto newBook = bookService.createBook(bookDto);
+        return new ResponseEntity<>(newBook, HttpStatus.CREATED);
+    }
 
-        @PostMapping("/addBook")
-        public ResponseEntity<BookDto> addBook(@RequestBody BookDto BookDto) {
-            BookDto newBook = BookService.createBook(BookDto);
-            return new ResponseEntity<>(newBook, HttpStatus.CREATED);
-        }
-
-        @GetMapping("/getBook/{BookIsbn}")
-        public ResponseEntity<BookDto> getBook(@PathVariable("BookIsbn") Long bookIsbn) {
-            BookDto retrievedBook = BookService.getBookByIsbn(bookIsbn);
-            return new ResponseEntity<>(retrievedBook, HttpStatus.OK);
-
-
-        }
-
+    // ✅ change Long -> String
+    @GetMapping("/getBook/{BookIsbn}")
+    public ResponseEntity<BookDto> getBook(@PathVariable("BookIsbn") String bookIsbn) {
+        BookDto retrievedBook = bookService.getBookByIsbn(bookIsbn);
+        return new ResponseEntity<>(retrievedBook, HttpStatus.OK);
+    }
 }
+
