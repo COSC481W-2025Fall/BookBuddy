@@ -8,15 +8,36 @@ export default defineConfig({
     emptyOutDir: true,
     assetsDir: '', // optional: keep assets flat for simplicity
   },
-  server: {
-    proxy: {
-      '/Account': 'http://localhost:8080',
-        '/Book': 'http://localhost:8080',
-        '/login': 'http://localhost:8080',
-        '/openlib': 'http://localhost:8080',
-    }
-  },
-  test: {
+    server: {
+        proxy: {
+            '/Account': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
+            '/Book': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
+            '/login': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
+            '/googlebooks': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
+            '/books': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
+        }
+    },
+    test: {
       environment: 'jsdom',
       globals: true,
       coverage: {

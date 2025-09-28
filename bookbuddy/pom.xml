@@ -31,12 +31,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Junit for testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-
         <!-- Spring Boot starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
