@@ -1,6 +1,5 @@
 @echo off
 cd bookbuddy
-
 :: Start docker (optional, uncomment if needed)
 start docker compose up -d --build
 

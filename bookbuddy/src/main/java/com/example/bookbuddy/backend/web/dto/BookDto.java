@@ -1,5 +1,7 @@
 package com.example.bookbuddy.backend.web.dto;
 
+import com.example.bookbuddy.backend.domain.model.Book;
+
 public class BookDto {
 
     private String isbn;
@@ -48,4 +50,11 @@ public class BookDto {
         this.genre = genre;
     }
 
+    /**
+     * Convert this DTO into a Book entity.
+     * This is used in controllers when saving to the database.
+     */
+    public Book toBook() {
+        return new Book(isbn, bookname, author, genre);
+    }
 }
