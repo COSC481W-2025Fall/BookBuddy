@@ -33,6 +33,14 @@ export async function getAccount(identifier: string | number): Promise<AccountDt
     return res.json()
 }
 
+export async function getMyLibrary(): Promise<BookDto[]> {
+    const res = await fetch(`/books/my-library`, { credentials: "include" });
+    if (res.status === 401 || res.status === 403) throw new Error("AUTH");
+    if (!res.ok) throw new Error(`Failed to load library: ${res.status}`);
+    return res.json();
+
+}
+
 // this is where we are adding a book
 export async function addBook(body: BookDto): Promise<BookDto> {
     const res = await fetch(`${BASE}/Book/addBook`, {

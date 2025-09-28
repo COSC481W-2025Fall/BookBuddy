@@ -4,7 +4,9 @@ import Layout from "./components/Layout";
 import Login from "./login";
 import Signup from "./signup";
 import Search from "./Search";
+import Library from "./Library";
 
+// Main application component with routing
 export default function App() {
   return (
     <Routes>
@@ -13,6 +15,7 @@ export default function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/library" element={<Library />} />
       </Route>
     </Routes>
   );
