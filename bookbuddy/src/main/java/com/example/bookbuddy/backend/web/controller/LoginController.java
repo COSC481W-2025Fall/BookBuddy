@@ -1,33 +1,45 @@
 package com.example.bookbuddy.backend.web.controller;
 
-import com.example.bookbuddy.backend.domain.mapper.LoginMapper;
-import com.example.bookbuddy.backend.domain.model.Login;
-import com.example.bookbuddy.backend.infrastructure.service.LoginService;
+import com.example.bookbuddy.backend.domain.model.Account;
+import com.example.bookbuddy.backend.domain.repository.AccountRepository;
 import com.example.bookbuddy.backend.web.dto.LoginDto;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/login")
 public class LoginController {
 
-    public LoginService loginService;
+    private final AccountRepository accountRepository;
 
-    public LoginController(LoginService loginService) {
-        this.loginService = loginService;
+    public LoginController(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
     @PostMapping("/attemptLogin")
-    public ResponseEntity<String> addLogin(@RequestBody LoginDto loginDto) {
-        boolean accountExists = this.loginService.sendLoginRequest(
-                loginDto.getName(),    // 👈 directly use fields
-                loginDto.getPassword()
+    public ResponseEntity<String> attemptLogin(@RequestBody LoginDto loginDto, HttpSession session) {
+        System.out.println("Login attempt: " + loginDto.getName() + " / " + loginDto.getPassword());
+
+        Optional<Account> accountOpt = accountRepository.findByNameAndPassword(
+                loginDto.getName(), loginDto.getPassword()
         );
 
-        if (accountExists) {
+        System.out.println("Query result present? " + accountOpt.isPresent());
+
+        if (accountOpt.isPresent()) {
+            Account account = accountOpt.get();
+
+            // ✅ Save userId in session for later use
+            session.setAttribute("userId", account.getAccountId());
+
+            // ✅ Return "1" to indicate success (matches frontend expectation)
             return ResponseEntity.ok("1");
         } else {
+            // ❌ Return "0" to indicate failure
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("0");
         }
     }
