@@ -33,11 +33,14 @@ public class GoogleBooksAPI {
     }
 
     // Accept query parameter: /googlebooks/search?q=the%20hobbit
+
+    // Maps to the /search addition to the application url
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam("q") String query) {
         String encoded = URLEncoder.encode(query.trim(), StandardCharsets.UTF_8);
+        //below sets the api to only return 30 results.
         String fullUrl = BASE_URL + encoded + "&maxResults=30&orderBy=relevance&key=" + API_KEY;
-
+//below was created for error checking when creating the api as it was not initially functioning.
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(fullUrl))
@@ -49,7 +52,7 @@ public class GoogleBooksAPI {
             System.out.println("Raw Google API Response: " + response.body());
 
             if (response.statusCode() != 200) {
-                // Propagate Google’s error so the browser shows the real cause (e.g., 400/403/quota/etc.)
+                // change Google’s error so the browser shows the real cause (e.g., 400/403/500)
                 return ResponseEntity.status(response.statusCode()).body(response.body());
             }
 
@@ -63,6 +66,7 @@ public class GoogleBooksAPI {
 
                     String bookname = info.has("title") ? info.get("title").asText() : "Unknown";
 
+                    //retrieve the book author
                     String author = "Unknown";
                     if (info.has("authors") && info.get("authors").isArray() && info.get("authors").size() > 0) {
                         author = info.get("authors").get(0).asText();
@@ -71,6 +75,9 @@ public class GoogleBooksAPI {
                     String isbn = null;
                     if (info.has("industryIdentifiers") && info.get("industryIdentifiers").isArray()) {
                         String isbn10 = null;
+
+
+                        //checks initially for an isbn of length 13 and then allows for length of 10 if the 13 digit doesnt exist.
                         for (JsonNode id : info.get("industryIdentifiers")) {
                             if (id.has("type") && "ISBN_13".equals(id.get("type").asText())) {
                                 isbn = id.get("identifier").asText();
@@ -83,11 +90,12 @@ public class GoogleBooksAPI {
                             isbn = isbn10;
                         }
                     }
-
+// Skip this entry if no ISBN is found; our app requires ISBN to track books uniquely
                     if (isbn == null) {
                         continue;
                     }
 
+                    //add the genre to the api list
                     String genre = "Unknown";
                     if (info.has("categories") && info.get("categories").isArray() && info.get("categories").size() > 0) {
                         genre = info.get("categories").get(0).asText();
@@ -103,6 +111,7 @@ public class GoogleBooksAPI {
 
             return ResponseEntity.ok(result);
 
+            //below a catch for if the api is unable to retreive books
         } catch (IOException | InterruptedException e) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
                     .body("Failed to fetch from Google Books API.");

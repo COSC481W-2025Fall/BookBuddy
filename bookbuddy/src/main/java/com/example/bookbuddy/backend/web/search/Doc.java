@@ -9,6 +9,8 @@ public class Doc {
     private String isbn;
     private String genre;
 
+
+    //the doc is basically the format for the book structure when the JSON is returned from the api
     public Doc() {}
 
     public Doc(String bookname, String author, String isbn, String genre) {

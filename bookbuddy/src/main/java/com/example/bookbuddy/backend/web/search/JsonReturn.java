@@ -11,6 +11,7 @@ public class JsonReturn {
     private int num_found;
 
     @JsonProperty("docs")
+    //below is a list of docs that is created which is a list of books that is returned by the api
     private List<Doc> docs;
 
     public int getNum_found() { return num_found; }
