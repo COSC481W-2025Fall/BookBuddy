@@ -14,6 +14,7 @@ export default function Search() {
         setStatus("searching…");
 
         //try {
+        //send forward the title that was inputed by the user on front end to the api on back end./
             const searchRes = await fetch(`${BASE}/googlebooks/search/${encodeURIComponent(title)}`);
             if (!searchRes.ok) throw new Error(`Search failed: ${searchRes.status}`);
 
