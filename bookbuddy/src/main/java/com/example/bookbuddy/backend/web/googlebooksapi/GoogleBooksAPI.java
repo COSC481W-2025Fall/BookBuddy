@@ -39,7 +39,7 @@ public class GoogleBooksAPI {
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam("q") String query) {
         String encoded = URLEncoder.encode(query.trim(), StandardCharsets.UTF_8);
-        String fullUrl = BASE_URL + encoded + "&maxResults=30&orderBy=relevance&key=" + API_KEY;
+        String fullUrl = BASE_URL + encoded + "&maxResults=30&orderBy=relevance&key=" + apiKey;
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
