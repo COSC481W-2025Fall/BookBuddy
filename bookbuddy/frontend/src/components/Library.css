@@ -1,0 +1,134 @@
+:root {
+  --bb-space-1: .5rem;
+  --bb-space-2: .75rem;
+  --bb-space-3: 1rem;
+  --bb-space-4: 1.5rem;
+  --bb-radius: 1rem;
+  --bb-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+}
+
+.wrap {
+  padding: var(--bb-space-4);
+  width: 100%;
+}
+
+.bb-lib__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bb-space-3);
+  margin-bottom: var(--bb-space-3);
+}
+
+.bb-lib__title {
+  margin: 0;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.bb-lib__status {
+  color: #64748b;
+}
+
+.bb-lib__error {
+  background: #fee2e2;
+  color: #7f1d1d;
+  padding: var(--bb-space-2) var(--bb-space-3);
+  border-radius: .75rem;
+  margin-bottom: var(--bb-space-3);
+}
+
+.bb-btn {
+  border: 0;
+  border-radius: .75rem;
+  padding: .6rem 1rem;
+  cursor: pointer;
+  box-shadow: var(--bb-shadow);
+  font-weight: 600;
+}
+
+.bb-btn:active {
+  transform: translateY(1px);
+}
+
+.bb-empty {
+  display: grid;
+  place-items: start;
+  gap: var(--bb-space-2);
+}
+
+.bb-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--bb-space-3);
+}
+
+.bb-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bb-space-2);
+  background: #fff;
+  border-radius: var(--bb-radius);
+  box-shadow: var(--bb-shadow);
+  overflow: hidden;
+}
+
+.bb-card__media {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #f1f5f9;
+  display: grid;
+  place-items: center;
+}
+
+.bb-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.bb-card__placeholder {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.bb-card__body {
+  padding: var(--bb-space-3);
+}
+
+.bb-card__title {
+  margin: 0 0 var(--bb-space-1) 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.bb-card__meta {
+  color: #475569;
+  font-size: .9rem;
+  margin-bottom: var(--bb-space-1);
+}
+
+.bb-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bb-space-1);
+}
+
+.bb-tag {
+  background: #eef2ff;
+  color: #3730a3;
+  padding: .15rem .5rem;
+  border-radius: .5rem;
+  font-size: .75rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 720px) {
+  .wrap {
+    padding: var(--bb-space-3);
+  }
+}
