@@ -27,12 +27,21 @@ export async function addAccount(body: AccountDto): Promise<AccountDto> {
     return res.json()
 }
 
-// fetch an account by identifier (string or number)
-export async function getAccount(identifier: string | number): Promise<AccountDto> {
-    const res = await fetch(`${BASE}/login/attemptLogin/${encodeURIComponent(String(identifier))}`)
-    if (!res.ok) throw new Error(`Get failed: ${res.status}`)
-    return res.json()
+// LOGIN
+export async function login(body: { name: string; password: string }): Promise<boolean> {
+    const res = await fetch(`${BASE}/login/attemptLogin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        credentials: "include", // so session cookies stick
+    });
+
+    if (!res.ok) return false;
+
+    const txt = await res.text();
+    return txt.trim() === "1"; // backend returns "1" on success
 }
+
 
 export async function getMyLibrary(): Promise<BookDto[]> {
     const res = await fetch(`/books/my-library`, { credentials: "include" });
