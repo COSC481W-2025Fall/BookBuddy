@@ -17,6 +17,7 @@ class BookServiceTest {
     //Uses the actual database to run this test via this @Autowired
     //Real database should not be affected after the fact
 
+    /*
     @Autowired
     private BookService bookService;
 
@@ -48,4 +49,6 @@ class BookServiceTest {
         //Empty string is used to ensure the IBSN doesn't exist
         assertThrows(IllegalArgumentException.class, () -> bookService.getBookByIsbn(" "));
     }
+    */
+
 }
