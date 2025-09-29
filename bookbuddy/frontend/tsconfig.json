@@ -14,5 +14,12 @@
     "strict": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/test",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
 }
