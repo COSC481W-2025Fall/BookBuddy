@@ -58,7 +58,7 @@ export default function Search() {
     return (
         <div style={{ maxWidth: 720, margin: '2rem auto', fontFamily: 'ui-sans-serif, system-ui' }}>
             <h1>THE BOOK SEARCH</h1>
-            <form onSubmit={doAddBook}>
+            <form role = "form" onSubmit={doAddBook}>
                 <label>
                     Please enter a book you would like to search
                     <input

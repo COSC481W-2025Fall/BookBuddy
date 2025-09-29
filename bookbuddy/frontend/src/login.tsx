@@ -49,7 +49,7 @@ const Login: React.FC = () => {
     return (
         <div className="login-container">
             <h2>Login</h2>
-            <form onSubmit={handleSubmit} method="post" className="login-form">
+            <form role = "form" onSubmit={handleSubmit} method="post" className="login-form">
                 <label>
                     Username
                     <input

@@ -44,6 +44,7 @@ const SignupForm: React.FC = () => {
             <h1 className="titlePopup">Sign up</h1>
             <div id="signup-modal" className="flex justify-center items-center">
                 <form
+                    role = "form" // added by Ryan R. for testing
                     id="signupForm"
                     className="w-1/2 h-[300px] bg-white rounded p-5 text-center"
                     onSubmit={handleSubmit}
