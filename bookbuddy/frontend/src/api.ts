@@ -20,7 +20,8 @@ export async function addAccount(body: AccountDto): Promise<AccountDto> {
         body: JSON.stringify(body),
     })
     if (!res.ok) {
-        const details = await res.text().catch(() => '')
+        //const details = await res.text().catch(() => '') // Changed by Ryan R. I have no clue why this line is breaking stuff
+        const details = "I have no idea"
         throw new Error(`Add failed: ${res.status}${details ? ' - ' + details : ''}`)
     }
     return res.json()
