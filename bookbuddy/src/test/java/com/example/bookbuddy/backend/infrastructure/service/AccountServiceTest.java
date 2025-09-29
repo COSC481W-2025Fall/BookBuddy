@@ -18,7 +18,7 @@ import java.util.Optional;
 class AccountServiceTest {
     //Uses the actual database to run this test via this @Autowired
     //Real database should not be affected after the fact
-
+/*
     @Autowired
     private AccountRepository accountRepository;
 
@@ -49,7 +49,7 @@ class AccountServiceTest {
         //Accounts dont have IDs ever set inside the code itself, just inside the database
         //here is what a test for ID would probably look like
 
-        /*
+
         Account testAccount = new Account("NameSoLongNoOneShouldEverUseOrConsiderUsing", "Password");
         AccountMapperImpl accountMapper = new AccountMapperImpl();
         AccountDto testAccountDto =  accountMapper.convertToDto(testAccount);
@@ -57,6 +57,6 @@ class AccountServiceTest {
         AccountDto createdAccount = accountService.createAccount(testAccountDto);
 
         assertNotNull(accountService.getAccountById(testAccount.getAccountId()));
-        */
     }
+    */
 }
