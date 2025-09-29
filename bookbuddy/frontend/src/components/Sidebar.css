@@ -1,0 +1,116 @@
+:root{
+  --bb-sidebar-width: 220px;
+  --bb-sidebar-bg: #ffffff;
+  --bb-sidebar-text: #000000;
+  --bb-accent: #3b82f6;
+  --bb-muted: #94a3b8;
+}
+
+.bb-sidebar_toggle{
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 60;
+  background: var(--bb-accent);
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.bb-sidebar{
+  width: var(--bb-sidebar-width);
+  min-width: var(--bb-sidebar-width);
+  background: var(--bb-sidebar-bg);
+  color: var(--bb-sidebar-text);
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100vh;
+  position: relative;
+  transition: transform .2s ease;
+}
+
+.bb-sidebar_brand{
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: .5px;
+  margin-bottom: .25rem;
+}
+
+.bb-sidebar_links{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  flex: 1 1 auto;
+}
+
+.bb-link{
+  display: block;
+  padding: .5rem .75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--bb-sidebar-text);
+  font-weight: 500;
+}
+
+.bb-link:hover{
+  background: rgba(255,255,255,0.03);
+}
+
+.bb-link--active{
+  background: linear-gradient(90deg, rgba(59,130,246,0.12), rgba(59,130,246,0.08));
+  color: var(--bb-accent);
+  box-shadow: inset 3px 0 0 var(--bb-accent);
+}
+
+
+  .bb-main {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+
+.bb-sidebar_footer{
+  font-size: .85rem;
+  color: var(--bb-muted);
+  margin-top: 0.5rem;
+}
+
+.bb-layout {
+  display: flex;
+}
+
+@media (max-width: 900px) {
+  .bb-sidebar_toggle{
+    display: block;
+  }
+
+  .bb-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    z-index: 50;
+    width: 70%;
+    max-width: 320px;
+    height: 100vh;
+    padding-top: 3.5rem; /* leave space for toggle button */
+    box-shadow: 0 6px 18px rgba(2,6,23,0.4);
+  }
+
+  .bb-sidebar.open{
+    transform: translateX(0);
+  }
+}

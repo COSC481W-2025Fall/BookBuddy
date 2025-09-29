@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import type { BookDto } from './types/BookDto'
-import "./css/Searchpage.css";
+import "./components/Searchpage.css";
 const BASE = '' // keep empty, proxy or relative path handles backend
 
 
