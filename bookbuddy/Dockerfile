@@ -2,14 +2,15 @@
 # Frontend Build
 # ===========================
 FROM node:20 AS frontend-build
-WORKDIR /frontend
+WORKDIR /app/frontend
 
 COPY ./frontend/package*.json ./
 RUN npm install
 
 COPY ./frontend .
-RUN npm run build
-# NOTE: This build already outputs to ../src/main/resources/static
+
+# Force output into Spring Boot static folder inside /app
+RUN npm run build -- --outDir=../src/main/resources/static
 
 # ===========================
 # Backend Build
@@ -19,7 +20,6 @@ WORKDIR /app
 
 COPY . .
 
-# No need to copy from frontend-build — files are already in place
 RUN mvn clean package -DskipTests
 
 # ===========================
@@ -31,4 +31,3 @@ WORKDIR /app
 COPY --from=backend-build /app/target/*.jar app.jar
 
 ENTRYPOINT ["java","-jar","/app/app.jar"]
-
