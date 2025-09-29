@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/googlebooks")
 public class GoogleBooksAPI {
     @Value("${book.api.key}")
-    private String apiKey;
+    private String API_KEY;
     private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
     private final HttpClient httpClient;
@@ -39,7 +39,7 @@ public class GoogleBooksAPI {
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam("q") String query) {
         String encoded = URLEncoder.encode(query.trim(), StandardCharsets.UTF_8);
-        String fullUrl = BASE_URL + encoded + "&maxResults=30&orderBy=relevance&key=" + apiKey;
+        String fullUrl = BASE_URL + encoded + "&maxResults=30&orderBy=relevance&key=" + API_KEY;
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
