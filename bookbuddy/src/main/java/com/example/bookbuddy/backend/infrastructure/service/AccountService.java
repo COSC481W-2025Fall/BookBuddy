@@ -17,24 +17,48 @@ public class AccountService {
     }
 
     public AccountDto createAccount(AccountDto accountDto) {
-        // Validate input
-        if (accountDto == null || !StringUtils.hasText(accountDto.name) || !StringUtils.hasText(accountDto.password)) {
-            throw new IllegalArgumentException("Username and password must not be empty");
+        try {
+            System.out.println("➡️ Entering createAccount()");
+            System.out.println("📥 Incoming DTO: name=" + accountDto.name + ", password=" + accountDto.password);
+
+            // Validate input
+            if (accountDto == null || !StringUtils.hasText(accountDto.name) || !StringUtils.hasText(accountDto.password)) {
+                System.out.println("❌ Validation failed: empty username or password");
+                throw new IllegalArgumentException("Username and password must not be empty");
+            }
+
+            accountDto.name = accountDto.name.trim();
+
+            // Check duplicate username
+            if (accountRepository.existsByName(accountDto.name)) {
+                System.out.println("⚠️ Duplicate username: " + accountDto.name);
+                throw new IllegalStateException("Account name already exists");
+            }
+
+            // Convert to entity
+            Account newAccount = AccountMapper.INSTANCE.convertToAccount(accountDto);
+            System.out.println("✅ Mapped entity (before save): " + newAccount);
+
+            // Save to DB
+            newAccount = accountRepository.save(newAccount);
+            System.out.println("💾 Saved entity (after save): accountId=" + newAccount.getAccountId());
+
+            // Convert back to DTO
+            AccountDto result = AccountMapper.INSTANCE.convertToDto(newAccount);
+            System.out.println("📤 Returning DTO: accountId=" + result.accountId + ", name=" + result.name);
+
+            return result;
+
+        } catch (Exception e) {
+            System.out.println("🔥 ERROR inside createAccount(): " + e.getMessage());
+            e.printStackTrace(); // full stack trace in Render logs
+            throw e; // rethrow so controller’s @ExceptionHandler catches it
         }
-
-        accountDto.name = accountDto.name.trim();
-
-        // Duplicate username -> treat as a business conflict, not a 500
-        if (accountRepository.existsByName(accountDto.name)) {
-            throw new IllegalStateException("Account name already exists");
-        }
-
-        Account newAccount = AccountMapper.INSTANCE.convertToAccount(accountDto);
-        this.accountRepository.save(newAccount);
-        return AccountMapper.INSTANCE.convertToDto(newAccount);
     }
 
     public AccountDto getAccountById(Long accountId) {
-        return AccountMapper.INSTANCE.convertToDto(this.accountRepository.getById(accountId));
+        System.out.println("🔎 Looking up account with ID=" + accountId);
+        Account account = accountRepository.getById(accountId);
+        return AccountMapper.INSTANCE.convertToDto(account);
     }
 }
