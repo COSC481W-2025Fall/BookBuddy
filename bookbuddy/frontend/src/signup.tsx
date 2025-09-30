@@ -21,7 +21,7 @@ const Signup: React.FC = () => {
         }
 
         const body: AccountDto = {
-            accountId: 0, // backend will assign real ID
+            //accountId: 0, // backend will assign real ID
             name: username.trim(),
             password: password,
         };
