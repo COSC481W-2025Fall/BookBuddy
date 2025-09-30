@@ -13,6 +13,7 @@ const Signup: React.FC = () => {
     // Handle signup form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log("hello");
 
         if (!username || !password) {
             setMessage("Please enter a valid username and password");
