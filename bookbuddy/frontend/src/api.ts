@@ -30,8 +30,9 @@ export async function addAccount(body: AccountDto): Promise<AccountDto> {
 }
 
 // Login
-export async function addLogin(body: LoginDto): Promise<AccountDto> {
-    const res = await fetch(`${BASE}/Account/login`, {
+// Login
+export async function addLogin(body: LoginDto): Promise<boolean> {
+    const res = await fetch(`/login/attemptLogin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -39,13 +40,11 @@ export async function addLogin(body: LoginDto): Promise<AccountDto> {
     });
 
     if (!res.ok) {
-        const details = await res.text().catch(() => "");
-        throw new Error(
-            `Login failed: ${res.status}${details ? " - " + details : ""}`
-        );
+        return false; // login failed
     }
 
-    return res.json(); // ✅ return full AccountDto
+    const text = await res.text();
+    return text === "1"; // ✅ backend sends "1" on success
 }
 
 // Example of fetching account later

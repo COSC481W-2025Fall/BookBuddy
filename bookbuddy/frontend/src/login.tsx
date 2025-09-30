@@ -31,14 +31,10 @@ const Login: React.FC = () => {
         };
 
         try {
-            const account: AccountDto = await addLogin(body);
+            const ok = await addLogin(body);
 
-            if (account && account.accountId) {
-                // Store accountId + username for later use
-                localStorage.setItem("accountId", account.accountId.toString());
-                localStorage.setItem("username", account.name);
-
-                navigate("/search");
+            if (ok) {
+                navigate("/search"); // ✅ login successful
             } else {
                 setMessage("Invalid username or password");
             }
