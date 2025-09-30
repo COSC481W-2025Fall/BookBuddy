@@ -17,39 +17,24 @@ public class AccountService {
     }
 
     public AccountDto createAccount(AccountDto accountDto) {
-        System.out.println("➡️ Starting createAccount with DTO: " + accountDto);
-
         // Validate input
         if (accountDto == null || !StringUtils.hasText(accountDto.name) || !StringUtils.hasText(accountDto.password)) {
-            System.out.println("❌ Validation failed: empty username or password");
             throw new IllegalArgumentException("Username and password must not be empty");
         }
 
         accountDto.name = accountDto.name.trim();
 
-        // Duplicate username check
+        // Duplicate username -> treat as a business conflict, not a 500
         if (accountRepository.existsByName(accountDto.name)) {
-            System.out.println("⚠️ Duplicate username attempted: " + accountDto.name);
             throw new IllegalStateException("Account name already exists");
         }
 
-        // Map DTO → Entity
         Account newAccount = AccountMapper.INSTANCE.convertToAccount(accountDto);
-        System.out.println("✅ Mapped Account before save: " + newAccount);
-
-        // Save and flush to ensure ID is generated
-        newAccount = accountRepository.saveAndFlush(newAccount);
-        System.out.println("✅ Saved Account with ID: " + newAccount.getAccountId());
-
-        // Map Entity → DTO
-        AccountDto savedDto = AccountMapper.INSTANCE.convertToDto(newAccount);
-        System.out.println("✅ Returning AccountDto: " + savedDto);
-
-        return savedDto;
+        this.accountRepository.save(newAccount);
+        return AccountMapper.INSTANCE.convertToDto(newAccount);
     }
 
     public AccountDto getAccountById(Long accountId) {
-        System.out.println("➡️ Fetching account by ID: " + accountId);
         return AccountMapper.INSTANCE.convertToDto(this.accountRepository.getById(accountId));
     }
 }

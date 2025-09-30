@@ -16,17 +16,14 @@ public class Account {
     @Column(nullable = false)
     private String password;
 
-    // 👉 Required by JPA
-    public Account() {
-    }
+    public Account() {}
 
-    // 👉 Convenience constructor (used in your AuthController)
     public Account(String name, String password) {
         this.name = name;
         this.password = password;
     }
 
-    // Getters & setters
+    // Getters and setters
     public Long getAccountId() {
         return accountId;
     }
@@ -50,14 +47,5 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    // Debug-friendly toString (don’t log raw password)
-    @Override
-    public String toString() {
-        return "Account{" +
-                "accountId=" + accountId +
-                ", name='" + name + '\'' +
-                ", password='[PROTECTED]'" +
-                '}';
-    }
 }
+
