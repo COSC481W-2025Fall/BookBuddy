@@ -1,91 +1,85 @@
 import React, { useState } from "react";
+import "./components/signup.css";
 import { useNavigate } from "react-router-dom";
 import { addAccount } from "./api";
 import type { AccountDto } from "./types/AccountDto";
 
-const SignupForm: React.FC = () => {
+const Signup: React.FC = () => {
     const navigate = useNavigate();
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    // Handle signup form submission
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError("");
 
-        if (!username.trim() || !password.trim()) {
-            setError("Username and password cannot be empty");
+        if (!username || !password) {
+            setMessage("Please enter a valid username and password");
             return;
         }
 
+        const body: AccountDto = {
+            accountId: 0, // backend will assign real ID
+            name: username.trim(),
+            password: password,
+        };
+
         try {
-            // Build the exact payload expected by the backend
-            const body: AccountDto = {
-                name: username.trim(),
-                password: password,
-            };
+            const account: AccountDto = await addAccount(body);
 
-            // Optional: debug log to verify the payload
-            // console.log("Submitting account:", body);
+            if (account && account.accountId) {
+                // ✅ Store ID and username right after signup
+                localStorage.setItem("accountId", account.accountId.toString());
+                localStorage.setItem("username", account.name);
 
-            const created = await addAccount(body);
-
-            // Optionally use created
-            navigate("/search");
-        } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "Signup failed";
-            setError(message);
+                navigate("/search");
+            } else {
+                setMessage("Signup failed. Please try again.");
+            }
+        } catch (error) {
+            setMessage("Server error. Please try again later.");
         }
     };
 
     return (
-        <div>
-            <h1 className="titlePopup">Sign up</h1>
-            <div id="signup-modal" className="flex justify-center items-center">
-                <form
-                    role = "form" // added by Ryan R. for testing
-                    id="signupForm"
-                    className="w-1/2 h-[300px] bg-white rounded p-5 text-center"
-                    onSubmit={handleSubmit}
-                >
+        <div className="signup-container">
+            <h2>Signup</h2>
+            <form
+                role="form"
+                onSubmit={handleSubmit}
+                method="post"
+                className="signup-form"
+            >
+                <label>
+                    Username
                     <input
-                        id="userName"
-                        name="username"
                         type="text"
-                        placeholder="Username"
+                        name="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="w-full p-3 mb-2 border rounded"
+                        required
                     />
+                </label>
 
+                <label>
+                    Password
                     <input
-                        id="password"
-                        name="password"
                         type="password"
-                        placeholder="Password"
+                        name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-3 mb-2 border rounded"
+                        required
                     />
+                </label>
 
-                    <button
-                        id="signupBtn"
-                        type="submit"
-                        className="bg-gray-500 text-white p-3 rounded w-full font-bold cursor-pointer"
-                    >
-                        Submit
-                    </button>
+                <button type="submit">Signup</button>
+            </form>
 
-                    {error && (
-                        <div id="signupError" className="text-red-500 mt-2">
-                            {error}
-                        </div>
-                    )}
-                </form>
-            </div>
+            {message && <p className="message">{message}</p>}
         </div>
     );
 };
 
-export default SignupForm;
+export default Signup;
+

@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import "./components/login.css";
 import { useNavigate } from "react-router-dom";
 import { addLogin } from "./api";
-import type {AccountDto} from "./types/AccountDto";
-import {LoginDto} from "./types/LoginDto"; // use the unified API
-
+import type { AccountDto } from "./types/AccountDto";
+import { LoginDto } from "./types/LoginDto";
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -17,7 +16,6 @@ const Login: React.FC = () => {
         navigate("/signup");
     };
 
-    // Handle login form submission
     // Handle login form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,9 +31,13 @@ const Login: React.FC = () => {
         };
 
         try {
-            const ok = await addLogin(body);  // ✅ no {body}
+            const account: AccountDto = await addLogin(body);
 
-            if (ok) {
+            if (account && account.accountId) {
+                // Store accountId + username for later use
+                localStorage.setItem("accountId", account.accountId.toString());
+                localStorage.setItem("username", account.name);
+
                 navigate("/search");
             } else {
                 setMessage("Invalid username or password");
@@ -45,11 +47,15 @@ const Login: React.FC = () => {
         }
     };
 
-
     return (
         <div className="login-container">
             <h2>Login</h2>
-            <form role = "form" onSubmit={handleSubmit} method="post" className="login-form">
+            <form
+                role="form"
+                onSubmit={handleSubmit}
+                method="post"
+                className="login-form"
+            >
                 <label>
                     Username
                     <input
