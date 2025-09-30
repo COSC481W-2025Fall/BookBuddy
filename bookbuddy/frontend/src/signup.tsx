@@ -26,6 +26,7 @@ const Signup: React.FC = () => {
         };
 
         try {
+            console.log(body);
             const account: AccountDto = await addAccount(body);
 
             if (account && account.accountId) {
