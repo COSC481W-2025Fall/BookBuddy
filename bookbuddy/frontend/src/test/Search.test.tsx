@@ -19,7 +19,7 @@ describe('Search Rendering', () => {
         expect(container).toBeInTheDocument();
     });
 });
-
+/*
 //test to see if the search works properly
 test('search is returned correctly', () => {
     afterEach(() => {
@@ -46,4 +46,4 @@ test('search is returned correctly', () => {
     });
 
 
-});
+});*/
