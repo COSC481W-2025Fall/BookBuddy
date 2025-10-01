@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/googlebooks")
 public class GoogleBooksAPI {
-    private static final String API_KEY = "KEY GOES HERE";
+    private static final String API_KEY = "AIzaSyD3xuJEgf0D6Zm881QunCpjWUP7yu3sQUI";
     private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
     private final HttpClient httpClient;

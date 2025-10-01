@@ -11,12 +11,10 @@ export default function Library() {
     const [books, setBooks] = useState<BookDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    // function to get book cover from open library api
-    //Uses hobbit cover if nothing comes through
-    const coverUrl = (isbn?: string) =>
-        isbn ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg` : "https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg";
-
-
+    // function to get book cover from Google Books api
+    // uses template cover if nothing comes through
+    const coverUrl = (id?: string) =>
+        id ? `https://books.google.com/books/content?id=${id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api` : "https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg";
 
     // on component load, fetch the user's library
     useEffect(() => {
@@ -80,7 +78,7 @@ export default function Library() {
                             <div className="bb-card__media">
                                 {/* // Book cover image with fallback on error */}
                                 <img
-                                    src={coverUrl(b.isbn)}
+                                    src={coverUrl(b.id)}
                                     alt={`${b.bookname ?? "Book"} cover`}
                                     onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg"; }}
                                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
