@@ -23,8 +23,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/googlebooks")
 public class GoogleBooksAPI {
-    @Value("${book.api.key}")
-    private String API_KEY;
+    @Value("${book.api.key}") //comment this line out and use actual api key for local useage
+    private String API_KEY; //make this = "the api key" for local useage
     private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
     private final HttpClient httpClient;
@@ -42,6 +42,7 @@ public class GoogleBooksAPI {
         String fullUrl = BASE_URL + encoded + "&maxResults=30&orderBy=relevance&key=" + API_KEY;
 
         try {
+            System.out.println("🔑 Google Books API URL: " + fullUrl);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(fullUrl))
                     .GET()
