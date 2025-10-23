@@ -65,3 +65,20 @@ export async function addLogin(body: LoginDto): Promise<boolean> {
     return txt.trim() === "1";
 }
 
+    export async function SendQeustions(body: string[] | any[]): Promise<void> {
+        try {
+        const response = await fetch('/ENDPOINT', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json',},
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+    } catch (err) {
+        console.error("Error sending array:", err);
+        throw err;
+    }
+}

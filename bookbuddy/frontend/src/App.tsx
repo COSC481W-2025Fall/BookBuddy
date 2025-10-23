@@ -5,6 +5,7 @@ import Login from "./login";
 import Signup from "./signup";
 import Search from "./Search";
 import Library from "./Library";
+import Buddy from "./Buddy_Recommendation";
 
 // Main application component with routing
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/library" element={<Library />} />
+          <Route path="/Buddy_Recommendation" element ={<Buddy />} />
       </Route>
     </Routes>
   );

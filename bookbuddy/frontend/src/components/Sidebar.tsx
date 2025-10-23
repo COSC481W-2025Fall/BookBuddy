@@ -9,10 +9,11 @@ export default function Sidebar() {
 
   //Defines the navigation links, can be added to later
   const links: { to: string; label: string }[] = [
-    { to: "/", label: "Home" },
-    { to: "/search", label: "Search" },
-    { to: "/library", label: "Library" },
-    { to: "/login", label: "Sign Out" },
+      { to: "/", label: "Home" },
+      { to: "/search", label: "Search" },
+      { to: "/library", label: "Library" },
+      { to: "/login", label: "Sign Out" },
+      { to:"/Buddy_Recommendation", label: "Ask a buddy"}
   ];
 
   // Render the sidebar with navigation links

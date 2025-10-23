@@ -5,6 +5,7 @@ import Signup from "./signup";
 import Search from "./Search";
 import App from "./App";
 import Library from "./Library";
+import Buddy from "./Buddy_Recommendation";
 
 export default function Myroute() {
   return (
@@ -14,6 +15,7 @@ export default function Myroute() {
       <Route path="/search" element={<Search />} />
       <Route path="/app" element={<App />} />
       <Route path="/library" element={<Library />} />
+      <Route path="/Buddy_Recommendation" element ={<Buddy />} />
     </Routes>
-  );
+  )
 }
