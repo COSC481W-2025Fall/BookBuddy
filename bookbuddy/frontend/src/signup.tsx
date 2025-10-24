@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAccount } from "./api";
 import type { AccountDto } from "./types/AccountDto";
-import logo from "logo/bookbuddy-logo-mywristhurts.png";
+import logo from "./logo/bookbuddy-logo-mywristhurts.png";
 
 const SignupForm: React.FC = () => {
     const navigate = useNavigate();
@@ -42,7 +42,7 @@ const SignupForm: React.FC = () => {
 
     return (
         <div>
-            <img src={logo} alt="Welcome to BookBuddy"/>
+            <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
             <h1 className="titlePopup">Sign up</h1>
             <div id="signup-modal" className="flex justify-center items-center">
                 <form

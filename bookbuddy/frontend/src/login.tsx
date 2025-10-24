@@ -49,8 +49,8 @@ const Login: React.FC = () => {
 
     return (
         <div className="login-container">
-            <img src={logo} alt="Welcome to BookBuddy"/>
-            <h2>Test</h2>
+            <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
+            <h2>Login</h2>
             <form role = "form" onSubmit={handleSubmit} method="post" className="login-form">
                 <label>
                     Username
