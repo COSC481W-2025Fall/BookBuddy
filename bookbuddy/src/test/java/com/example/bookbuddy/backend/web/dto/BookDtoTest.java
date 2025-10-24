@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BookDtoTest {
 
     //Test Bookdto object used for testing
-    BookDto testBookDto =  new BookDto("testIBSN", "testName", "testAuthor", "testGenre");
+    BookDto testBookDto =  new BookDto("testIBSN", "testName", "testAuthor", "testGenre", "testCoverid",  "testDescription", 200, "testPublication");
 
     //Test for returning the book IBSN
     @Test
