@@ -4,6 +4,7 @@ import com.example.bookbuddy.backend.domain.mapper.AccountMapper;
 import com.example.bookbuddy.backend.domain.model.Account;
 import com.example.bookbuddy.backend.domain.repository.AccountRepository;
 import com.example.bookbuddy.backend.web.dto.AccountDto;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -11,9 +12,11 @@ import org.springframework.util.StringUtils;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AccountDto createAccount(AccountDto accountDto) {
@@ -34,6 +37,9 @@ public class AccountService {
                 System.out.println("⚠️ Duplicate username: " + accountDto.name);
                 throw new IllegalStateException("Account name already exists");
             }
+
+            // Hash the password before saving
+            accountDto.password = passwordEncoder.encode(accountDto.password);
 
             // Convert to entity
             Account newAccount = AccountMapper.INSTANCE.convertToAccount(accountDto);
