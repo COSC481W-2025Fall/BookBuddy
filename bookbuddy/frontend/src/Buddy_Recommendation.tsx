@@ -70,6 +70,7 @@ const Q_List = [
 }
 
 export default function Buddy() {
+    const maxInput = 50
     const [error, seterror] = useState("");
     const [RQ1, setRQ1] = useState("");
     const [RQ2, setRQ2] = useState("");
@@ -81,8 +82,9 @@ export default function Buddy() {
     const [RQ8, setRQ8] = useState("");
     const [RQ9, setRQ9] = useState("");
     const [RQ10, setRQ10] = useState("");
-    const [textlengs, setTextlengs] = useState(50)
+    const [textlengs, setTextlengs] = useState(maxInput)
     const navigate = useNavigate();
+
 
 
     const [questions, setQuestions] = useState(() => getUniqueRandomQuestions(Q_List));
@@ -194,10 +196,12 @@ const [Q1, Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9, Q10] = questions;
                         onChange={(e) =>{
                             const newVal = e.target.value;
                             setRQ10(e.target.value);
-                            const newLength = 50 - newVal.length;
+                            const newLength = (maxInput) - newVal.length;
                             setTextlengs(newLength)
                         }}/><br/>
                     <span id="displayValue">{textlengs}</span>
+                    <br/>
+                    <input type="submit" value="send"/>
                 </form>
             </>
         </div>
