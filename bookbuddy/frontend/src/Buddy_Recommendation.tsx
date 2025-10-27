@@ -48,29 +48,47 @@ const Q_List = [
     "What’s a topic, time period, or mystery you’ve always been curious about but never explored through reading?"
 ];
 
-// Helper function
-const getUniqueRandomQuestions = (list: any[]) => {
-    let Q1 = list[Math.floor(Math.random() * list.length)];
-    let Q2 = list[Math.floor(Math.random() * list.length)];
+    const getUniqueRandomQuestions = (list: any[]) => {
+    const Questions: any[] = []
+    const random_Numbers: any[]= []
 
-    // Ensure they are different
-    while (Q1 === Q2) {
-        Q2 = list[Math.floor(Math.random() * list.length)];
+    let i  = 1
+    while ( i <= 11){
+        let curr_num = Math.floor(Math.random() * list.length)
+        if (random_Numbers.includes(curr_num)) {
+            continue
+        }
+        else random_Numbers.push(curr_num)
+        i++
     }
-    return [Q1, Q2];
+
+    for (let i = 1; i < 11; i++){
+        Questions.push(list[(random_Numbers[i])])
+    }
+    console.log(Questions)
+    return Questions;
 }
 
 export default function Buddy() {
     const [error, seterror] = useState("");
     const [RQ1, setRQ1] = useState("");
     const [RQ2, setRQ2] = useState("");
+    const [RQ3, setRQ3] = useState("");
+    const [RQ4, setRQ4] = useState("");
+    const [RQ5, setRQ5] = useState("");
+    const [RQ6, setRQ6] = useState("");
+    const [RQ7, setRQ7] = useState("");
+    const [RQ8, setRQ8] = useState("");
+    const [RQ9, setRQ9] = useState("");
+    const [RQ10, setRQ10] = useState("");
+    const [textlengs, setTextlengs] = useState(50)
     const navigate = useNavigate();
 
 
     const [questions, setQuestions] = useState(() => getUniqueRandomQuestions(Q_List));
 
 
-    const [Q1, Q2] = questions;
+const [Q1, Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9, Q10] = questions;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -81,9 +99,18 @@ export default function Buddy() {
 
         const Q_A1 = `${Q1} ${RQ1}`;
         const Q_A2 = `${Q2} ${RQ2}`;
-        const result = [Q_A1, Q_A2];
+        const Q_A3 = `${Q3} ${RQ3}`;
+        const Q_A4 = `${Q4} ${RQ4}`;
+        const Q_A5 = `${Q5} ${RQ5}`;
+        const Q_A6 = `${Q6} ${RQ6}`;
+        const Q_A7 = `${Q7} ${RQ7}`;
+        const Q_A8 = `${Q8} ${RQ8}`;
+        const Q_A9 = `${Q9} ${RQ9}`;
+        const Q_A10 = `${Q10} ${RQ10}`;
 
-        // await SendQeustions(result);
+        const result = [Q_A1, Q_A2, Q_A3, Q_A4, Q_A5, Q_A6, Q_A7, Q_A8, Q_A9, Q_A10];
+        const payload = JSON.stringify(result)
+        // await SendQeustions(payload);
 
         seterror("");
     }
@@ -95,22 +122,97 @@ export default function Buddy() {
                 <h1>{error}</h1>
 
                 <form onSubmit={handleSubmit}>
-                    <label>{Q1}</label><br/>
+                    <label>1.{Q1}</label><br/>
                     <input
                         id="Q1"
                         type="text"
                         value={RQ1}
-                        onChange={(e) => setRQ1(e.target.value)}/>
-                    <br/>
-                    <label>{Q2}</label><br/>
+                        onChange={(e) => setRQ1(e.target.value)}/><br/>
+
+                    <label>2.{Q2}</label><br/>
                     <input
                         id="Q2"
                         type="text"
                         value={RQ2}
                         onChange={(e) => setRQ2(e.target.value)}/><br/>
-                    <input type="submit" value="send"/>
+
+                    <label>3.{Q3}</label><br/>
+                    <input
+                        id="Q3"
+                        type="text"
+                        value={RQ3}
+                        onChange={(e) => setRQ3(e.target.value)}/><br/>
+
+                    <label>4.{Q4}</label><br/>
+                    <input
+                        id="Q4"
+                        type="text"
+                        value={RQ4}
+                        onChange={(e) => setRQ4(e.target.value)}/><br/>
+
+                    <label>5.{Q5}</label><br/>
+                    <input
+                        id="Q5"
+                        type="text"
+                        value={RQ5}
+                        onChange={(e) => setRQ5(e.target.value)}/><br/>
+
+                    <label>6.{Q6}</label><br/>
+                    <input
+                        id="Q6"
+                        type="text"
+                        value={RQ6}
+                        onChange={(e) => setRQ6(e.target.value)}/><br/>
+
+                    <label>7.{Q7}</label><br/>
+                    <input
+                        id="Q7"
+                        type="text"
+                        value={RQ7}
+                        onChange={(e) => setRQ7(e.target.value)}/><br/>
+
+                    <label>8.{Q8}</label><br/>
+                    <input
+                        id="Q8"
+                        type="text"
+                        value={RQ8}
+                        onChange={(e) => setRQ8(e.target.value)}/><br/>
+
+                    <label>9.{Q9}</label><br/>
+                    <input
+                        id="Q9"
+                        type="text"
+                        value={RQ9}
+                        onChange={(e) => setRQ9(e.target.value)}/><br/>
+
+                    <label>10.{Q10}</label><br/>
+                    <input
+                        id="Q10"
+                        type="text"
+                        value={RQ10}
+                        maxLength={50}
+                        onChange={(e) =>{
+                            const newVal = e.target.value;
+                            setRQ10(e.target.value);
+                            const newLength = 50 - newVal.length;
+                            setTextlengs(newLength)
+                        }}/><br/>
+                    <span id="displayValue">{textlengs}</span>
                 </form>
             </>
         </div>
     )
 }
+
+/* odds of each reroll for each question
+1/100
+1/50
+1/33
+1/25
+1/20
+1/16
+1/14
+1/12.5
+1/11
+1/10
+ */
