@@ -23,6 +23,10 @@ export default function Book_display({ result }: { result: BookDto[] }) {
                 author: selected_book.author ?? "Unknown",
                 isbn: selected_book.isbn ?? "Unknown",
                 genre: selected_book.genre ?? "Unknown",
+                coverid: selected_book.coverid ?? "Unknown",
+                publication: selected_book.publication ?? "Unknown",
+                pagecount: selected_book.pagecount ?? 0,
+                description: selected_book.description ?? "No description available",
             };
 
             // sends item to backend
