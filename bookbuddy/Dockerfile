@@ -1,42 +1,49 @@
 # ===========================
-# Frontend Build
+# FRONTEND BUILD STAGE
 # ===========================
 FROM node:20 AS frontend-build
 WORKDIR /frontend
 
-# Copy dependency files first for caching
+# Copy dependency files first (improves caching)
 COPY ./frontend/package*.json ./
 RUN npm install
 
-# Copy the rest of the frontend source and build
+# Copy the rest of the frontend source
 COPY ./frontend ./
-RUN npm run build
-# 👉 Outputs static files into /frontend/dist
+
+# Debug: show current working directory and files
+RUN echo "=== Frontend directory structure before build ===" && pwd && ls -la
+
+# Build the frontend (Vite)
+RUN echo "=== Starting frontend build ===" && npm run build || (echo "Frontend build failed" && exit 1)
+
+# Debug: confirm that the dist folder exists
+RUN echo "=== Frontend directory structure after build ===" && ls -la && echo "=== dist folder contents ===" && ls -la dist || (echo "No dist folder found!" && exit 1)
 
 # ===========================
-# Backend Build
+# BACKEND BUILD STAGE
 # ===========================
-FROM maven:3.9.4-eclipse-temurin-17 AS backend-build
+FROM maven:3.9.8-eclipse-temurin-17 AS backend-build
 WORKDIR /app
 
-# Copy Maven files and backend source
-COPY ./pom.xml ./
-COPY ./src ./src
+# Copy the backend source code
+COPY . .
 
-# Copy frontend build output into Spring Boot's static resources
+# Copy built frontend assets into Spring Boot static resources
 COPY --from=frontend-build /frontend/dist ./src/main/resources/static
 
 # Build backend JAR (skip tests for faster builds)
-RUN mvn clean package -DskipTests
+RUN echo "=== Starting backend build ===" && mvn clean package -DskipTests
 
 # ===========================
-# Runtime
+# RUNTIME STAGE
 # ===========================
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
-# Copy only the built JAR (keep image small)
-COPY --from=backend-build /app/target/*.jar app.jar
+# Copy the packaged JAR from the backend build stage
+COPY --from=backend-build /app/target/bookbuddy-0.0.1-SNAPSHOT.jar app.jar
 
-# Run Spring Boot
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
