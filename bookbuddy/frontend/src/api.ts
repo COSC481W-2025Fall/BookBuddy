@@ -22,7 +22,7 @@ export async function ping(): Promise<string> {
 // Signup
 // ===========================
 export async function addAccount(body: AccountDto): Promise<AccountDto> {
-    const res = await fetch(`${BASE}/Account/addAccount`, {
+    const res = await fetch(`${BASE}/addAccount`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
