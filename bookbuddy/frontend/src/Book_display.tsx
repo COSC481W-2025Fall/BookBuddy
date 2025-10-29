@@ -23,8 +23,8 @@ export default function Book_display({ result }: { result: BookDto[] }) {
                 author: selected_book.author ?? "Unknown",
                 isbn: selected_book.isbn ?? "Unknown",
                 genre: selected_book.genre ?? "Unknown",
-                id: selected_book.id ?? "Unknown",
-                coverLink: `https://books.google.com/books/content?id=${selected_book.id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`,
+                coverid: selected_book.coverid ?? "Unknown",
+                coverLink: `https://books.google.com/books/content?id=${selected_book.coverid}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`,
             };
 
             // sends item to backend

@@ -13,8 +13,8 @@ export default function Library() {
     const [error, setError] = useState<string | null>(null);
     // function to get book cover from Google Books api
     // uses template cover if nothing comes through
-    const coverUrl = (id?: string) =>
-        id ? `https://books.google.com/books/content?id=${id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api` : "https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg";
+    const coverUrl = (coverid?: string) =>
+        coverid ? `https://books.google.com/books/content?id=${coverid}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api` : "https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg";
 
     // on component load, fetch the user's library
     useEffect(() => {
