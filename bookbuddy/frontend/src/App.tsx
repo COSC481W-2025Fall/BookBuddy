@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Login from "./login";
 import Signup from "./signup";
@@ -11,14 +11,17 @@ import WishBook from "./WishBook";
 export default function App() {
   return (
     <Routes>
-      <Route element={<Layout />}>
-          <Route path="/" element={<Login />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        <Route element={<Layout />}>
           <Route path="/search" element={<Search />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           <Route path="/library" element={<Library />} />
           <Route path="/WishBook" element={<WishBook />} />
       </Route>
+        <Route path="*" element={<Navigate to="/login" replace />} />
+
     </Routes>
   );
 }
