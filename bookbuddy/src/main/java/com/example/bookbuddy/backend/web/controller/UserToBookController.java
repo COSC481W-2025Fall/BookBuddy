@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -67,7 +68,13 @@ public class UserToBookController {
         UserToBook link = new UserToBook(account, book);
         userToBookRepository.save(link);
 
-        return ResponseEntity.ok("Book added for user " + account.getName());
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Book added for user " + account.getName(),
+                        "bookname", book.getBookname(),
+                        "author", book.getAuthor()
+                )
+        );
     }
 
     /**
