@@ -1,7 +1,6 @@
 # ---------- FRONTEND BUILD ----------
 FROM node:18 AS frontend-build
-WORKDIR /frontend
-# Copy frontend folder (it’s inside this same directory)
+WORKDIR /app/frontend
 COPY ./frontend ./
 RUN npm install
 RUN npm run build
@@ -9,10 +8,9 @@ RUN npm run build
 # ---------- BACKEND BUILD ----------
 FROM maven:3.9.8-eclipse-temurin-17 AS backend-build
 WORKDIR /app
-# Copy everything in the current directory (src, pom.xml, etc.)
 COPY . .
-# Copy built frontend files into backend static resources
-COPY --from=frontend-build /frontend/dist ./src/main/resources/static
+# ✅ Note the corrected path:
+COPY --from=frontend-build /app/frontend/dist ./src/main/resources/static
 RUN mvn clean package -DskipTests
 
 # ---------- RUNTIME STAGE ----------
