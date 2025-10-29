@@ -1,43 +1,24 @@
-# ===========================
-# Frontend Build
-# ===========================
-FROM node:20 AS frontend-build
+# ---------- FRONTEND BUILD ----------
+FROM node:18 AS frontend-build
 WORKDIR /frontend
-
-# Copy dependency files first for caching
-COPY ./frontend/package*.json ./
-RUN npm install
-
-# Copy the rest of the frontend source and build
 COPY ./frontend ./
+RUN npm install
 RUN npm run build
-# 👉 Outputs static files into /frontend/dist
 
-# ===========================
-# Backend Build
-# ===========================
-FROM maven:3.9.4-eclipse-temurin-17 AS backend-build
+# ---------- BACKEND BUILD ----------
+FROM maven:3.9.8-eclipse-temurin-17 AS backend-build
 WORKDIR /app
+COPY ./bookbuddy ./bookbuddy
 
-# Copy Maven files and backend source
-COPY ./pom.xml ./
-COPY ./src ./src
+# ✅ FIXED: copy from frontend build output to backend static resources
+COPY --from=frontend-build /frontend/dist ./bookbuddy/src/main/resources/static
 
-# Copy frontend build output into Spring Boot's static resources
-COPY --from=frontend-build /frontend/dist ./src/main/resources/static
+RUN mvn -f ./bookbuddy/pom.xml clean package -DskipTests
 
-# Build backend JAR (skip tests for faster builds)
-RUN mvn clean package -DskipTests
-
-# ===========================
-# Runtime
-# ===========================
-FROM eclipse-temurin:17-jdk
+# ---------- RUNTIME STAGE ----------
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
+COPY --from=backend-build /app/bookbuddy/target/bookbuddy-0.0.1-SNAPSHOT.jar app.jar
 
-# Copy only the built JAR (keep image small)
-COPY --from=backend-build /app/target/*.jar app.jar
-
-# Run Spring Boot
-ENTRYPOINT ["java","-jar","/app/app.jar"]
-
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","app.jar"]
