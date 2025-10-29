@@ -3,7 +3,8 @@ import "./components/login.css";
 import { useNavigate } from "react-router-dom";
 import { addLogin } from "./api";
 import type {AccountDto} from "./types/AccountDto";
-import {LoginDto} from "./types/LoginDto"; // use the unified API
+import {LoginDto} from "./types/LoginDto";
+import logo from "./logo/bookbuddy-logo-mywristhurts.png"; // use the unified API
 
 
 const Login: React.FC = () => {
@@ -48,6 +49,7 @@ const Login: React.FC = () => {
 
     return (
         <div className="login-container">
+            <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
             <h2>Login</h2>
             <form role = "form" onSubmit={handleSubmit} method="post" className="login-form">
                 <label>

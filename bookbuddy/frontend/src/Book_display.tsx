@@ -49,6 +49,8 @@ export default function Book_display({ result }: { result: BookDto[] }) {
 
         }
     }
+
+
     return (
 
         <div style={{marginLeft: '-50px'}}>
@@ -65,7 +67,7 @@ export default function Book_display({ result }: { result: BookDto[] }) {
 
                             {/*set up formatting so we can have book image next to text*/}
                             <div style={{ display: 'flex' }}>
-                                <img style={{  boxShadow: '5px 5px gray'}} src="https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg" alt="BOOK" width="200" height="250"/>
+                                <img style={{  boxShadow: '5px 5px gray'}} src={'https://books.google.com/books/content?id='+book.coverid+'&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api'} alt="BOOK" width="200" height="250"/>
                                 <div style={{ marginLeft: 'auto',margin: '15px' }}>
                                     <ul style={{ listStyleType: 'disc', fontSize: 20, }}>
                                         <li><strong>Title:</strong> {book.bookname}</li>
