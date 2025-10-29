@@ -23,8 +23,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/googlebooks")
 public class GoogleBooksAPI {
-    @Value("${book.api.key}")
-    private String API_KEY;
+    @Value("${book.api.key}") //comment this line out and use actual api key for local useage
+    private String API_KEY; //make this = "the api key" for local useage
     private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
     private final HttpClient httpClient;
@@ -42,6 +42,7 @@ public class GoogleBooksAPI {
         String fullUrl = BASE_URL + encoded + "&maxResults=30&orderBy=relevance&key=" + API_KEY;
 
         try {
+            System.out.println("🔑 Google Books API URL: " + fullUrl);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(fullUrl))
                     .GET()
@@ -95,8 +96,21 @@ public class GoogleBooksAPI {
                     if (info.has("categories") && info.get("categories").isArray() && info.get("categories").size() > 0) {
                         genre = info.get("categories").get(0).asText();
                     }
+                    String coverid = item.has("id") ? item.get("id").asText() : "Unknown";
 
-                    docs.add(new Doc(bookname, author, isbn, genre));
+                    String publication = info.has("publishedDate")
+                            ? info.get("publishedDate").asText()
+                            : "Unknown";
+
+                    int pagecount = info.has("pageCount")
+                            ? info.get("pageCount").asInt()
+                            : 0;
+
+                    String description = info.has("description")
+                            ? info.get("description").asText()
+                            : "No description available";
+
+                    docs.add(new Doc(isbn, bookname, author, genre, coverid, description, pagecount, publication));
                 }
             }
 

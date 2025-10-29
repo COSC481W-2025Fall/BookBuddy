@@ -29,7 +29,7 @@ export default function Search() {
 
             //const first = data.docs[0]; // backend Doc format
 
-            // // ✅ matches BookDto in backend
+            // // matches BookDto in backend
             // const newBook: BookDto = {
             //     bookname: first.bookname ?? "Unknown",
             //     author: first.author ?? "Unknown",

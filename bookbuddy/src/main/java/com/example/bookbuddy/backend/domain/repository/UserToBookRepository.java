@@ -12,4 +12,6 @@ import java.util.List;
 public interface UserToBookRepository extends JpaRepository<UserToBook, Long> {
     List<UserToBook> findByAccount(Account account);
     List<UserToBook> findByBook(Book book);
+
+    boolean existsByAccountAndBook(Account account, Book book);
 }
