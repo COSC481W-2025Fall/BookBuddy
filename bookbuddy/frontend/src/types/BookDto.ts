@@ -3,6 +3,8 @@ export type BookDto = {  bookname: string;
     genre?: string;
     isbn?: string;
     image?: string;
-    id?: string;
-    coverLink?: string;
+    description?: string;
+    pagecount?: number;
+    publication?: string;
+    coverid?: string;
 }

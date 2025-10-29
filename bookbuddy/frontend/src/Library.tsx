@@ -78,7 +78,7 @@ export default function Library() {
                             <div className="bb-card__media">
                                 {/* // Book cover image with fallback on error */}
                                 <img
-                                    src={coverUrl(b.id)}
+                                    src={coverUrl(b.coverid)}
                                     alt={`${b.bookname ?? "Book"} cover`}
                                     onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg"; }}
                                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
