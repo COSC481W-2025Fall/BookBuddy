@@ -12,6 +12,7 @@ export default function Sidebar() {
     { to: "/", label: "Home" },
     { to: "/search", label: "Search" },
     { to: "/library", label: "Library" },
+    { to: "/WishBook", label: "WishList" },
     { to: "/login", label: "Sign Out" },
   ];
 
