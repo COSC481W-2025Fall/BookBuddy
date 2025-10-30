@@ -1,7 +1,7 @@
 import type { AccountDto } from "./types/AccountDto";
 import type { BookDto } from "./types/BookDto";
 import type { LoginDto } from "./types/LoginDto";
-
+import {WishBookDto} from "./types/WishBookDto";
 // proxy means we call relative paths, Vite forwards to 8080
 const BASE = "";
 
@@ -99,4 +99,12 @@ export async function addBook(body: BookDto): Promise<BookDto> {
     });
     if (!res.ok) throw new Error(`Book addition failed: ${res.status}`);
     return res.json();
+}
+
+export async function getMyWishBook(): Promise<WishBookDto[]> {
+    const res = await fetch(`/wishbooks/my-library`, { credentials: "include" });
+    if (res.status === 401 || res.status === 403) throw new Error("AUTH");
+    if (!res.ok) throw new Error(`Failed to load wishlist: ${res.status}`);
+    return res.json();
+
 }

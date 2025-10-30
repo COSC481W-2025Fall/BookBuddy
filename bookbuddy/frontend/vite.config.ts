@@ -35,6 +35,16 @@ export default defineConfig({
                 changeOrigin: true,
                 secure: false,
             },
+            '/wishbooks': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
+            '/WishBooks': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
         },
     },
     test: {
