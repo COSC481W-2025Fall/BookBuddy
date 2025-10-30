@@ -4,17 +4,21 @@
 FROM node:20 AS frontend-build
 WORKDIR /app/bookbuddy/frontend
 
-# Copy package files first
+# Copy package info and install dependencies
 COPY ./bookbuddy/frontend/package*.json ./
 RUN npm ci
 
-# Copy all frontend source
+# Copy frontend source
 COPY ./bookbuddy/frontend ./
 
-# Build frontend — output goes directly into backend/static
-RUN echo "=== Frontend directory before build ===" && pwd && ls -la
-RUN echo "=== Starting frontend build ===" && npm run build || (echo "Frontend build failed" && exit 1)
-RUN echo "=== Frontend build complete ===" && ls -la ../src/main/resources/static || echo "Static folder missing"
+# Clean any existing static folder (safety)
+RUN rm -rf ../src/main/resources/static/* || true
+
+# Build React app (Vite)
+RUN echo "=== Starting frontend build ===" \
+ && npm run build \
+ && echo "=== Frontend build complete ===" \
+ && ls -la ../src/main/resources/static
 
 # ===========================
 # BACKEND BUILD STAGE
@@ -22,11 +26,14 @@ RUN echo "=== Frontend build complete ===" && ls -la ../src/main/resources/stati
 FROM maven:3.9.8-eclipse-temurin-17 AS backend-build
 WORKDIR /app/bookbuddy
 
-# Copy everything (frontend + backend with built static assets)
+# Copy full project (backend + built frontend)
 COPY . .
 
-# Build backend JAR (skip tests)
-RUN echo "=== Starting backend build ===" && mvn clean package -DskipTests
+# Build backend JAR
+RUN echo "=== Starting backend build ===" \
+ && mvn clean package -DskipTests \
+ && echo "=== Backend build complete ===" \
+ && ls -la target
 
 # ===========================
 # RUNTIME STAGE
@@ -34,8 +41,12 @@ RUN echo "=== Starting backend build ===" && mvn clean package -DskipTests
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
+# Copy compiled JAR from backend build
 COPY --from=backend-build /app/bookbuddy/target/bookbuddy-0.0.1-SNAPSHOT.jar app.jar
 
+# Expose backend port
 EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
 

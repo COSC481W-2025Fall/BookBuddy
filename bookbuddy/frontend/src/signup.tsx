@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAccount } from "./api";
 import type { AccountDto } from "./types/AccountDto";
+import logo from "./logo/bookbuddy-logo-mywristhurts.png"; // use the unified API
 
 const Signup: React.FC = () => {
     console.log("🧭 Signup component mounted");
@@ -52,6 +53,7 @@ const Signup: React.FC = () => {
 
     return (
         <div className="signup-container">
+            <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
             <h2>Signup</h2>
             <form
                 role="form"
