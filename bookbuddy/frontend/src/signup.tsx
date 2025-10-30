@@ -54,7 +54,7 @@ const Signup: React.FC = () => {
             <form
                 role="form"
                 onSubmit={handleSubmit}
-                method="post"
+
                 className="signup-form"
             >
                 <label>
