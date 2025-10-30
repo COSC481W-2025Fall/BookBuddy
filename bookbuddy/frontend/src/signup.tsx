@@ -5,6 +5,7 @@ import { addAccount } from "./api";
 import type { AccountDto } from "./types/AccountDto";
 
 const Signup: React.FC = () => {
+    console.log("🧭 Signup component mounted");
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -13,6 +14,7 @@ const Signup: React.FC = () => {
     // Handle signup form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        alert("React handleSubmit triggered!");
         console.log("hello");
 
         if (!username || !password) {
