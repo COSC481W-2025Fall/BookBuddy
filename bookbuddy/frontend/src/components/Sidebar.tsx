@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
+import logo from "../logo/bookbuddy-logo-mywristhurts.png";
 
 // Sidebar component with navigation links
 export default function Sidebar() {
@@ -9,10 +10,10 @@ export default function Sidebar() {
 
   //Defines the navigation links, can be added to later
   const links: { to: string; label: string }[] = [
-      { to: "/", label: "Home" },
-      { to: "/search", label: "Search" },
-      { to: "/library", label: "Library" },
-      { to: "/login", label: "Sign Out" },
+    { to: "/search", label: "Search" },
+    { to: "/library", label: "Library" },
+    { to: "/WishBook", label: "WishList" },
+    { to: "/login", label: "Sign Out" },
       { to:"/Buddy_Recommendation", label: "Ask a buddy"}
   ];
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAccount } from "./api";
 import type { AccountDto } from "./types/AccountDto";
+import logo from "./logo/bookbuddy-logo-mywristhurts.png";
 
 const SignupForm: React.FC = () => {
     const navigate = useNavigate();
@@ -41,10 +42,11 @@ const SignupForm: React.FC = () => {
 
     return (
         <div>
+            <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
             <h1 className="titlePopup">Sign up</h1>
             <div id="signup-modal" className="flex justify-center items-center">
                 <form
-                    role = "form" // added by Ryan R. for testing
+                    role="form" // added by Ryan R. for testing
                     id="signupForm"
                     className="w-1/2 h-[300px] bg-white rounded p-5 text-center"
                     onSubmit={handleSubmit}

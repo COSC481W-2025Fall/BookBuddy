@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -50,16 +51,30 @@ public class UserToBookController {
         // Load the Account. finds user by id
         Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        System.out.println(" Received ISBN: " + bookDto.getIsbn());
+        System.out.println(" Description length: " +
+                (bookDto.getDescription() != null ? bookDto.getDescription().length() : 0));
 
         // Load or create the Book if not in database
         Book book = bookRepository.findByIsbn(bookDto.getIsbn())
                 .orElseGet(() -> bookRepository.save(bookDto.toBook()));
+        // Check if already exists in mapping
 
+        if (userToBookRepository.existsByAccountAndBook(account, book)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(" Book already exists in user's library");
+        }
         // Link the User + Book in the user_to_book table
         UserToBook link = new UserToBook(account, book);
         userToBookRepository.save(link);
 
-        return ResponseEntity.ok("Book added for user " + account.getName());
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Book added for user " + account.getName(),
+                        "bookname", book.getBookname(),
+                        "author", book.getAuthor()
+                )
+        );
     }
 
     /**
