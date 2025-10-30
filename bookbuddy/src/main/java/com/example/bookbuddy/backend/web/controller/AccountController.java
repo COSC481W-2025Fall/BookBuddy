@@ -24,10 +24,13 @@ public class AccountController {
     @PostMapping("/addAccount")
     public ResponseEntity<AccountDto> addAccount(@RequestBody AccountDto accountDto,
                                                  HttpSession session) {
+        System.out.println("=== Incoming raw request ===");
+        if (accountDto == null) {
+            System.out.println("❌ accountDto is null");
+        } else {
+            System.out.println("name=" + accountDto.name + ", password=" + accountDto.password);
+        }
         AccountDto newAccount = accountService.createAccount(accountDto);
-
-
-        System.out.println("RAW REQUEST DTO: name=" + accountDto.name + ", password=" + accountDto.password);
         session.setAttribute("userId", newAccount.accountId);
 
         return new ResponseEntity<>(newAccount, HttpStatus.CREATED);

@@ -27,6 +27,10 @@ const Signup: React.FC = () => {
         };
 
         try {
+            console.log("About to send signup request:");
+            console.log("username =", username);
+            console.log("password =", password);
+
             console.log(body);
             const account: AccountDto = await addAccount(body);
 
