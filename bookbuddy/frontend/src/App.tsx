@@ -5,6 +5,7 @@ import Login from "./login";
 import Signup from "./signup";
 import Search from "./Search";
 import Library from "./Library";
+import WishBook from "./WishBook";  // just add this line
 
 // Main application component with routing
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/search" element={<Search />} />
         <Route path="/library" element={<Library />} />
+        <Route path="/wishbook" element={<WishBook />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
