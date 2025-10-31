@@ -25,34 +25,6 @@ export default function Search() {
             }
             // updates the React hook and stores search results within hook to send it to Book_display.tsx
             Set_Book_results(data.docs)
-
-
-            //const first = data.docs[0]; // backend Doc format
-
-            // // matches BookDto in backend
-            // const newBook: BookDto = {
-            //     bookname: first.bookname ?? "Unknown",
-            //     author: first.author ?? "Unknown",
-            //     isbn: first.isbn ?? "Unknown",
-            //     genre: first.genre ?? "Unknown",
-            // };
-
-            // setStatus("adding…");
-            //
-            // const added = await fetch(`${BASE}/Book/addBook`, {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify(newBook),
-            // }).then(res => {
-            //     if (!res.ok) throw new Error("Add failed: " + res.status);
-            //     return res.json();
-            // });
-            //
-            // console.log(" Book saved to DB:", added);
-            // setStatus(`Book added: ${added.bookname} by ${added.author}`);
-      //  } catch (e: any) {
-           // setStatus(e.message ?? "create book failed");
-      //  }
     }
 
     return (
