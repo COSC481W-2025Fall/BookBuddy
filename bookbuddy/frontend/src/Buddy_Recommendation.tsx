@@ -3,9 +3,19 @@ import React, {useState, useEffect} from 'react';
 import {SendQeustions} from "./api";
 //import {BuddyRec} from "./api";
 
+function FormWithDisplay() {
+    // 1. State to control the div's visibility (starts hidden)
+    const [isDivVisible, setIsDivVisible] = useState(false);
 
-// Questions
+    // 2. Function to handle the click and show the div
+    const handleSubmit = (event: { preventDefault: () => void; }) => {
+        // *** CRITICAL STEP: Prevent the form from submitting/reloading the page ***
+        event.preventDefault();
 
+        // Set the state to true to show the div
+        setIsDivVisible(true);
+    };
+}
 
 
 // main function that has react hooks and such
@@ -18,8 +28,12 @@ export function Buddy() {
     const [RQ4, setRQ4] = useState("");
     const [RQ5, setRQ5] = useState("");
     const [textlengs, setTextlengs] = useState(maxInput)
+    const [isDivVisible, setIsDivVisible] = useState(false);
+    const [bookrec,setBookrec] = useState("I WOULD RECOMMEND THIS BOOK");
+
     const [reccomindation, setReccomindation] = useState<Text | any>("BUY MORE CARDS ");
     const navigate = useNavigate();
+
 
 
     const getUniqueRandomQuestions = async (): Promise<string[]> => {
@@ -105,7 +119,7 @@ export function Buddy() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // checks to see if each value is populated or not ( will be refactored to include all values )
-        if ((RQ1 === "") || (RQ2 === "")) {
+        if ((RQ1 === "") || (RQ2 === "") || (RQ3 === "") || (Q4 === "") || (Q5 === "")) {
             seterror("No questions can be left blank ");
             return;
         }
@@ -119,6 +133,7 @@ export function Buddy() {
 
         // sets all values into an array then sends it to backend
         const result = [Q_A1, Q_A2, Q_A3, Q_A4, Q_A5];
+        setIsDivVisible(true);
 
 
         await SendQeustions(result);
@@ -135,8 +150,8 @@ export function Buddy() {
     return (
         <div style={{width: '', overflowWrap: 'break-word'}}>
             <>
-                <h1>{error}</h1>
 
+                <h1>{error}</h1>
                 <form onSubmit={handleSubmit}>
                     <label>1: {Q1}</label><br/>
 
@@ -181,12 +196,55 @@ export function Buddy() {
                     <span id="displayValue">{textlengs}</span>
                     <br/>
                     <input type="submit" value="send"/>
-
-
                 </form>
             </>
-            <h1>{reccomindation}</h1>
+
+            {isDivVisible && (
+            <div  style={{
+
+                position: 'absolute', // 2. Absolute positioning is key
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.7)', // Black with 50% opacity
+
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 10, // 3. Ensure it's on top of everything
+                color: 'white',
+                fontSize: '20px',
+                textAlign: 'center'
+            }}><div style={{
+                position: 'absolute',
+                width: '85%',  // Required
+                height: '85%', // Required
+
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: 'rgba(255, 255, 255, 1)', // Black with 50% opacity
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 10, // 3. Ensure it's on top of everything
+                color: 'black',
+                fontSize: '20px',
+                margin: 'auto',
+                textAlign: 'center',
+                border: 'black',
+                borderStyle: 'solid',
+                borderWidth: '5px'
+
+            }}>
+                <p>{bookrec}</p>
+                {/* Could add a spinner component here */}
+            </div>
+            </div> )}
+
         </div>
+
     )
 }
 
