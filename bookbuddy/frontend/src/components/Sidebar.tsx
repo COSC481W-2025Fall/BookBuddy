@@ -10,6 +10,7 @@ export default function Sidebar() {
 
   //Defines the navigation links, can be added to later
   const links: { to: string; label: string }[] = [
+    { to: "/profile", label: "Profile" },
     { to: "/search", label: "Search" },
     { to: "/library", label: "Library" },
     { to: "/WishBook", label: "WishList" },

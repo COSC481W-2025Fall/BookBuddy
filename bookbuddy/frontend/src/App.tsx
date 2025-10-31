@@ -6,6 +6,7 @@ import Signup from "./signup";
 import Search from "./Search";
 import Library from "./Library";
 import WishBook from "./WishBook";
+import Profile from "./Profile";
 
 // Main application component with routing
 export default function App() {
@@ -16,7 +17,8 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
 
         <Route element={<Layout />}>
-          <Route path="/search" element={<Search />} />
+           <Route path="/profile" element={<Profile />} />
+           <Route path="/search" element={<Search />} />
           <Route path="/library" element={<Library />} />
           <Route path="/WishBook" element={<WishBook />} />
       </Route>

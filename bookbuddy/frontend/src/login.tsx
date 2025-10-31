@@ -36,15 +36,17 @@ const Login: React.FC = () => {
             const ok = await addLogin(body);
 
             if (ok) {
-                navigate("/search"); // ✅ login successful
+                //  store username instead of ID
+                localStorage.setItem("accountId", username.trim());
+                navigate("/search");
             } else {
                 setMessage("Invalid username or password");
             }
         } catch (error) {
+            console.error("Login failed:", error);
             setMessage("Server error. Please try again later.");
         }
     };
-
     return (
         <div className="login-container">
             <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
