@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/recommendation/controller")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true"
-)
+@RequestMapping("/api/sendquestions")
 public class RecommendationController {
 
     @Autowired
@@ -20,8 +18,8 @@ public class RecommendationController {
     @PostMapping
     public Map<String, String> getRecommendationMessage(@RequestBody Map<String, String> body) {
         String questionData = body.get("questions");
-        List<String> symptomsList = Arrays.asList(questionData.split(",\\s*"));
-        String result = recommendationService.createRecommendationPrompt(symptomsList);
+        List<String> newList = Arrays.asList(questionData.split(",\\s*"));
+        String result = recommendationService.createRecommendationPrompt(newList);
         return Map.of("response", result);
     }
 

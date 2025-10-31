@@ -40,4 +40,3 @@ COPY --from=backend-build /app/target/*.jar app.jar
 
 # Run Spring Boot
 ENTRYPOINT ["java","-jar","/app/app.jar"]
-

@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/message")
-@CrossOrigin(origins = "*") // Allows frontend requests
+@RequestMapping("/api/recievemessage")
 public class MessageController {
 
     @Autowired

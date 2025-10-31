@@ -6,6 +6,7 @@ import type { AccountDto } from "./types/AccountDto";
 import logo from "./logo/bookbuddy-logo-mywristhurts.png"; // use the unified API
 
 const Signup: React.FC = () => {
+    console.log("🧭 Signup component mounted");
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -14,6 +15,7 @@ const Signup: React.FC = () => {
     // Handle signup form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        alert("React handleSubmit triggered!");
         console.log("hello");
 
         if (!username || !password) {
@@ -28,6 +30,10 @@ const Signup: React.FC = () => {
         };
 
         try {
+            console.log("About to send signup request:");
+            console.log("username =", username);
+            console.log("password =", password);
+
             console.log(body);
             const account: AccountDto = await addAccount(body);
 
@@ -52,7 +58,7 @@ const Signup: React.FC = () => {
             <form
                 role="form"
                 onSubmit={handleSubmit}
-                method="post"
+
                 className="signup-form"
             >
                 <label>
