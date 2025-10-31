@@ -118,35 +118,45 @@ export function Buddy() {
     // function that fires when submit button is pressed
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // checks to see if each value is populated or not ( will be refactored to include all values )
-        if ((RQ1 === "") || (RQ2 === "") || (RQ3 === "") || (Q4 === "") || (Q5 === "")) {
-            seterror("No questions can be left blank ");
+
+        if (
+            RQ1 === "" ||
+            RQ2 === "" ||
+            RQ3 === "" ||
+            RQ4 === "" ||
+            RQ5 === ""
+        ) {
+            seterror("No questions can be left blank");
             return;
         }
 
-        //  meshes each Q and a with each other
         const Q_A1 = `${Q1} ${RQ1}`;
         const Q_A2 = `${Q2} ${RQ2}`;
         const Q_A3 = `${Q3} ${RQ3}`;
         const Q_A4 = `${Q4} ${RQ4}`;
         const Q_A5 = `${Q5} ${RQ5}`;
-
-        // sets all values into an array then sends it to backend
         const result = [Q_A1, Q_A2, Q_A3, Q_A4, Q_A5];
+
         setIsDivVisible(true);
 
+        try {
+            const response = await SendQeustions(result);
+            console.log("Backend returned:", response);
 
-        await SendQeustions(result);
+            if (response && response.response) {
+                setBookrec(response.response);
+            } else {
+                setBookrec("No recommendation received.");
+            }
 
-        // clears error message
-        seterror("");
-
-        //  const pro = await BuddyRec()
-        // setReccomindation(pro)
-
-
-    }
-
+            seterror("");
+        } catch (err) {
+            console.error("Error sending questions:", err);
+            setBookrec(
+                "An error occurred while getting your recommendation."
+            );
+        }
+    };
     return (
         <div style={{width: '', overflowWrap: 'break-word'}}>
             <>

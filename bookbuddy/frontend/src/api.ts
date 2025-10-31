@@ -6,7 +6,7 @@ import type { BookDto } from "./types/BookDto";
 import type { LoginDto } from "./types/LoginDto";
 import type { WishBookDto } from "./types/WishBookDto";
 
-// ✅ When deployed on Render, leave BASE empty so it uses the same origin as Spring Boot
+// ✅When deployed on Render, leave BASE empty so it uses the same origin as Spring Boot
 const BASE = "";
 
 // ===========================
@@ -138,13 +138,11 @@ export async function addBook(body: BookDto): Promise<BookDto> {
 //     }
 
 
-export async function SendQeustions(body: String[]): Promise<String[]> {
-    const res = await fetch(`${BASE}/api/sendquestions`, {
+export async function SendQeustions(body: string[]): Promise<{ response: string }> {
+    const res = await fetch(`/api/sendquestions`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ questions: body.join(", ") }),
         credentials: "include",
     });
 
@@ -152,6 +150,11 @@ export async function SendQeustions(body: String[]): Promise<String[]> {
         const details = await res.text().catch(() => "");
         throw new Error(`Cant ask questions: ${res.status}${details ? " - " + details : ""}`);
     }
-
-    return res.json();
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+        return res.json();
+    } else {
+        const text = await res.text();
+        return { response: text };
+    }
 }
