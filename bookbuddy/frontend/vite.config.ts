@@ -35,15 +35,25 @@ export default defineConfig({
                 changeOrigin: true,
                 secure: false,
             },
+            '/wishbooks': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
+            '/WishBooks': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+            },
         }
     },
-    test: {
-      environment: 'jsdom',
-      globals: true,
-      coverage: {
-           enabled: true, // Enable coverage
-           reporter: ['text', 'html', 'lcov'], // Configure desired reporters
-           // Other coverage options like include, exclude, etc.
-      },
-  },
+    // test: {
+    //   environment: 'jsdom',
+    //   globals: true,
+    //   coverage: {
+    //        enabled: true, // Enable coverage
+    //        reporter: ['text', 'html', 'lcov'], // Configure desired reporters
+    //        // Other coverage options like include, exclude, etc.
+    //   },
+  // },
 })

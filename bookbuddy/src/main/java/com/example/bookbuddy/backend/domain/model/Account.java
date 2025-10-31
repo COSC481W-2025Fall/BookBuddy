@@ -11,6 +11,7 @@ public class Account {
     @Column(name = "account_id")
     private Long accountId;
 
+
     @Column(nullable = false, unique = true)
     private String name;
 
@@ -24,13 +25,7 @@ public class Account {
         this.password = password;
     }
 
-    public String getPassword(){
-        return this.password;
-    }
-    public void setPassword(String password){
-        this.password = password;
-    }
-
+    // Getters and setters
     public Long getAccountId() {
         return accountId;
     }
@@ -46,4 +41,13 @@ public class Account {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
+
