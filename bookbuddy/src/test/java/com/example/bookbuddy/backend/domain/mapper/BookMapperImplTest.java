@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BookMapperImplTest {
     //Test objects needed for the testing
-    Book book =  new Book("testIBSN", "testName", "testAuthor", "testGenre");
+    Book book =  new Book("testIBSN", "testName", "testAuthor", "testGenre", "", "", 0, "");
     BookMapperImpl mapper = new BookMapperImpl();
     BookDto bookDto = new BookDto();
     Book DtoToBook = new Book();

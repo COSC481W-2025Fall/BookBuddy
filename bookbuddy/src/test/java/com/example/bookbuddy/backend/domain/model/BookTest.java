@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BookTest {
 
     //Book object made to test Book.java class
-    Book book = new Book("testIBSN", "testName", "testAuthor", "testGenre");
+    Book book = new Book("testIBSN", "testName", "testAuthor", "testGenre", "testCoverId", "testDescription", 0, "testPublication");
 
     //Test to return IBSN
     @Test
@@ -59,6 +59,58 @@ class BookTest {
     void setBookname() {
         book.setBookname("testNewBookname");
         assertEquals("testNewBookname", book.getBookname());
+    }
+
+    //Test to return cover ID
+    @Test
+    void getCoverId() {
+        assertEquals("testCoverId", book.getCoverid());
+    }
+
+    //Test to set cover ID
+    @Test
+    void setCoverId() {
+        book.setCoverid("testNewCoverId");
+        assertEquals("testNewCoverId", book.getCoverid());
+    }
+
+    //Test to return description
+    @Test
+    void getDescription() {
+        assertEquals("testDescription", book.getDescription());
+    }
+
+    //Test to set description
+    @Test
+    void setDescription() {
+        book.setDescription("testNewDescription");
+        assertEquals("testNewDescription", book.getDescription());
+    }
+
+    //Test to return page count
+    @Test
+    void getPageCount() {
+        assertEquals(0, book.getPagecount());
+    }
+
+    //Test to set page count
+    @Test
+    void setPageCount() {
+        book.setPagecount(1);
+        assertEquals(1, book.getPagecount());
+    }
+
+    //Test to return publication
+    @Test
+    void getPublication() {
+        assertEquals("testPublication", book.getPublication());
+    }
+
+    //Test to set publication
+    @Test
+    void setPublication() {
+        book.setPublication("testNewPublication");
+        assertEquals("testNewPublication", book.getPublication());
     }
 
     //Empty book to test empty constructor

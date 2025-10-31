@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserToBookTest {
     //Test Account and Book objects made for the UsertTOBook constructor
     final Account testAccount = new Account("TestName", "TestPassword");
-    final Book testbook = new Book("testIBSN", "testName", "testAuthor", "testGenre");
+    final Book testbook = new Book("testIBSN", "testName", "testAuthor", "testGenre", "testCoverId", "testDescription", 0, "testPublication");
 
     //Test user to book object created with the test Account and Book
     final UserToBook testUserToBook = new UserToBook(testAccount, testbook);
@@ -35,7 +35,7 @@ class UserToBookTest {
 
     //New Account and Book objects created to test the setters
     final Account newAccount = new Account("NewName", "NewPassword");
-    final Book newBook = new Book("newIBSN", "newName", "newAuthor", "newGenre");
+    final Book newBook = new Book("newIBSN", "newName", "newAuthor", "newGenre", "newCoverId", "newDescription", 1, "newPublication");
 
     //The new Account should be set and returned
     @Test
