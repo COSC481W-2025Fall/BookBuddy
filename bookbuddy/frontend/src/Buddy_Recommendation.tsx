@@ -1,6 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import React, {useState} from 'react';
 import {SendQeustions} from "./api";
+//import {BuddyRec} from "./api";
 
 // Questions
 const Q_List = [
@@ -218,34 +219,9 @@ const Q_List = [
     "Do you prefer dialogue that is sparse and meaningful or dialogue that is abundant and revealing?",
 ];
 
-    // fat arrow function that sets random questions
-    const getUniqueRandomQuestions = (list: any[]) => {
-    const Questions: any[] = []
-    const random_Numbers: any[]= []
-
-        //loops until random numbers that are different from each others are made
-    let i  = 0
-    while ( i <= 10){
-        let curr_num = Math.floor(Math.random() * list.length)
-        if (random_Numbers.includes(curr_num)) {
-            continue
-        }
-        // if its a new number then we add it to the array
-        else random_Numbers.push(curr_num)
-        i++
-    }
-
-    // most likely could be one loop in all honesty
-    for (let i = 0; i < 10; i++){
-        Questions.push(list[(random_Numbers[i])])
-    }
-    // testing values and such
-    console.log(random_Numbers)
-    return Questions;
-}
 
 // main function that has react hooks and such
-export default function Buddy() {
+export function Buddy() {
     const maxInput = 50
     const [error, seterror] = useState("");
     const [RQ1, setRQ1] = useState("");
@@ -253,21 +229,46 @@ export default function Buddy() {
     const [RQ3, setRQ3] = useState("");
     const [RQ4, setRQ4] = useState("");
     const [RQ5, setRQ5] = useState("");
-    const [RQ6, setRQ6] = useState("");
-    const [RQ7, setRQ7] = useState("");
-    const [RQ8, setRQ8] = useState("");
-    const [RQ9, setRQ9] = useState("");
-    const [RQ10, setRQ10] = useState("");
+    const [questionlen, setQuestionlen] = useState <Number>(0);
     const [textlengs, setTextlengs] = useState(maxInput)
+    const [reccomindation, setReccomindation] = useState<Text | any>("BUY MORE CARDS ");
     const navigate = useNavigate();
 
+    // gets number of questions and stores questions into var
+
+
+    // fat arrow function that sets random questions
+    const getUniqueRandomQuestions = (list: any[]) => {
+        const Questions: any[] = []
+        const random_Numbers: any[] = []
+
+        //loops until random numbers that are different from each others are made
+        let i = 0
+        while (i <= 10) {
+            let curr_num = Math.floor(Math.random() * list.length)
+            if (random_Numbers.includes(curr_num)) {
+                continue
+            }
+            // if its a new number then we add it to the array
+            else random_Numbers.push(curr_num)
+            i++
+        }
+
+        // most likely could be one loop in all honesty
+        for (let i = 0; i < 10; i++) {
+            Questions.push(list[(random_Numbers[i])])
+        }
+        // testing values and such
+        console.log(random_Numbers)
+        return Questions;
+    }
 
     // stores values of questions into a React hook so the page does not UPDATE EVERY SINGLE TIME THE USER
     // ENTERS A VALUE
-   const [questions, setQuestions] = useState(() => getUniqueRandomQuestions(Q_List));
+    const [questions, setQuestions] = useState(() => getUniqueRandomQuestions(Q_List));
 
 // sets array to list of random questions
-const [Q1, Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9, Q10] =  questions
+    const [Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10] = questions
 
     // function that fires when submit button is pressed
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -284,19 +285,35 @@ const [Q1, Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9, Q10] =  questions
         const Q_A3 = `${Q3} ${RQ3}`;
         const Q_A4 = `${Q4} ${RQ4}`;
         const Q_A5 = `${Q5} ${RQ5}`;
-        const Q_A6 = `${Q6} ${RQ6}`;
-        const Q_A7 = `${Q7} ${RQ7}`;
-        const Q_A8 = `${Q8} ${RQ8}`;
-        const Q_A9 = `${Q9} ${RQ9}`;
-        const Q_A10 = `${Q10} ${RQ10}`;
+
+
+        fetch("/Questions.txt")
+            .then((res) => res.text())
+            .then((text) => {
+                // 1. Split the entire text file content (a single string)
+                //    into an array of strings, using the newline character (\n) as the delimiter.
+                const lines = text.split('\n');
+
+                // 2. Access the third line (which is at index 2).
+                //    We use .trim() to remove any leading/trailing whitespace, including carriage returns (\r).
+                const thirdLine = lines[2] ? lines[2].trim() : "Line not found";
+                setReccomindation(thirdLine);
+
+            })
+            .catch((e) => console.error(e));
 
         // sets all values into an array then sends it to backend
-        const result = [Q_A1, Q_A2, Q_A3, Q_A4, Q_A5, Q_A6, Q_A7, Q_A8, Q_A9, Q_A10];
-        const payload = JSON.stringify(result)
-        // await SendQeustions(payload);
+        const result = [Q_A1, Q_A2, Q_A3, Q_A4, Q_A5];
+
+        await SendQeustions(result);
 
         // clears error message
         seterror("");
+
+        //  const pro = await BuddyRec()
+        // setReccomindation(pro)
+
+
     }
 
     return (
@@ -339,66 +356,21 @@ const [Q1, Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9, Q10] =  questions
                         id="Q5"
                         type="text"
                         value={RQ5}
-                        onChange={(e) => setRQ5(e.target.value)}/><br/><br/>
-
-                    <label>6: {Q6}</label><br/>
-                    <input
-                        id="Q6"
-                        type="text"
-                        value={RQ6}
-                        onChange={(e) => setRQ6(e.target.value)}/><br/><br/>
-
-                    <label>7: {Q7}</label><br/>
-                    <input
-                        id="Q7"
-                        type="text"
-                        value={RQ7}
-                        onChange={(e) => setRQ7(e.target.value)}/><br/><br/>
-
-                    <label>8: {Q8}</label><br/>
-                    <input
-                        id="Q8"
-                        type="text"
-                        value={RQ8}
-                        onChange={(e) => setRQ8(e.target.value)}/><br/><br/>
-
-                    <label>9: {Q9}</label><br/>
-                    <input
-                        id="Q9"
-                        type="text"
-                        value={RQ9}
-                        onChange={(e) => setRQ9(e.target.value)}/><br/><br/>
-
-                    <label>10: {Q10}</label><br/>
-                    <input
-                        id="Q10"
-                        type="text"
-                        value={RQ10}
-                        maxLength={50}
-                        onChange={(e) =>{
+                        onChange={(e) => {
                             const newVal = e.target.value;
-                            setRQ10(e.target.value);
+                            setRQ5(e.target.value);
                             const newLength = (maxInput) - newVal.length;
                             setTextlengs(newLength)
                         }}/><br/>
                     <span id="displayValue">{textlengs}</span>
                     <br/>
                     <input type="submit" value="send"/>
+
+
                 </form>
             </>
+            <h1>{reccomindation}</h1>
         </div>
     )
 }
 
-/* odds of each reroll for each question
-1/100
-1/50
-1/33
-1/25
-1/20
-1/16
-1/14
-1/12.5
-1/11
-1/10
- */

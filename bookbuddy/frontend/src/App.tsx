@@ -6,7 +6,7 @@ import Signup from "./signup";
 import Search from "./Search";
 import Library from "./Library";
 import WishBook from "./WishBook";
-import Buddy from "./Buddy_Recommendation";
+import {Buddy} from "./Buddy_Recommendation";
 
 // Main application component with routing
 export default function App() {

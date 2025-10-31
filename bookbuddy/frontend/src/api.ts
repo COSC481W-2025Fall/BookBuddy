@@ -117,3 +117,41 @@ export async function addBook(body: BookDto): Promise<BookDto> {
     if (!res.ok) throw new Error(`Book addition failed: ${res.status}`);
     return res.json();
 }
+
+// export async function SendQeustions(body: string[] | any[]): Promise<void> {
+//     try {
+//         console.log({BASE})
+//         const response = await fetch(`${BASE}/api/sendquestions`, {
+//             method: 'POST',
+//             headers: {'Content-Type': 'application/json',},
+//             body: JSON.stringify(body),
+//             credentials: "include",
+//         });
+//
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//
+//     } catch (err) {
+//         console.error("Error sending array:", err);
+//         throw err;
+//     }
+
+
+export async function SendQeustions(body: String[]): Promise<String[]> {
+    const res = await fetch(`${BASE}/api/sendquestions`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+        credentials: "include",
+    });
+
+    if (!res.ok) {
+        const details = await res.text().catch(() => "");
+        throw new Error(`Cant ask questions: ${res.status}${details ? " - " + details : ""}`);
+    }
+
+    return res.json();
+}
