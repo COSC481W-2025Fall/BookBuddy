@@ -96,8 +96,21 @@ public class GoogleBooksAPI {
                     if (info.has("categories") && info.get("categories").isArray() && info.get("categories").size() > 0) {
                         genre = info.get("categories").get(0).asText();
                     }
+                    String coverid = item.has("id") ? item.get("id").asText() : "Unknown";
 
-                    docs.add(new Doc(bookname, author, isbn, genre));
+                    String publication = info.has("publishedDate")
+                            ? info.get("publishedDate").asText()
+                            : "Unknown";
+
+                    int pagecount = info.has("pageCount")
+                            ? info.get("pageCount").asInt()
+                            : 0;
+
+                    String description = info.has("description")
+                            ? info.get("description").asText()
+                            : "No description available";
+
+                    docs.add(new Doc(isbn, bookname, author, genre, coverid, description, pagecount, publication));
                 }
             }
 

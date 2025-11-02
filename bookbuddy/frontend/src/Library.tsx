@@ -13,11 +13,15 @@ function norm(v?: string | null): string {
 }
 
 // Generic comparator for two strings, putting empties at the end.
-function compareStr(a?: string | null, b?: string | null, dir: SortDir = "asc") {
+function compareStr(
+  a?: string | null,
+  b?: string | null,
+  dir: SortDir = "asc"
+) {
   const aa = norm(a);
   const bb = norm(b);
   if (!aa && !bb) return 0;
-  if (!aa) return 1;     // empty goes after non-empty
+  if (!aa) return 1; // empty goes after non-empty
   if (!bb) return -1;
   const res = aa.localeCompare(bb, undefined, { sensitivity: "base" });
   return dir === "asc" ? res : -res;
@@ -34,9 +38,10 @@ export default function Library() {
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
-  const coverUrl = (isbn?: string) =>
-    isbn
-      ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
+  // cover retrieval using Google Books coverid
+  const coverUrl = (coverid?: string) =>
+    coverid
+      ? `https://books.google.com/books/content?id=${coverid}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`
       : "https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg";
 
   useEffect(() => {
@@ -72,7 +77,11 @@ export default function Library() {
             primary = compareStr(x.b.author, y.b.author, sortDir);
             break;
           case "genre":
-            primary = compareStr((x.b as any).genre, (y.b as any).genre, sortDir);
+            primary = compareStr(
+              (x.b as any).genre,
+              (y.b as any).genre,
+              sortDir
+            );
             break;
         }
         if (primary !== 0) return primary;
@@ -102,8 +111,12 @@ export default function Library() {
     return (
       <div className="bb-lib wrap">
         <h1 className="bb-lib__title">My Library</h1>
-        <div className="bb-lib__error" role="alert">{error}</div>
-        <button className="bb-btn" onClick={() => navigate("/search")}>Go to Search</button>
+        <div className="bb-lib__error" role="alert">
+          {error}
+        </div>
+        <button className="bb-btn" onClick={() => navigate("/search")}>
+          Go to Search
+        </button>
       </div>
     );
   }
@@ -131,8 +144,12 @@ export default function Library() {
           <button
             type="button"
             className="bb-btn bb-btn--ghost"
-            onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
-            aria-label={`Toggle sort direction, currently ${sortDir === "asc" ? "ascending" : "descending"}`}
+            onClick={() =>
+              setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+            }
+            aria-label={`Toggle sort direction, currently ${
+              sortDir === "asc" ? "ascending" : "descending"
+            }`}
             title={`Sort ${sortDir === "asc" ? "A→Z" : "Z→A"}`}
           >
             {sortDir === "asc" ? "A→Z" : "Z→A"}
@@ -143,29 +160,56 @@ export default function Library() {
       {sortedBooks.length === 0 ? (
         <div className="bb-empty">
           <p>You haven't added any books yet.</p>
-          <button className="bb-btn" onClick={() => navigate("/search")}>Search for books</button>
+          <button className="bb-btn" onClick={() => navigate("/search")}>
+            Search for books
+          </button>
         </div>
       ) : (
         <ul className="bb-grid" aria-label="Your saved books">
           {sortedBooks.map((b, i) => (
-            <li key={(b.isbn ?? "no-isbn") + "-" + i} className="bb-card">
+            <li
+              key={(b.isbn ?? "no-isbn") + "-" + i}
+              className="bb-card"
+            >
               <div className="bb-card__media">
+                {/* Book cover image with fallback on error */}
                 <img
-                  src={coverUrl(b.isbn)}
+                  src={coverUrl((b as any).coverid)}
                   alt={`${b.bookname ?? "Book"} cover`}
                   onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
+                    (e.currentTarget as HTMLImageElement).src =
+                      "/hobbit-placeholder.jpg";
                   }}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
                 />
               </div>
               <div className="bb-card__body">
-                <h2 className="bb-card__title">{b.bookname || "Untitled"}</h2>
-                {b.author && <div className="bb-card__meta">{b.author}</div>}
+                {/* Book title */}
+                <h2 className="bb-card__title">
+                  {b.bookname || "Untitled"}
+                </h2>
+
+                {/* Author */}
+                {b.author && (
+                  <div className="bb-card__meta">{b.author}</div>
+                )}
+
+                {/* ISBN + Genre tags */}
                 {(b.isbn || (b as any).genre) && (
                   <div className="bb-card__tags">
-                    {b.isbn && <span className="bb-tag">ISBN: {b.isbn}</span>}
-                    {(b as any).genre && <span className="bb-tag">{(b as any).genre}</span>}
+                    {b.isbn && (
+                      <span className="bb-tag">ISBN: {b.isbn}</span>
+                    )}
+                    {(b as any).genre && (
+                      <span className="bb-tag">
+                        {(b as any).genre}
+                      </span>
+                    )}
                   </div>
                 )}
               </div>

@@ -1,4 +1,4 @@
-export type BookDto = {  bookname: string;
+export type WishBookDto = {  bookname: string;
     author: string;
     genre?: string;
     isbn?: string;

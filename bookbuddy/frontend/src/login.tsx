@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import "./components/login.css";
 import { useNavigate } from "react-router-dom";
 import { addLogin } from "./api";
-import type {AccountDto} from "./types/AccountDto";
-import {LoginDto} from "./types/LoginDto"; // use the unified API
+import type { AccountDto } from "./types/AccountDto";
+import { LoginDto } from "./types/LoginDto";
+import logo from "./logo/bookbuddy-logo-mywristhurts.png"; // use the unified API
 
 
 const Login: React.FC = () => {
@@ -17,7 +18,6 @@ const Login: React.FC = () => {
         navigate("/signup");
     };
 
-    // Handle login form submission
     // Handle login form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,10 +33,10 @@ const Login: React.FC = () => {
         };
 
         try {
-            const ok = await addLogin(body);  // ✅ no {body}
+            const ok = await addLogin(body);
 
             if (ok) {
-                navigate("/search");
+                navigate("/search"); // ✅ login successful
             } else {
                 setMessage("Invalid username or password");
             }
@@ -45,11 +45,16 @@ const Login: React.FC = () => {
         }
     };
 
-
     return (
         <div className="login-container">
+            <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
             <h2>Login</h2>
-            <form role = "form" onSubmit={handleSubmit} method="post" className="login-form">
+            <form
+                role="form"
+                onSubmit={handleSubmit}
+                method="post"
+                className="login-form"
+            >
                 <label>
                     Username
                     <input

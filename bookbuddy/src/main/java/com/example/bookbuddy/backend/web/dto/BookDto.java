@@ -8,19 +8,39 @@ public class BookDto {
     private String bookname;
     private String author;
     private String genre;
+    private String coverid;
+    private String publication;
+    private int pagecount;
+    private String description;
 
     public BookDto() {}
 
-    public BookDto(String isbn, String bookname, String author, String genre) {
+    public BookDto(String isbn, String bookname, String author, String genre, String coverid, String description, int pagecount, String publication) {
         this.isbn = isbn;
         this.bookname = bookname;
         this.author = author;
         this.genre = genre;
+        this.coverid = coverid;
+        this.description = description;
+        this.pagecount = pagecount;
+        this.publication = publication;
     }
 
     public String getIsbn() {
         return isbn;
     }
+
+    public String getCoverid() {return coverid;}
+    public void setCoverid(String coverid) {this.coverid = coverid;}
+
+    public String getPublication() {return publication;}
+    public void setPublication(String publication) {this.publication = publication;}
+
+    public int getPagecount() {return pagecount;}
+    public void setPagecount(int pagecount) {this.pagecount = pagecount;}
+
+    public String getDescription() {return description;}
+    public void setDescription(String description) {this.description = description;}
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
@@ -55,6 +75,10 @@ public class BookDto {
      * This is used in controllers when saving to the database.
      */
     public Book toBook() {
-        return new Book(isbn, bookname, author, genre);
+//        String safeDescription = description;
+//        if (safeDescription != null && safeDescription.length() > 255) {
+//            safeDescription = safeDescription.substring(0, 255);
+//        }
+        return new Book(isbn,  bookname,  author,  genre,  coverid,  description,  pagecount,  publication);
     }
 }
