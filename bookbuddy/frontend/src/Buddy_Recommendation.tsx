@@ -1,6 +1,10 @@
 import {useNavigate} from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 import {SendQeustions} from "./api";
+import "./components/Searchpage.css";
+import Wish_on_Rec from "./Add_Result_to_Wishlist";
+import WishlistButton from "./Add_Result_to_Wishlist";
+//import Wish_on_Rec from "./Add_Result_to_Wishlist";
 //import {BuddyRec} from "./api";
 
 function FormWithDisplay() {
@@ -19,7 +23,7 @@ function FormWithDisplay() {
 
 
 // main function that has react hooks and such
-export function Buddy() {
+function Buddy() {
     const maxInput = 50
     const [error, seterror] = useState("");
     const [RQ1, setRQ1] = useState("");
@@ -30,9 +34,33 @@ export function Buddy() {
     const [textlengs, setTextlengs] = useState(maxInput)
     const [isDivVisible, setIsDivVisible] = useState(false);
     const [bookrec,setBookrec] = useState("I WOULD RECOMMEND THIS BOOK");
+    const [booktitle, setBooktitle] = useState("");
 
     const [reccomindation, setReccomindation] = useState<Text | any>("BUY MORE CARDS ");
     const navigate = useNavigate();
+
+
+    const parseBookTitle = (responseString: string) => {
+        // Finds the position of the first "
+        const firstQuoteIndex = responseString.indexOf(',');
+
+        // Finds the position of the second ", starting the search one character after the first "
+       // const secondQuoteIndex = responseString.indexOf('"', firstQuoteIndex + 1);
+
+        // If both quotes are found, extract the content between them
+        if (firstQuoteIndex !== -1) {
+            // substring(start, end) includes 'start' but excludes 'end'.
+            // By using firstQuoteIndex + 1, we start AFTER the first quote.
+            // By using secondQuoteIndex, we stop BEFORE the second quote.
+            const extractedTitle = responseString.substring(0, firstQuoteIndex);
+
+
+            return extractedTitle;
+        }
+
+        // If parsing fails (e.g., no quotes found), return the original string
+        return responseString;
+    };
 
 
 
@@ -58,7 +86,6 @@ export function Buddy() {
                     i++;
                 }
             }
-
 
             // Map the random numbers to the corresponding lines (questions)
             const Questions: string[] = random_Numbers.map(index => lines[index] || "Question not found");
@@ -112,10 +139,6 @@ export function Buddy() {
             Q5 = ''
         ] = questions;
 
-
-
-
-    // function that fires when submit button is pressed
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -143,8 +166,13 @@ export function Buddy() {
             const response = await SendQeustions(result);
             console.log("Backend returned:", response);
 
+            //what is this response.response
             if (response && response.response) {
                 setBookrec(response.response);
+
+                setBooktitle(parseBookTitle(response.response))
+
+
             } else {
                 setBookrec("No recommendation received.");
             }
@@ -156,6 +184,7 @@ export function Buddy() {
                 "An error occurred while getting your recommendation."
             );
         }
+
     };
     return (
         <div style={{width: '', overflowWrap: 'break-word'}}>
@@ -227,18 +256,22 @@ export function Buddy() {
                 textAlign: 'center'
             }}><div style={{
                 position: 'absolute',
-                width: '85%',  // Required
-                height: '85%', // Required
-
+                width: '85%',
+                height: '85%',
                 top: 0,
                 bottom: 0,
                 left: 0,
                 right: 0,
-                backgroundColor: 'rgba(255, 255, 255, 1)', // Black with 50% opacity
+                backgroundColor: 'rgba(255, 255, 255, 1)',
+
+                // Key Changes to Stacking:
                 display: 'flex',
+                flexDirection: 'column', // <-- Add this to stack children vertically
+                // ----------------------
+
                 justifyContent: 'center',
                 alignItems: 'center',
-                zIndex: 10, // 3. Ensure it's on top of everything
+                zIndex: 10,
                 color: 'black',
                 fontSize: '20px',
                 margin: 'auto',
@@ -249,12 +282,18 @@ export function Buddy() {
 
             }}>
                 <p>{bookrec}</p>
-                {/* Could add a spinner component here */}
+                {isDivVisible && <WishlistButton nameOfBook={booktitle} />}
+
             </div>
+                {/* Could add a spinner component here
+                if you want to design front end let me know ill let you take it over.*/}
+
             </div> )}
 
         </div>
 
     )
 }
+
+export default Buddy
 
