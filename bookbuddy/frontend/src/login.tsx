@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";  // ✅ add Link import
 import { addLogin } from "./api";
 import type { LoginDto } from "./types/LoginDto";
 import logo from "./logo/bookbuddy-logo-mywristhurts.png";
@@ -105,9 +105,9 @@ const Login: React.FC = () => {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Don’t have an account?{" "}
-            <a href="/signup" className="text-indigo-600 hover:underline">
+            <Link to="/signup" className="text-indigo-600 hover:underline">
               Create one
-            </a>
+            </Link>
           </p>
         </div>
       </div>
