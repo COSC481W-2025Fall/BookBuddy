@@ -4,13 +4,14 @@ import { WishBookDto } from "./types/WishBookDto";
 
 const BASE = ''; // keep empty, proxy or relative path handles backend
 
-
+// the button function
 export default function WishlistButton({ nameOfBook }: { nameOfBook: string }) {
 
     // State to manage the button's status/feedback
     const [status, setStatus] = useState('');
 
 
+    // calls function to add book to wishlist, BOOK DTO and spits out wishlist book
     const add_book_to_wishlist = async (newWishBook: WishBookDto) => {
         setStatus("Adding book to wishlist...");
         try {
@@ -30,6 +31,7 @@ export default function WishlistButton({ nameOfBook }: { nameOfBook: string }) {
         }
     };
 
+    // same as the google book api call in bool_display
     const doAddBook = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
@@ -63,6 +65,7 @@ export default function WishlistButton({ nameOfBook }: { nameOfBook: string }) {
             };
 
 
+            // calls function
             await add_book_to_wishlist(newWishBook);
 
         } catch (err: any) {
