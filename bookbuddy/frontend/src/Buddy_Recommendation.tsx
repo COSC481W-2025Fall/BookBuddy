@@ -1,78 +1,89 @@
 import {useNavigate} from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 import {SendQeustions} from "./api";
-//import {BuddyRec} from "./api";
-
-function FormWithDisplay() {
-    // 1. State to control the div's visibility (starts hidden)
-    const [isDivVisible, setIsDivVisible] = useState(false);
-
-    // 2. Function to handle the click and show the div
-    const handleSubmit = (event: { preventDefault: () => void; }) => {
-        // *** CRITICAL STEP: Prevent the form from submitting/reloading the page ***
-        event.preventDefault();
-
-        // Set the state to true to show the div
-        setIsDivVisible(true);
-    };
-}
+import "./components/Searchpage.css";
+import WishlistButton from "./Add_Result_to_Wishlist";
 
 
-// main function that has react hooks and such
-export function Buddy() {
+// MAN i gotta learn vim
+
+
+//our main function. kinda just holds everything
+function Buddy() {
+    // max answer length
     const maxInput = 50
+    // just so meny hooks
+    //error status
     const [error, seterror] = useState("");
+    // answers from user
     const [RQ1, setRQ1] = useState("");
     const [RQ2, setRQ2] = useState("");
     const [RQ3, setRQ3] = useState("");
     const [RQ4, setRQ4] = useState("");
     const [RQ5, setRQ5] = useState("");
+    // element we use to show user how meny chars they have left
     const [textlengs, setTextlengs] = useState(maxInput)
+    // state we use to show the rec div
     const [isDivVisible, setIsDivVisible] = useState(false);
+    // hook we use to hold the openAI respones
     const [bookrec,setBookrec] = useState("I WOULD RECOMMEND THIS BOOK");
+    // value that holds the book title and sometimes the book author ( basically everything up until the first ','
+    // this actually works out great because sometimes the book wont show less you enter an auther with it, a good
+    //example of this is the book 1984 by George Orwell. the book will not show less the author is there too.
+    //however if you just search George Orwell it wont come up at all so this is epic
+    const [booktitle, setBooktitle] = useState("");
 
-    const [reccomindation, setReccomindation] = useState<Text | any>("BUY MORE CARDS ");
-    const navigate = useNavigate();
 
+    const parseBookTitle = (responseString: string) => {
+        // Finds the position of the first ","
+        const firstQuoteIndex = responseString.indexOf(',');
+        // if the result of the api is not null
+        if (firstQuoteIndex !== -1) {
+            // starts from the start of the API respons and goes until the first ,
+            const extractedTitle = responseString.substring(0, firstQuoteIndex);
+            return extractedTitle;
+        }
+        // If parsing fails (e.g., no quotes found), return the original string
+        return responseString;
+    };
 
-
+    // function that fills the questions from a text file
     const getUniqueRandomQuestions = async (): Promise<string[]> => {
         try {
+            //snags the text file
             const res = await fetch("/Questions.txt");
-
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
             const text = await res.text();
+            // separates the file into questions via splitting at new lines and removing trailing space
             const lines = text.split('\n').filter(line => line.trim() !== '');
             const maxIndex = lines.length;
 
+            // number of questions we have
             const numQuestionsToSelect = 5
 
             while (i < numQuestionsToSelect) {
-                // Generate a number from 0 up to (but not including) maxIndex
+                // Generate a number from 0 up to (but not including) maxIndex (which is the number of questions we have)
                 let curr_num = Math.floor(Math.random() * maxIndex);
-
+                // if it's a repeat question we skip it if not we add it to the array
                 if (!random_Numbers.includes(curr_num)) {
                     random_Numbers.push(curr_num);
                     i++;
                 }
             }
-
-
             // Map the random numbers to the corresponding lines (questions)
             const Questions: string[] = random_Numbers.map(index => lines[index] || "Question not found");
 
+            // testing values to show what questions were pulled
             console.log("Random Indices:", random_Numbers);
             return Questions;
 
         } catch (e) {
-            // You'll need to assert the error type if you want to access properties like 'message'
             console.error("Error fetching file:", e instanceof Error ? e.message : "Unknown error");
             return []; // Return an empty array of the correct type on error
         }
     };
-
         const random_Numbers: number[] = [];
         let i = 0;
 
@@ -84,11 +95,8 @@ export function Buddy() {
                 i++;
             }
         }
-
-
+        //more hooks to be used in sprint 3
         const [questions, setQuestions] = useState<string[]>([]);
-
-
         const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
@@ -100,7 +108,6 @@ export function Buddy() {
                 setQuestions(loadedQuestions);
                 setIsLoading(false); // Stop loading once data is set
             };
-
             loadQuestions();
         }, []);
 
@@ -112,10 +119,7 @@ export function Buddy() {
             Q5 = ''
         ] = questions;
 
-
-
-
-    // function that fires when submit button is pressed
+        //function that deals with the submit button
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -130,6 +134,7 @@ export function Buddy() {
             return;
         }
 
+        // CATS each Question with the Answer
         const Q_A1 = `${Q1} ${RQ1}`;
         const Q_A2 = `${Q2} ${RQ2}`;
         const Q_A3 = `${Q3} ${RQ3}`;
@@ -137,18 +142,26 @@ export function Buddy() {
         const Q_A5 = `${Q5} ${RQ5}`;
         const result = [Q_A1, Q_A2, Q_A3, Q_A4, Q_A5];
 
+        // shows the rec div
         setIsDivVisible(true);
 
+        // sends questions to backend
         try {
             const response = await SendQeustions(result);
             console.log("Backend returned:", response);
 
+            //what is this response.response
             if (response && response.response) {
+                // fills this hook with the api responds
                 setBookrec(response.response);
+
+                // parses the responds to get the author  and title
+                setBooktitle(parseBookTitle(response.response))
             } else {
                 setBookrec("No recommendation received.");
             }
 
+            // some error mesasge
             seterror("");
         } catch (err) {
             console.error("Error sending questions:", err);
@@ -156,7 +169,9 @@ export function Buddy() {
                 "An error occurred while getting your recommendation."
             );
         }
+
     };
+    // ya know the basic html we update the react hook each time the user enters a value
     return (
         <div style={{width: '', overflowWrap: 'break-word'}}>
             <>
@@ -198,6 +213,7 @@ export function Buddy() {
                         type="text"
                         value={RQ5}
                         onChange={(e) => {
+                            // updating user char count
                             const newVal = e.target.value;
                             setRQ5(e.target.value);
                             const newLength = (maxInput) - newVal.length;
@@ -208,6 +224,7 @@ export function Buddy() {
                     <input type="submit" value="send"/>
                 </form>
             </>
+
 
             {isDivVisible && (
             <div  style={{
@@ -227,18 +244,22 @@ export function Buddy() {
                 textAlign: 'center'
             }}><div style={{
                 position: 'absolute',
-                width: '85%',  // Required
-                height: '85%', // Required
-
+                width: '85%',
+                height: '85%',
                 top: 0,
                 bottom: 0,
                 left: 0,
                 right: 0,
-                backgroundColor: 'rgba(255, 255, 255, 1)', // Black with 50% opacity
+                backgroundColor: 'rgba(255, 255, 255, 1)',
+
+                // Key Changes to Stacking:
                 display: 'flex',
+                flexDirection: 'column', // <-- Add this to stack children vertically
+                // ----------------------
+
                 justifyContent: 'center',
                 alignItems: 'center',
-                zIndex: 10, // 3. Ensure it's on top of everything
+                zIndex: 10,
                 color: 'black',
                 fontSize: '20px',
                 margin: 'auto',
@@ -249,12 +270,18 @@ export function Buddy() {
 
             }}>
                 <p>{bookrec}</p>
-                {/* Could add a spinner component here */}
+                {isDivVisible && <WishlistButton nameOfBook={booktitle} />}
+
             </div>
+                {/* Could add a spinner component here
+                that is what ill be doing however i still feel petty about this comment */}
+
             </div> )}
 
         </div>
 
     )
 }
+
+export default Buddy
 

@@ -5,7 +5,7 @@ import {WishBookDto} from "./types/WishBookDto";
 const BASE = '' // keep empty, proxy or relative path handles backend
 
 
-// Main function that we can call it in the book user Library and within the search page (ideally)
+
 export default function Book_display({ result }: { result: BookDto[] }) {
     const [status, setStatus] = useState<string>('')
     const [bookname, setBookName] = useState<String>("")
@@ -96,7 +96,7 @@ export default function Book_display({ result }: { result: BookDto[] }) {
 
         <div style={{marginLeft: '-50px'}}>
 
-            {/* dog */}
+
             <h1 style={{marginLeft: 'auto' }}>Displaying Results:</h1>
             {status && <p style={{ fontWeight: "500", marginTop: 16, marginRight: -500 }}>{status}</p>}
             {result.length > 0 ? (
@@ -118,7 +118,8 @@ export default function Book_display({ result }: { result: BookDto[] }) {
                                     alt={book.bookname || "Book cover"}
                                     width="200"
                                     height="250"
-                                />                                <div style={{ marginLeft: 'auto',margin: '15px' }}>
+                                />
+                                <div style={{ marginLeft: 'auto',margin: '15px' }}>
                                     <ul style={{ listStyleType: 'disc', fontSize: 20, }}>
                                         <li><strong>Title:</strong> {book.bookname}</li>
                                         <li><strong>By:</strong> {book.author}</li>
