@@ -126,6 +126,37 @@
   font-size: .75rem;
 }
 
+.bb-lib__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-space-2, 0.75rem);
+}
+
+.bb-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bb-field__label {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.bb-select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--bb-radius, 12px);
+  background: #fff;
+}
+
+.bb-btn--ghost {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  box-shadow: none;
+}
+
+
 /* Responsive tweaks */
 @media (max-width: 720px) {
   .wrap {
