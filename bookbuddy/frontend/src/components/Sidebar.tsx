@@ -12,7 +12,7 @@ export default function Sidebar() {
         { to: "/search", label: "Search" },
         { to: "/library", label: "Library" },
         { to: "/WishBook", label: "WishList" },
-        { to:"/Buddy_Recommendation", label: "Ask a buddy
+        { to:"/Buddy_Recommendation", label: "Ask a buddy"},
     ];
 
 

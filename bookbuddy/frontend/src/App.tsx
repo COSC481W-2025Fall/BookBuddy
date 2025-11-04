@@ -62,7 +62,7 @@ export default function App() {
                     path="/WishBook"
                     element={
                         <ProtectedRoute>
-                            <Buddy />
+                            <WishBook />
                         </ProtectedRoute>
                     }
                 />
@@ -70,7 +70,7 @@ export default function App() {
                     path="/Buddy_Recommendation"
                     element={
                         <ProtectedRoute>
-                            <WishBook />
+                            <Buddy />
                         </ProtectedRoute>
                     }
                 />
