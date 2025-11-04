@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "react-router-dom": "^7.9.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.16"
   }
 }
