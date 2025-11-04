@@ -7,6 +7,8 @@ import Search from "./Search";
 import Library from "./Library";
 import WishBook from "./WishBook";
 import Profile from "./Profile";
+import Buddy from "./Buddy_Recommendation";
+
 
 //  Protect pages from being accessed without login
 function ProtectedRoute({ children }: { children: JSX.Element }) {
@@ -18,6 +20,7 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
     }
 
     return children;
+
 }
 
 //  Main application component with routing
@@ -57,6 +60,14 @@ export default function App() {
                 />
                 <Route
                     path="/WishBook"
+                    element={
+                        <ProtectedRoute>
+                            <Buddy />
+                        </ProtectedRoute>
+                    }
+                />
+               <Route
+                    path="/Buddy_Recommendation"
                     element={
                         <ProtectedRoute>
                             <WishBook />

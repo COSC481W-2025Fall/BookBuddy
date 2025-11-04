@@ -29,7 +29,7 @@ public class RecommendationService {
 
         String prompt = "You are a professional Book Recommender. A client has answered these questions in question/answer format: " + list + ".\n\n" +
                 "Please analyze these questions and the clients answers and provide the following:\n" +
-                "1. give the top book you would recommend for the client after analyzing the answers to their given questions.\n" +
+                "1. give the top book you would recommend for the client after analyzing the answers to their given questions only giving the book title first.\n" +
                 "2. Provide a small one paragraph response as to why you belive this book is a good recommendation for the client.\n" +
                 "   - For your response:\n" +
                 "     • Give the book title ONLY on the first line.\n" +

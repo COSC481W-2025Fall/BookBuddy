@@ -12,7 +12,9 @@ export default function Sidebar() {
         { to: "/search", label: "Search" },
         { to: "/library", label: "Library" },
         { to: "/WishBook", label: "WishList" },
+        { to:"/Buddy_Recommendation", label: "Ask a buddy
     ];
+
 
     return (
         <>
@@ -23,6 +25,7 @@ export default function Sidebar() {
             >
                 ☰
             </button>
+
 
             <nav className={`bb-sidebar ${open ? "open" : ""}`} aria-label="Main Navigation">
                 <div className="bb-sidebar_brand">BookBuddy</div>
@@ -53,6 +56,7 @@ export default function Sidebar() {
                     localStorage.clear();
                     navigate("/login", { replace: true });
                 }}
+
                 role="menuitem"
                 style={{ cursor: "pointer" }}
             >

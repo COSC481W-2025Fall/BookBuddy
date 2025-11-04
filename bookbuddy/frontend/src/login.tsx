@@ -1,94 +1,118 @@
 import React, { useState } from "react";
-import "./components/login.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { addLogin } from "./api";
-import type { AccountDto } from "./types/AccountDto";
-import { LoginDto } from "./types/LoginDto";
-import logo from "./logo/bookbuddy-logo-mywristhurts.png"; // use the unified API
-
+import type { LoginDto } from "./types/LoginDto";
+import logo from "./logo/bookbuddy-logo-mywristhurts.png";
 
 const Login: React.FC = () => {
-    const navigate = useNavigate();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const [form, setForm] = useState<LoginDto>({ name: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    // Redirect user to signup page
-    const handleRedirectToSignup = () => {
-        navigate("/signup");
-    };
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-    // Handle login form submission
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      await addLogin({ name: form.name.trim(), password: form.password });
+      localStorage.setItem("accountId", form.name.trim());
+      navigate("/search");
+    } catch (err: any) {
+      setError(err?.message ?? "Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        if (!username || !password) {
-            setMessage("Please enter a valid username and password");
-            return;
-        }
-
-        const body: LoginDto = {
-            name: username.trim(),
-            password: password,
-        };
-
-        try {
-            const ok = await addLogin(body);
-
-            if (ok) {
-                //  store username instead of ID
-                localStorage.setItem("accountId", username.trim());
-                navigate("/search");
-            } else {
-                setMessage("Invalid username or password");
-            }
-        } catch (error) {
-            console.error("Login failed:", error);
-            setMessage("Server error. Please try again later.");
-        }
-    };
-    return (
-        <div className="login-container">
-            <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
-            <h2>Login</h2>
-            <form
-                role="form"
-                onSubmit={handleSubmit}
-                method="post"
-                className="login-form"
-            >
-                <label>
-                    Username
-                    <input
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </label>
-
-                <label>
-                    Password
-                    <input
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </label>
-
-                <button type="submit">Login</button>
-            </form>
-
-            {message && <p className="message">{message}</p>}
-
-            <button id="signup" type="button" onClick={handleRedirectToSignup}>
-                Signup
-            </button>
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        {/* Header / Branding */}
+        <div className="flex flex-col items-center text-center space-y-2 mb-6">
+          <img
+            src={logo}
+            alt="BookBuddy"
+            className="h-20 w-auto sm:h-24 sm:w-auto rounded-xl shadow-md"
+          />
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+            Welcome back
+          </h1>
+          <p className="text-sm text-gray-600">
+            Log in to continue to BookBuddy
+          </p>
         </div>
-    );
+
+        <div className="card">
+          {error && (
+            <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="name" className="label">
+                Username
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="username"
+                placeholder="e.g. jdoe"
+                className="input"
+                value={form.name}
+                onChange={onChange}
+                required
+              />
+            </div>
+
+
+            <div>
+              <label htmlFor="password" className="label">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                placeholder="••••••••"
+                className="input"
+                value={form.password}
+                onChange={onChange}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn-primary w-full"
+              disabled={loading}
+
+            >
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-gray-600">
+            Don’t have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-indigo-600 hover:underline"
+            >
+              Create one
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

@@ -1,95 +1,145 @@
 import React, { useState } from "react";
-//import "./components/signup.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { addAccount } from "./api";
 import type { AccountDto } from "./types/AccountDto";
-import logo from "./logo/bookbuddy-logo-mywristhurts.png"; // use the unified API
+import logo from "./logo/bookbuddy-logo-mywristhurts.png";
 
 const Signup: React.FC = () => {
-    console.log("🧭 Signup component mounted");
-    const navigate = useNavigate();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const [form, setForm] = useState<AccountDto>({ name: "", password: "" });
+  const [confirm, setConfirm] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    // Handle signup form submission
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        alert("React handleSubmit triggered!");
-        console.log("hello");
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "confirm") {
+        setConfirm(value);
+    } else {
+        setForm({ ...form, [name]: value });
+    }
+  };
 
-        if (!username || !password) {
-            setMessage("Please enter a valid username and password");
-            return;
-        }
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
 
-        const body: AccountDto = {
-            //accountId: 0, // backend will assign real ID
-            name: username.trim(),
-            password: password,
-        };
+    if (form.password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    if (form.password !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
 
-        try {
-            console.log("About to send signup request:");
-            console.log("username =", username);
-            console.log("password =", password);
+    setLoading(true);
+    try {
+      await addAccount({ name: form.name.trim(), password: form.password });
+      navigate("/login");
+    } catch (err: any) {
+      setError(err?.message ?? "Sign up failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            console.log(body);
-            const account: AccountDto = await addAccount(body);
-
-            if (account && account.accountId) {
-                // ✅ Store ID and username right after signup
-                localStorage.setItem("accountId", account.accountId.toString());
-                localStorage.setItem("username", account.name);
-
-                navigate("/search");
-            } else {
-                setMessage("Signup failed. Please try again.");
-            }
-        } catch (error) {
-            setMessage("Server error. Please try again later.");
-        }
-    };
-
-    return (
-        <div className="signup-container">
-            <img src={logo} alt="Welcome to BookBuddy" width="200" height="200"/>
-            <h2>Signup</h2>
-            <form
-                role="form"
-                onSubmit={handleSubmit}
-
-                className="signup-form"
-            >
-                <label>
-                    Username
-                    <input
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </label>
-
-                <label>
-                    Password
-                    <input
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </label>
-
-                <button type="submit">Signup</button>
-            </form>
-
-            {message && <p className="message">{message}</p>}
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        {/* Header / Branding */}
+        <div className="flex flex-col items-center text-center space-y-2 mb-6">
+          <img
+            src={logo}
+            alt="BookBuddy"
+            className="h-20 w-auto sm:h-24 sm:w-auto rounded-xl shadow-md"
+          />
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+            Create your account
+          </h1>
+          <p className="text-sm text-gray-600">
+            Join BookBuddy today
+          </p>
         </div>
-    );
+
+        <div className="card">
+          {error && (
+            <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="name" className="label">
+                Username
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Choose a username"
+                className="input"
+                value={form.name}
+                onChange={onChange}
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="label">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Create a password"
+                className="input"
+                value={form.password}
+                onChange={onChange}
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="confirm" className="label">
+                Confirm password
+              </label>
+              <input
+                id="confirm"
+                name="confirm"
+                type="password"
+                placeholder="Re-enter your password"
+                className="input"
+                value={confirm}
+                onChange={onChange}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn-primary w-full"
+              disabled={loading}
+            >
+              {loading ? "Creating account..." : "Create account"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-indigo-600 hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Signup;
-
