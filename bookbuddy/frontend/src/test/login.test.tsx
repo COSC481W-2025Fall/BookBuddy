@@ -5,17 +5,11 @@ import Login from '../login';
 import * as api from "../api";
 import { act } from 'react';
 
-//import { cleanup } from '@testing-library/react';
-
-//import matchers from '@testing-library/jest-dom/matchers';
-
-//expect.extend(matchers);
-
 
 describe('Login', () => {
     it('should show a login screen', () => {
         render(<MemoryRouter><Login /></MemoryRouter>);
-        expect(screen.getAllByText('Login'));
+        expect(screen.getAllByText('Welcome back'));
     });
 })
 
@@ -41,7 +35,7 @@ test('submits the form correctly', () => {
 
     render(<MemoryRouter><Login /></MemoryRouter>);
 
-    var form = screen.getByRole('form');
+    const form = document.querySelector('form');
 
     //input
     const inputName = screen.getByLabelText('Username');
@@ -50,7 +44,7 @@ test('submits the form correctly', () => {
     act(() => {
         fireEvent.change(inputName, { target: { value: 'TestUsername' } });
         fireEvent.change(inputPass, { target: { value: 'TestPassword'} });
-        fireEvent.click(screen.getByRole("button", { name: /login/i }));
+        fireEvent.click(screen.getByRole("button", { name: /sign in|signing in/i }));
 
         // check that API was called
         expect(api.addLogin).toHaveBeenCalledWith({
@@ -71,7 +65,7 @@ test('submits the form correctly', () => {
     act(() => {
         fireEvent.change(inputName, { target: { value: '' } });
         fireEvent.change(inputPass, { target: { value: ''} });
-        fireEvent.click(screen.getByRole("button", { name: /login/i }));
+        fireEvent.click(screen.getByRole("button", { name: /sign in|signing in/i }));
 
         //if the username and password do not exist inside the database
         return screen.findByText(/Please enter a valid username and password/i).then((message) => {
