@@ -92,7 +92,7 @@
   display: flex;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 9000px) {
   .bb-sidebar_toggle{
     display: block;
   }
