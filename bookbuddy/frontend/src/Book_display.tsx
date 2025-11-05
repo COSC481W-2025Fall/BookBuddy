@@ -119,11 +119,11 @@ export default function Book_display({ result }: { result: BookDto[] }) {
                                     width="200"
                                     height="250"
                                 />
-                                <div style={{ marginLeft: 'auto',margin: '15px' }}>
+                                <div style={{ marginLeft: 'auto',margin: '45px' }}>
                                     <ul style={{ listStyleType: 'disc', fontSize: 20, }}>
                                         <li><strong>Title:</strong> {book.bookname}</li>
                                         <li><strong>By:</strong> {book.author}</li>
-                                        <li><strong>Genre:</strong>{book.genre}</li>
+                                        <li><strong>Genre: </strong>{book.genre}</li>
                                         <li><strong>ISBN:</strong> {book.isbn}</li>
                                     </ul>
                                 </div>
