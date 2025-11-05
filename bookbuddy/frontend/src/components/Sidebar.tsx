@@ -13,8 +13,9 @@ export default function Sidebar() {
     { to: "/search", label: "Search" },
     { to: "/library", label: "Library" },
     { to: "/WishBook", label: "WishList" },
-    { to: "/login", label: "Sign Out" },
-      { to:"/Buddy_Recommendation", label: "Ask a buddy"}
+      { to:"/Buddy_Recommendation", label: "Ask a buddy"},
+    { to: "/login", label: "Sign Out" }
+
   ];
 
   // Render the sidebar with navigation links
