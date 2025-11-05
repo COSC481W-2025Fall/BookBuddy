@@ -113,10 +113,11 @@ describe('Book_display component', () => {
     expect(await screen.findByText(/Add to wishlist failed: 500/i)).toBeInTheDocument();
   });
 
-  //We really need to update this to not show the hobbit
+  //Test to see if the fallback image is being used
   it('uses fallback image if coverid is missing', () => {
     render(<Book_display result={[{ bookname: "NoCover", author: "Author NC", genre: "Fiction", isbn: "123" }]} />);
     const img = screen.getByAltText(/NoCover/i) as HTMLImageElement;
     expect(img.src).toContain('The_Hobbit_trilogy_dvd_cover.jpg');
+    //expect(img.src).toContain('noCoverFound.png');
   });
 });
