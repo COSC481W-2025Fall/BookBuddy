@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import type { BookDto } from './types/BookDto'
 import "./components/Searchpage.css";
 import {WishBookDto} from "./types/WishBookDto";
+import "./logo/noCoverFound.png";
 const BASE = '' // keep empty, proxy or relative path handles backend
 
 
@@ -112,18 +113,18 @@ export default function Book_display({ result }: { result: BookDto[] }) {
                                     style={{ boxShadow: '5px 5px gray' }}
                                     src={
                                         book.coverid
-                                            ? `https://books.google.com/books/content?id=${book.coverid}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`
-                                            : "https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg"
+                                            ? `https://books.google.com/books/content?id=${book.coverid}&fife=w400-h600&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`
+                                            : "./logo/noCoverFound.png"
                                     }
                                     alt={book.bookname || "Book cover"}
                                     width="200"
                                     height="250"
                                 />
-                                <div style={{ marginLeft: 'auto',margin: '15px' }}>
+                                <div style={{ marginLeft: 'auto',margin: '45px' }}>
                                     <ul style={{ listStyleType: 'disc', fontSize: 20, }}>
                                         <li><strong>Title:</strong> {book.bookname}</li>
                                         <li><strong>By:</strong> {book.author}</li>
-                                        <li><strong>Genre:</strong>{book.genre}</li>
+                                        <li><strong>Genre: </strong>{book.genre}</li>
                                         <li><strong>ISBN:</strong> {book.isbn}</li>
                                     </ul>
                                 </div>
