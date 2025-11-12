@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { BookDto } from "./types/BookDto";
 import { getMyLibrary } from "./api";
 import "./components/Library.css";
+import "./logo/noCoverFound.png";
 
 type SortKey = "name" | "author" | "genre";
 type SortDir = "asc" | "desc";
@@ -41,8 +42,8 @@ export default function Library() {
   // cover retrieval using Google Books coverid
   const coverUrl = (coverid?: string) =>
     coverid
-      ? `https://books.google.com/books/content?id=${coverid}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`
-      : "https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg";
+      ? `https://books.google.com/books/content?id=${coverid}&fife=w400-h600&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`
+      : "./logo/noCoverFound.png";
 
   useEffect(() => {
     (async () => {

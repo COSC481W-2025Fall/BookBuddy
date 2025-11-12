@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import type {WishBookDto} from "./types/WishBookDto";
 import {getMyWishBook} from "./api";
+import "./logo/noCoverFound.png";
 
 export default function WishWishBook() {
     // allows us to navigate to different pages
@@ -10,11 +11,12 @@ export default function WishWishBook() {
     const [wishbooks, setWishBooks] = useState<WishBookDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    // function to get wishbook cover from open library api
-    //Uses hobbit cover if nothing comes through
-    const coverUrl = (isbn?: string) =>
-        isbn ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg` : "https://upload.wikimedia.org/wikipedia/en/a/a9/The_Hobbit_trilogy_dvd_cover.jpg";
 
+    // cover retrieval using Google Books coverid
+    const coverUrl = (coverid?: string) =>
+        coverid
+            ? `https://books.google.com/books/content?id=${coverid}&fife=w400-h600&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`
+            : "./logo/noCoverFound.png";
 
 
     // on component load, fetch the user's library
@@ -79,7 +81,7 @@ export default function WishWishBook() {
                             <div className="bb-card__media">
                                 {/* // WishBook cover image with fallback on error */}
                                 <img
-                                    src={coverUrl(b.isbn)}
+                                    src={coverUrl(b.coverid)}
                                     alt={`${b.bookname ?? "WishBook"} cover`}
                                     onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg"; }}
                                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
