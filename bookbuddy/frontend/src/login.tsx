@@ -20,6 +20,7 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       await addLogin({ name: form.name.trim(), password: form.password });
+      localStorage.setItem("accountId", form.name.trim());
       navigate("/search");
     } catch (err: any) {
       setError(err?.message ?? "Login failed. Please check your credentials.");
@@ -71,6 +72,7 @@ const Login: React.FC = () => {
               />
             </div>
 
+
             <div>
               <label htmlFor="password" className="label">
                 Password
@@ -92,6 +94,7 @@ const Login: React.FC = () => {
               type="submit"
               className="btn-primary w-full"
               disabled={loading}
+
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
