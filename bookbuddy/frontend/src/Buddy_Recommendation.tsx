@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {SendQeustions} from "./api";
 import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
+import "./components/Book_loading.css"
 
 
 // MAN i gotta learn vim
@@ -25,6 +26,7 @@ function Buddy() {
     const [textlengs, setTextlengs] = useState(maxInput)
     // state we use to show the rec div
     const [isDivVisible, setIsDivVisible] = useState(false);
+    const [darkbox, setDarkBox] = useState(false);
     // hook we use to hold the openAI respones
     const [bookrec,setBookrec] = useState("I WOULD RECOMMEND THIS BOOK");
     // value that holds the book title and sometimes the book author ( basically everything up until the first ','
@@ -123,6 +125,7 @@ function Buddy() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+
         if (
             RQ1 === "" ||
             RQ2 === "" ||
@@ -133,6 +136,7 @@ function Buddy() {
             seterror("No questions can be left blank");
             return;
         }
+        setDarkBox(true);
 
         // CATS each Question with the Answer
         const Q_A1 = `${Q1} ${RQ1}`;
@@ -143,7 +147,7 @@ function Buddy() {
         const result = [Q_A1, Q_A2, Q_A3, Q_A4, Q_A5];
 
         // shows the rec div
-        setIsDivVisible(true);
+
 
         // sends questions to backend
         try {
@@ -170,6 +174,7 @@ function Buddy() {
             );
         }
 
+        setIsDivVisible(true);
     };
     // ya know the basic html we update the react hook each time the user enters a value
     return (
@@ -226,57 +231,71 @@ function Buddy() {
             </>
 
 
-            {isDivVisible && (
-            <div  style={{
+            {darkbox && (
 
-                position: 'absolute', // 2. Absolute positioning is key
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.7)', // Black with 50% opacity
+                <div style={{
 
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 10, // 3. Ensure it's on top of everything
-                color: 'white',
-                fontSize: '20px',
-                textAlign: 'center'
-            }}><div style={{
-                position: 'absolute',
-                width: '85%',
-                height: '85%',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                backgroundColor: 'rgba(255, 255, 255, 1)',
+                    position: 'fixed', // 2. Absolute positioning is key
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Black with 50% opacity
+                    display: 'flex',
 
-                // Key Changes to Stacking:
-                display: 'flex',
-                flexDirection: 'column', // <-- Add this to stack children vertically
-                // ----------------------
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 0, // 3. Ensure it's on top of everything
+                    color: 'white',
+                    fontSize: '20px',
+                    textAlign: 'center'
+                }}>
+                    {!isDivVisible && (
+                    <div className="book">
+                        <div className="book__pg-shadow"></div>
+                        <div className="book__pg"></div>
+                        <div className="book__pg book__pg--2"></div>
+                        <div className="book__pg book__pg--3"></div>
+                        <div className="book__pg book__pg--4"></div>
+                        <div className="book__pg book__pg--5"></div>
+                    </div>)}
 
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 10,
-                color: 'black',
-                fontSize: '20px',
-                margin: 'auto',
-                textAlign: 'center',
-                border: 'black',
-                borderStyle: 'solid',
-                borderWidth: '5px'
+                    {isDivVisible && (
+                        <div style={{
+                            position: 'relative',
+                            maxWidth: '85%',
+                            maxHeight: '85%',
+                            width: 'auto',
+                            height: 'auto',
+                            minWidth: '200px',
+                            minHeight: '200px',
+                            backgroundColor: 'rgba(255, 255, 255, 1)',
+                            border: 'black',
+                            borderStyle: 'solid',
+                            borderWidth: '5px',
+                            padding: '20px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            overflowY: 'auto',
+                            overflowX: 'hidden',
+                            wordWrap: 'break-word',
+                            textAlign: 'center',
 
-            }}>
-                <p>{bookrec}</p>
-                {isDivVisible && <WishlistButton nameOfBook={booktitle} />}
+                            // Other properties:
+                            zIndex: 10,
+                            color: 'black',
+                            fontSize: '20px',
+                        }}>
+                            <p style={{wordWrap: 'break-word', padding: '10px 0'}}>{bookrec}</p>
+                            {isDivVisible && <WishlistButton nameOfBook={booktitle}/>}
 
-            </div>
-                {/* Could add a spinner component here
+                        </div>)}
+                    {/* Could add a spinner component here
                 that is what ill be doing however i still feel petty about this comment */}
 
-            </div> )}
+                </div>)}
 
         </div>
 
