@@ -18,6 +18,7 @@ function Buddy() {
     //error status
     const [error, seterror] = useState("");
     // answers from user
+    const [RQ0, setRQ0] = useState("");
     const [RQ1, setRQ1] = useState("");
     const [RQ2, setRQ2] = useState("");
     const [RQ3, setRQ3] = useState("");
@@ -114,6 +115,8 @@ function Buddy() {
             loadQuestions();
         }, []);
 
+        let Q0 = "Tell us about the reading experience you're hoping for. Where and why are you reading this book?"
+
         const [
             Q1 = '',
             Q2 = '',
@@ -122,12 +125,16 @@ function Buddy() {
             Q5 = ''
         ] = questions;
 
+
+
+
         //function that deals with the submit button
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
 
         if (
+            RQ0 ===""||
             RQ1 === "" ||
             RQ2 === "" ||
             RQ3 === "" ||
@@ -140,12 +147,13 @@ function Buddy() {
         setDarkBox(true);
 
         // CATS each Question with the Answer
+        const Q_A0 = `${Q0} ${RQ0}`;
         const Q_A1 = `${Q1} ${RQ1}`;
         const Q_A2 = `${Q2} ${RQ2}`;
         const Q_A3 = `${Q3} ${RQ3}`;
         const Q_A4 = `${Q4} ${RQ4}`;
         const Q_A5 = `${Q5} ${RQ5}`;
-        const result = [Q_A1, Q_A2, Q_A3, Q_A4, Q_A5];
+        const result = [Q_A0, Q_A1, Q_A2, Q_A3, Q_A4, Q_A5];
 
         // shows the rec div
 
@@ -185,6 +193,18 @@ function Buddy() {
                 <h1>{error}</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="questions-container">
+
+                    {/* Question 1 */}
+                        <div className="questionBlock">
+                            <label className="questionLabel" >Filter question: {Q0}</label>
+                            <input
+                                className="aBox"
+                                type="text"
+                                value={RQ0}
+                                onChange={(e) => setRQ0(e.target.value)}
+                                placeholder="I'm looking for a light read to wind down with every night"
+                            />
+                        </div>
 
                         {/* Question 1 */}
                         <div className="questionBlock">
