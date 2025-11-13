@@ -1,0 +1,11 @@
+.questions-container {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 30px;
+    border: 1px solid #cccbbb;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    background: #ccc;
+    text-align: center;
+}
+
