@@ -117,7 +117,8 @@ describe('Book_display component', () => {
   it('uses fallback image if coverid is missing', () => {
     render(<Book_display result={[{ bookname: "NoCover", author: "Author NC", genre: "Fiction", isbn: "123" }]} />);
     const img = screen.getByAltText(/NoCover/i) as HTMLImageElement;
-    expect(img.src).toContain('The_Hobbit_trilogy_dvd_cover.jpg');
-    //expect(img.src).toContain('noCoverFound.png');
+    //old covers
+   // expect(img.src).toContain('The_Hobbit_trilogy_dvd_cover.jpg');
+    expect(img.src).toContain('noCoverFound.png');
   });
 });
