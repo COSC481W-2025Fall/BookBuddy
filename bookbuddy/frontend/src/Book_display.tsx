@@ -196,7 +196,7 @@ export default function Book_display({ result }: Props) {
 
                     window.open(amazonSearchUrl, "_blank");
                   }}
-                  className="bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-md shadow"
+                  className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white px-4 py-2 rounded-md shadow"
                 >
                   Search on Amazon
                 </button>
