@@ -34,6 +34,8 @@ public class RecommendationService {
                 "   - For your response:\n" +
                 "     • Give the book title ONLY on the first line.\n" +
                 "     • Give the Author name and Genre after adding 1 blank line from the book title.\n" +
+                "     • This MUST be given in the format only, NO numbers or any difference:  [BOOK NAME] [new line] [BOOK AUTHOR] , [GENRE] [new line] +\n" +
+                "                \"     • Provide a **concise explanation** (no more than 70 words).\\n\\n\" +\n\n" +
                 "     • Provide a **concise explanation** (no more than 70 words).\n\n" +
                 "Be thorough and precise, and format your response clearly to enhance quick understanding and decision-making.";
 
