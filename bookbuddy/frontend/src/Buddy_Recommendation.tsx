@@ -3,7 +3,8 @@ import React, {useState, useEffect} from 'react';
 import {SendQeustions} from "./api";
 import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
-import "./components/Book_loading.css"
+import "./components/Book_loading.css";
+import "./Styling/Buddy_Recommendation.css";
 
 
 // MAN i gotta learn vim
@@ -183,50 +184,70 @@ function Buddy() {
 
                 <h1>{error}</h1>
                 <form onSubmit={handleSubmit}>
-                    <label>1: {Q1}</label><br/>
+                    <div className="questions-container">
 
-                    <input
-                        id="Q1"
-                        type="text"
-                        value={RQ1}
-                        onChange={(e) => setRQ1(e.target.value)}/><br/><br/>
+                        {/* Question 1 */}
+                        <div className="questionBlock">
+                            <label className="questionLabel">1: {Q1}</label>
+                            <input
+                                className="aBox"
+                                type="text"
+                                value={RQ1}
+                                onChange={(e) => setRQ1(e.target.value)}
+                                placeholder=""
+                            />
+                        </div>
 
-                    <label>2: {Q2}</label><br/>
-                    <input
-                        id="Q2"
-                        type="text"
-                        value={RQ2}
-                        onChange={(e) => setRQ2(e.target.value)}/><br/><br/>
+                        {/* Question 2 */}
+                        <div className="questionBlock">
+                            <label className="questionLabel">2: {Q2}</label>
+                            <input
+                                className="aBox"
+                                type="text"
+                                value={RQ2}
+                                onChange={(e) => setRQ2(e.target.value)}
+                                placeholder=""
+                            />
+                        </div>
 
-                    <label>3: {Q3}</label><br/>
-                    <input
-                        id="Q3"
-                        type="text"
-                        value={RQ3}
-                        onChange={(e) => setRQ3(e.target.value)}/><br/><br/>
+                        {/* Question 3 */}
+                        <div className="questionBlock">
+                            <label className="questionLabel">3: {Q3}</label>
+                            <input
+                                className="aBox"
+                                type="text"
+                                value={RQ3}
+                                onChange={(e) => setRQ3(e.target.value)}
+                                placeholder=""
+                            />
+                        </div>
 
-                    <label>4: {Q4}</label><br/>
-                    <input
-                        id="Q4"
-                        type="text"
-                        value={RQ4}
-                        onChange={(e) => setRQ4(e.target.value)}/><br/><br/>
+                        {/* Question 4 */}
+                        <div className="questionBlock">
+                            <label className="questionLabel">4: {Q4}</label>
+                            <input
+                                className="aBox"
+                                type="text"
+                                value={RQ4}
+                                onChange={(e) => setRQ4(e.target.value)}
+                                placeholder=""
+                            />
+                        </div>
 
-                    <label>5: {Q5}</label><br/>
-                    <input
-                        id="Q5"
-                        type="text"
-                        value={RQ5}
-                        onChange={(e) => {
-                            // updating user char count
-                            const newVal = e.target.value;
-                            setRQ5(e.target.value);
-                            const newLength = (maxInput) - newVal.length;
-                            setTextlengs(newLength)
-                        }}/><br/>
-                    <span id="displayValue">{textlengs}</span>
-                    <br/>
-                    <input type="submit" value="send"/>
+                        {/* Question 5 */}
+                        <div className="questionBlock">
+                            <label className="questionLabel">5: {Q5}</label>
+                            <input
+                                className="aBox"
+                                type="text"
+                                value={RQ5}
+                                onChange={(e) => setRQ5(e.target.value)}
+                                placeholder=""
+                            />
+                        </div>
+
+                        <button type="submit" className="submitButton">Ask a Buddy!</button>
+                    </div>
                 </form>
             </>
 
