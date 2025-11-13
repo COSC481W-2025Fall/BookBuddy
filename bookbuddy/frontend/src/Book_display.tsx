@@ -154,19 +154,13 @@ export default function Book_display({ result }: Props) {
                   </div>
 
                   <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-1 text-sm text-gray-700">
-                    <dt className="font-medium">Genre: </dt>
-                    <dd>{book.genre || "Unknown"}</dd>
+                    <dt className="font-medium">Genre: {book.genre || "Unknown"}</dt>
 
-                    <dt className="font-medium">Pages: </dt>
-                    <dd>{book.pagecount ?? "Unknown"}</dd>
+                    <dt className="font-medium">Pages: {book.pagecount ?? "Unknown"}</dt>
 
+                    <dt className="font-medium">Publication: {book.publication || "Unknown"}</dt>
 
-                    <dt className="font-medium">Publication: </dt>
-                    <dd>{book.publication || "Unknown"}</dd>
-
-                    <dt className="font-medium">ISBN: </dt>
-                    <dd>{book.isbn || "N/A"}</dd>
-
+                    <dt className="font-medium">ISBN: {book.isbn || "N/A"}</dt>
                   </dl>
 
                   {book.description && (
@@ -192,6 +186,21 @@ export default function Book_display({ result }: Props) {
                 >
                   Add to wishlist
                 </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const title = book.bookname ?? "";
+                    const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(
+                      title
+                    ).replace(/%20/g, "+")}`;
+
+                    window.open(amazonSearchUrl, "_blank");
+                  }}
+                  className="bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-md shadow"
+                >
+                  Search on Amazon
+                </button>
+
               </div>
             </li>
           ))}
