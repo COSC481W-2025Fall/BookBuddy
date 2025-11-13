@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     outDir: '../src/main/resources/static', // Spring Boot serves this
     emptyOutDir: true,
-    assetsDir: '',
+    assetsDir: '', // optional: keep assets flat for simplicity
   },
     server: {
         proxy: {
@@ -19,43 +19,36 @@ export default defineConfig({
                 target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
-                cookieDomainRewrite: 'localhost', // ✅ ensure cookies work with 5173
             },
             '/Book': {
                 target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
-                cookieDomainRewrite: 'localhost',
             },
             '/login': {
                 target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
-                cookieDomainRewrite: 'localhost',
             },
             '/googlebooks': {
                 target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
-                cookieDomainRewrite: 'localhost',
             },
             '/books': {
                 target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
-                cookieDomainRewrite: 'localhost',
             },
             '/wishbooks': {
                 target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
-                cookieDomainRewrite: 'localhost',
             },
             '/WishBooks': {
                 target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
-                cookieDomainRewrite: 'localhost',
             },
         }
     },
