@@ -54,7 +54,7 @@ export default function Search() {
             Find your book
           </h1>
           <p className="text-sm text-gray-600">
-            Type a title and find the book your are looking for.
+            Enter a title and find the book your are looking for.
           </p>
         </div>
 
@@ -64,9 +64,6 @@ export default function Search() {
           className="space-y-3 sm:space-y-0 sm:flex sm:items-end sm:gap-3"
         >
           <div className="flex-1">
-            <label className="label" htmlFor="book-title">
-              Book title
-            </label>
             <input
               id="book-title"
               className="input"

@@ -157,14 +157,16 @@ export default function Book_display({ result }: Props) {
                     <dt className="font-medium">Genre</dt>
                     <dd>{book.genre || "Unknown"}</dd>
 
-                    <dt className="font-medium">ISBN</dt>
-                    <dd>{book.isbn || "N/A"}</dd>
+                    <dt className="font-medium">Pages</dt>
+                    <dd>{book.pagecount ?? "Unknown"}</dd>
+
 
                     <dt className="font-medium">Publication</dt>
                     <dd>{book.publication || "Unknown"}</dd>
 
-                    <dt className="font-medium">Pages</dt>
-                    <dd>{book.pagecount ?? "Unknown"}</dd>
+                    <dt className="font-medium">ISBN</dt>
+                    <dd>{book.isbn || "N/A"}</dd>
+
                   </dl>
 
                   {book.description && (
