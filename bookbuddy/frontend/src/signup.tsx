@@ -176,7 +176,7 @@ const Signup: React.FC = () => {
 
           <div className="w-2 bg-gray-400 shadow-mdz z-5"></div>
 
-          <div className="w-3/4 min-h-screen max-w-md p-12 z-5  " >
+          <div className="w-3/4  max-w-md p-12 z-5  " >
               {/* Header / Branding */}
               <div className="flex flex-col items-center text-center space-y-2 mb-6  ">
                   <img
