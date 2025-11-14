@@ -1,3 +1,11 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevents vertical scroll from massive background content */
+    overflow-x: hidden; /* Prevents horizontal scroll from massive background content */
+}
+
+
 
 /* Moves the scene up and right to create the illusion of the camera panning down and left. */
 @keyframes book-pan {
@@ -7,7 +15,7 @@
     }
     /* End position (Adjust 200vw/vh for more or less movement) */
     100% {
-        transform: translate3d(200vw, 200vh, 0);
+        transform: translate3d(100vw, 100vh, 0);
     }
 }
 
