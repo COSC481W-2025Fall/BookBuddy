@@ -24,7 +24,7 @@ html, body {
             circle at center,
             #F5F3F0 0%, /* Start: Brightest off-white in the center */
             #EAE7E1 50%, /* Middle: Soft taupe */
-            #c9c7c1 100% /* End: Same taupe on the edges */
+            #000000 80% /* End: Same taupe on the edges */
     );
 }
 
@@ -362,6 +362,19 @@ body {
     top: -820px; /* One level higher than Book 1's -250px */
     left: -2350px; /* Further right */
     transform: translate(-50%, -50%) rotate(5deg) scale(0.8);
+}
+
+.form-label-hover:hover {
+    color: #235789 !important;
+    /* Added this line: */
+    transform: scale(1.05) translateY(-2px);
+}
+
+.form-input-hover:hover {
+    background-color: rgb(240, 240, 240);
+
+    /* Added this line: */
+    transform: scale(1.05) translateY(-2px);
 }
 
 /* #424b54 gray

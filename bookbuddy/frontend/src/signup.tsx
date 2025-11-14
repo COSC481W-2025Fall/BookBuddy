@@ -45,26 +45,39 @@
         }
       };
 
-      return (
-          <div className="flex w-full min-h-screen">
-              <div
-                  className="flex-grow flex items-center justify-center gradient-background-books relative
-                        /* The fix: */
-                        h-screen p-8 overflow-hidden z-[-2]">
+        return (
+            // Main container with relative positioning and high Z-index to establish a stacking context
+            <div className="flex w-full min-h-screen relative z-10">
 
-                  <div className="wave-container z-10">
-                      <h1 className="wave-text">
-                          <span>Your </span><span> collection </span><span>all in one </span><span>Place</span>
-                      </h1>
-                  </div>
+                {/* --- TEXT CONTAINER: Now without a background color --- */}
+                <div className="wave-container absolute top-1/2 left-50 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                    <h1 className="wave-text">
+                        <span>Your </span><span> collection </span><span>all in one </span><span>place</span>
+                    </h1>
+                </div>
+                {/* ---------------------------- */}
 
 
-                  <div className="book-scene">
+                {/* LEFT COLUMN: Animated background section */}
+                <div
+                    className="flex-grow flex items-center justify-center gradient-background-books relative h-screen p-8 overflow-hidden z-[-2]">
+
+                    {/* --- NEW OVERLAY LAYER --- */}
+                    {/* This div covers the entire left column (inset-0) and applies the red transparency.
+                  It has a higher z-index than the animated books, but lower than the text. */}
+                    <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-1"></div>
+                    {/* ------------------------- */}
+
+
+
+
+
+                  <div className="book-scene ">
 
 
                       {/* --- Book Instances (The Reusable Components) --- */}
                       {/* Positioned using custom CSS classes (book-1-pos, etc.) */}
-                      <div className="book-3d book-1-pos">
+                      <div className="book-3d book-1-pos ">
                           <div className="page"></div>
                       </div>
 
@@ -176,17 +189,18 @@
                   </div>
               </div>
 
-              <div className="w-2 bg-gray-400 shadow-mdz z-5"></div>
+              <div className="w-2 bg-gray-700 shadow-xl z-5"></div>
 
-              <div className="w-3/4  max-w-md p-12 z-5  " >
+              <div className="w-2/4 h-full max-w-md m-2 p-2  z-5   " >
                   {/* Header / Branding */}
-                  <div className="flex flex-col items-center text-center space-y-2 mb-6  ">
+                  <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
                       <img
                           src={logo}
                           alt="BookBuddy"
                           className="h-20 w-auto sm:h-50 sm:w-auto rounded-4xl  "
                       />
-                      <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+                      <h1 className="text-2xl tracking-tight   z-10
+                      transition-all form-label-hover">
                           Create your account
                       </h1>
                       <p className="text-sm text-gray-600">
@@ -203,7 +217,7 @@
 
                       <form onSubmit={onSubmit} className="space-y-12" >
                           <div>
-                              <label htmlFor="name" className="label"style={{ fontWeight: "bold",fontSize: 20 }} >
+                              <label htmlFor="name" className="label font-bold text-xl " >
                                   Username
                               </label>
                               <input
@@ -211,7 +225,7 @@
                                   name="name"
                                   type="text"
                                   placeholder="Choose a username"
-                                  className="input text-xl"
+                                  className="input text-xl transition-all form-input-hover"
                                   value={form.name}
                     onChange={onChange}
                     required
@@ -219,15 +233,15 @@
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="label" style={{ fontWeight: "bold",fontSize: 20 }}>
-                    Password
+                    <label htmlFor="password" className="label font-bold text-xl t ">
+                        Password
                   </label>
                   <input
                     id="password"
                     name="password"
                     type="password"
                     placeholder="Create a password"
-                    className="input text-xl"
+                    className="input text-xl transition-all form-input-hover"
                     value={form.password}
                     onChange={onChange}
                     required
@@ -235,7 +249,7 @@
                 </div>
 
                 <div>
-                  <label htmlFor="confirm" className="label" style={{ fontWeight: "bold",fontSize: 20 }}>
+                    <label htmlFor="confirm" className="label font-bold text-xl " >
                     Confirm password
                   </label>
                   <input
@@ -243,7 +257,7 @@
                     name="confirm"
                     type="password"
                     placeholder="Re-enter your password"
-                    className="input text-xl"
+                    className="input text-xl transition-all form-input-hover"
                     value={confirm}
                     onChange={onChange}
                     required
@@ -252,8 +266,10 @@
 
                 <button
                   type="submit"
-                  className="w-full  rounded-xl font-bold  bg-[#f1dade] hover:bg-[#e2b4bd] focus:outline-none"
+                  className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]
+                  hover:bg-[#F1DADE]  duration-300 focus:outline-none"
                   disabled={loading}
+
                 >
                   {loading ? "Creating account..." : "Create account"}
                 </button>
