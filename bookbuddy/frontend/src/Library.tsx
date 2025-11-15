@@ -4,6 +4,7 @@ import type { BookDto } from "./types/BookDto";
 import { getMyLibrary } from "./api";
 import "./components/Library.css";
 import "./logo/noCoverFound.png";
+import CSVReader from "./addBooksViaCSV"
 
 type SortKey = "name" | "author" | "genre";
 type SortDir = "asc" | "desc";
@@ -126,7 +127,7 @@ export default function Library() {
     <div className="bb-lib wrap">
       <div className="bb-lib__header">
         <h1 className="bb-lib__title">My Library</h1>
-
+        <CSVReader />
         {/* Sort controls */}
         <div className="bb-lib__controls" aria-label="Sort options">
           <label className="bb-field">
