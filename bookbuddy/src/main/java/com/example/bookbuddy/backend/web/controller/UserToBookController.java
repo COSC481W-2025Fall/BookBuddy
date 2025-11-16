@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -102,4 +103,27 @@ public class UserToBookController {
 
         return ResponseEntity.ok(books);
     }
+
+    @Transactional
+    @DeleteMapping("/remove/{isbn}")
+    public ResponseEntity<?> removeBook(@PathVariable String isbn, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+        }
+
+        // Load the Account
+        Account account = accountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Load the Book
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        // Perform the FK-based delete
+        userToBookRepository.deleteByAccountAndBook(account, book);
+
+        return ResponseEntity.ok("Book removed from library");
+    }
+
 }

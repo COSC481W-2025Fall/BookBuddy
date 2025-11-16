@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { BookDto } from "./types/BookDto";
 import { getMyLibrary } from "./api";
+import { removeFromLibrary } from "./api";
 import "./components/Library.css";
 import "./logo/noCoverFound.png";
 
@@ -213,6 +214,21 @@ export default function Library() {
                     )}
                   </div>
                 )}
+                <button
+                  className="bb-btn bb-btn--danger"
+                  style={{ marginTop: "10px" }}
+                  onClick={async () => {
+                    try {
+                      await removeFromLibrary(b.isbn!);
+                      setBooks(books.filter(book => book.isbn !== b.isbn));
+                    } catch (err: any) {
+                      alert(err.message ?? "Failed to remove book");
+                    }
+                  }}
+                >
+                  Remove
+                </button>
+
               </div>
             </li>
           ))}
