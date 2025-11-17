@@ -76,7 +76,7 @@ export default function Search() {
 
           <button
             type="submit"
-            className="btn btn-primary w-full sm:w-auto mt-1 sm:mt-0"
+            className="btn btn-primary w-full sm:w-auto mt-1 sm:mt-0 bg-[#E2B4BD] hover:bg-[#DDA7B2]"
           >
             Search
           </button>

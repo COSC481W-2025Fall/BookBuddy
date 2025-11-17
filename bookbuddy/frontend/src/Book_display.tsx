@@ -204,14 +204,14 @@ export default function Book_display({ result }: Props) {
               <div className="mt-4 flex flex-wrap gap-3">
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] drop-shadow-2xl"
                   onClick={add_book_to_library(book)}
                 >
                   Add to my library
                 </button>
                 <button
                   type="button"
-                  className="btn"
+                  className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white drop-shadow-2xl"
                   onClick={add_book_to_wishlist(book as WishBookDto)}
                 >
                   Add to wishlist
@@ -226,7 +226,7 @@ export default function Book_display({ result }: Props) {
 
                     window.open(amazonSearchUrl, "_blank");
                   }}
-                  className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white px-4 py-2 rounded-md shadow"
+                  className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white px-4 py-2 rounded-md drop-shadow-2xl"
                 >
                   Search on Amazon
                 </button>
