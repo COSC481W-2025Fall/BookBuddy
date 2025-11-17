@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import type {WishBookDto} from "./types/WishBookDto";
 import {getMyWishBook} from "./api";
+import { removeFromWishlist } from "./api";
 import "./logo/noCoverFound.png";
 
 export default function WishWishBook() {
@@ -99,6 +100,21 @@ export default function WishWishBook() {
                                         {b.genre && <span className="bb-tag">{b.genre}</span>}
                                     </div>
                                 )}
+                                {/* // Remove Button*/}
+                                <button
+                                  className="bb-btn bb-btn--danger"
+                                  style={{ marginTop: "10px" }}
+                                  onClick={async () => {
+                                    try {
+                                      await removeFromWishlist(b.isbn!);
+                                      setWishBooks(wishbooks.filter(w => w.isbn !== b.isbn));
+                                    } catch (err: any) {
+                                      alert(err.message ?? "Failed to remove from wishlist");
+                                    }
+                                  }}
+                                >
+                                  Remove
+                                </button>
                             </div>
                         </li>
                     ))}
