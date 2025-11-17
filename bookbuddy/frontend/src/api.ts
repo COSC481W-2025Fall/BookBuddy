@@ -136,7 +136,7 @@ export async function removeFromLibrary(isbn: string): Promise<void> {
         throw new Error(`Failed to remove book: ${res.status}${text ? " - " + text : ""}`);
     }
 }
-
+//Remove book from wishlist
 export async function removeFromWishlist(isbn: string): Promise<void> {
     const res = await fetch(`${BASE}/wishbooks/remove/${encodeURIComponent(isbn)}`, {
         method: "DELETE",

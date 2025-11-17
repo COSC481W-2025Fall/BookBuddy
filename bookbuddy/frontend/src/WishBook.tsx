@@ -5,7 +5,7 @@ import {getMyWishBook} from "./api";
 import { removeFromWishlist } from "./api";
 import "./logo/noCoverFound.png";
 
-export default function WishWishBook() {
+export default function WishBook() {
     // allows us to navigate to different pages
     const navigate = useNavigate();
     // sets up react hooks for wishbooks, loading state and error state
