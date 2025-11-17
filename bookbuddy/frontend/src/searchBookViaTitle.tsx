@@ -5,4 +5,4 @@ export async function searchBookViaTitle(title: string, BASE: string): Promise<B
        const data = await res.json();
 
        return (data.docs?.[0] as BookDto) ?? null; //returns the first book
-   }
+}
