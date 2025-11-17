@@ -135,19 +135,49 @@ export default function Book_display({ result }: Props) {
               <div className="flex flex-col gap-4 sm:flex-row">
                 {/* Cover */}
                 <div className="sm:w-32 sm:flex-shrink-0 flex justify-center sm:justify-start">
-                  <img
-                    src={renderBookImage(book)}
-                    alt={book.bookname || "Book cover"}
-                    className="h-40 w-28 rounded-xl object-cover shadow"
-                  />
+                  {book.coverid ? (
+                    <a
+                      href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
+                        book.coverid
+                      )}&source=gbs_api`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={renderBookImage(book)}
+                        alt={book.bookname || "Book cover"}
+                        className="h-40 w-28 rounded-xl object-cover shadow"
+                      />
+                    </a>
+                  ) : (
+                    <img
+                      src={renderBookImage(book)}
+                      alt={book.bookname || "Book cover"}
+                      className="h-40 w-28 rounded-xl object-cover shadow"
+                    />
+                  )}
                 </div>
 
                 {/* Text content */}
                 <div className="flex-1 space-y-3">
                   <div>
                     <h3 className="text-lg font-semibold">
-                      {book.bookname || "Untitled book"}
+                      {book.coverid ? (
+                        <a
+                          href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
+                            book.coverid
+                          )}&source=gbs_api`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline"
+                        >
+                          {book.bookname || "Untitled book"}
+                        </a>
+                      ) : (
+                        book.bookname || "Untitled book"
+                      )}
                     </h3>
+
                     <p className="text-sm text-gray-600">
                       {book.author || "Unknown author"}
                     </p>
@@ -200,7 +230,6 @@ export default function Book_display({ result }: Props) {
                 >
                   Search on Amazon
                 </button>
-
               </div>
             </li>
           ))}
