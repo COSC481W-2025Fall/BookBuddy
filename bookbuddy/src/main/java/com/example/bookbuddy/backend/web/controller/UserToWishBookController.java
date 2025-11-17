@@ -3,10 +3,12 @@ package com.example.bookbuddy.backend.web.controller;
 import com.example.bookbuddy.backend.domain.model.*;
 import com.example.bookbuddy.backend.domain.repository.*;
 import com.example.bookbuddy.backend.web.dto.BookDto;
+import com.example.bookbuddy.backend.domain.repository.BookRepository;
 import com.example.bookbuddy.backend.web.dto.WishBookDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -93,6 +95,25 @@ public class UserToWishBookController {
 
             return ResponseEntity.ok(wishbooks);
         }
+    @Transactional
+    @DeleteMapping("/remove/{isbn}")
+    public ResponseEntity<?> removeWishBook(@PathVariable String isbn, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+        }
 
+        // Load the Account
+        Account account = accountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+        // Load the WishBook
+        WishBook wishbook = wishbookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new IllegalArgumentException("WishBook not found"));
+
+        // Delete the relationship row (account + wishbook)
+        userToWishBookRepository.deleteByAccountAndWishBook(account, wishbook);
+
+        return ResponseEntity.ok("Book removed from wishlist");
+    }
 }
