@@ -4,20 +4,14 @@
 FROM node:20 AS frontend-build
 WORKDIR /frontend
 
-# --- ABSOLUTE CACHE BUSTER FOR THE WHOLE FRONTEND STAGE ---
-RUN echo "frontend FULL rebuild $(date)"
-
-# Copy dependency files first
+# Copy dependency files first for caching
 COPY ./frontend/package*.json ./
 RUN npm install
 
-# Copy the rest of the frontend source
+# Copy the rest of the frontend source and build
 COPY ./frontend ./
-
-# Build the frontend
 RUN npm run build
-# dist/ will now contain fresh assets
-
+# 👉 Outputs static files into /frontend/dist
 
 # ===========================
 # Backend Build
@@ -25,19 +19,15 @@ RUN npm run build
 FROM maven:3.9.4-eclipse-temurin-17 AS backend-build
 WORKDIR /app
 
-# --- ABSOLUTE CACHE BUSTER FOR BACKEND STAGE ---
-RUN echo "backend FULL rebuild $(date)"
-
 # Copy Maven files and backend source
 COPY ./pom.xml ./
 COPY ./src ./src
 
-# Copy frontend build into Spring Boot resources
+# Copy frontend build output into Spring Boot's static resources
 COPY --from=frontend-build /frontend/dist ./src/main/resources/static
 
-# Build backend JAR
+# Build backend JAR (skip tests for faster builds)
 RUN mvn clean package -DskipTests
-
 
 # ===========================
 # Runtime
@@ -45,9 +35,8 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
-# Copy only the built JAR
+# Copy only the built JAR (keep image small)
 COPY --from=backend-build /app/target/*.jar app.jar
 
 # Run Spring Boot
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
+ENTRYPOINT ["java","-jar","/app/app.jar"]

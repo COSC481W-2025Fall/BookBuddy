@@ -5,7 +5,7 @@ import Login from "./login";
 import Signup from "./signup";
 import Search from "./Search";
 import Library from "./Library";
-import WishBook from "./WishBook";
+import WishBook from "./WishList";
 import Buddy from "./Buddy_Recommendation";
 
 // Main application component with routing
