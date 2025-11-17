@@ -222,7 +222,7 @@ export default function Book_display({ result }: Props) {
                     const title = book.bookname ?? "";
                     const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(
                       title
-                    ).replace(/%20/g, "+")}`;
+                    ).replace(/%20/g, "+")}&i=stripbooks`;
 
                     window.open(amazonSearchUrl, "_blank");
                   }}
