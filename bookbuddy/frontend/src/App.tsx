@@ -5,7 +5,7 @@ import Login from "./login";
 import Signup from "./signup";
 import Search from "./Search";
 import Library from "./Library";
-import WishBook from "./WishList";
+import WishList from "./WishList";
 import Buddy from "./Buddy_Recommendation";
 
 // Main application component with routing
@@ -19,7 +19,7 @@ export default function App() {
             <Route element={<Layout />}>
                 <Route path="/search" element={<Search />} />
                 <Route path="/library" element={<Library />} />
-                <Route path="/WishBook" element={<WishBook />} />
+                <Route path="/WishList" element={<WishBook />} />
                 <Route path="/Buddy_Recommendation" element ={<Buddy />} />
 
             </Route>
