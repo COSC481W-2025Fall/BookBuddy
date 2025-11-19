@@ -3,11 +3,16 @@ import { searchBookViaTitle } from "./searchBookViaTitle";
 import { addCSVBooks } from "./addCSVBooks";
 
 export default function CSVReader() {
-    const [columnData, setColumnData] = useState<string[]>([]);
+    let [columnData, setColumnData] = useState<string[]>([]);
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
-      if (!file) return;
+      if (file) {
+          setFileName(file.name);
+      } else {
+          setFileName('No File Chosen!');
+          return;
+      }
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -37,19 +42,29 @@ export default function CSVReader() {
     }
 
    const [bookMessages, setBookMessages] = useState<BookMessage[]>([]);
+   const [fileName, setFileName] = useState('No File Chosen!');
 
    useEffect(() => {
        async function processBooks() {
            if (columnData.length === 0) return;
 
+           //Splice to skip header information
+           if(columnData.length > 25) {
+               columnData = columnData.splice(1, 25);
+           } else {
+               columnData = columnData.splice(1, columnData.length);
+           }
+
            const messages: string[] = [];
 
            for (const title of columnData) {
+               const titleClean = title.replaceAll("#","")
+
                // 1. Search the book
-               const found = await searchBookViaTitle(title, BASE); // gets the first book
+               const found = await searchBookViaTitle(titleClean, BASE); // gets the first book
                if (!found) {
-                   messages.push({ title, message: "No result found", success: false });
-                   await delay(1000); // IMPORTANT: prevents rate limit so google doesn't cry :(
+                   messages.push({ titleClean, message: "No result found", success: false });
+                   await delay(100); // IMPORTANT: prevents rate limit so google doesn't cry :(
                    continue;
                }
                 // 2. Add book to backend
@@ -61,9 +76,10 @@ export default function CSVReader() {
                     success: result.ok,
                 });
 
-               await delay(1000);
+               await delay(100);
 
            }
+           messages.push({title: "Done", message: "Added successfully", success: true})
            // 3. Display final summary
            setBookMessages(messages);
        }
@@ -73,22 +89,25 @@ export default function CSVReader() {
 
 
     return (
-      <div className="p-4">
-        <h2 className="text-xl font-semibold mb-2">Upload CSV File</h2>
+      <div>
+        {/*<h2 className="text-xl font-semibold mb-2">Upload CSV File</h2>*/}
+        <label htmlFor="fileUpload" className="bb-btn">{fileName}</label>
         <input
+          style={{ display: "none" }}
+          id="fileUpload"
           type="file"
           accept=".csv"
           onChange={handleFileUpload}
-          className="mb-4 border p-2"
         />
 
-        <div className="space-y-1">
+        {/*<div  className="space-y-1">
             {bookMessages.map((b, i) => (
                 <div key={i} style={{ color: b.success ? "green" : "red" }}>
                     {b.title}: {b.message}
                 </div>
             ))}
-        </div>
+        </div> */}
+        <div> <br /> {bookMessages.map((b) => ("Completed"))}</div>
       </div>
     );
 }
