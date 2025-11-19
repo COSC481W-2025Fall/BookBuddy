@@ -115,6 +115,22 @@ export default function WishList() {
                                 >
                                   Remove
                                 </button>
+                                {/**Add to Library Button */}
+                                <button
+                                   className="bb-btn bb-btn--danger"
+                                   style={{ marginTop: "10px" }}
+                                   onClick={async () => {
+                                       try {
+                                           add_book_to_library(book)
+                                           await removeFromWishlist(b.isbn!);
+                                           setWishBooks(wishbooks.filter(w => w.isbn !== b.isbn));
+                                       } catch (err: any) {
+                                           alert(err.message ?? "Failed to remove from wishlist");
+                                       }
+                                   }}
+                               >
+                                   Add to Library
+                               </button>
                             </div>
                         </li>
                     ))}
