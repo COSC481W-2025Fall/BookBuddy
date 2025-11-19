@@ -22,16 +22,16 @@ export default function Sidebar() {
   return (
     <>
     {/* // Button to toggle sidebar visibility */}
-      <button
-        className="bb-sidebar_toggle"
-        aria-label="Toggle navigation"
-        onClick={() => setOpen((s) => !s)}
-      >
-        ☰
-      </button>
+        <button
+            className="bb-sidebar_toggle bookmark.icon"
+            aria-label="Toggle navigation"
+            onClick={() => setOpen((s) => !s)}
+        >
+            <div className="bookmark icon"></div>
+        </button>
 
-      {/* // The sidebar navigation */}
-      <nav className={`bb-sidebar ${open ? "open" : ""}`} aria-label="Main Navigation">
+        {/* // The sidebar navigation */}
+        <nav className={`bb-sidebar ${open ? "open" : ""}`} aria-label="Main Navigation">
         <div className="bb-sidebar_brand">BookBuddy</div>
         {/* // Navigation links */}
         <ul className="bb-sidebar_links" role="menu">
