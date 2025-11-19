@@ -1,16 +1,50 @@
-    import React, { useState } from "react";
-    import { useNavigate, Link } from "react-router-dom";
-    import { addAccount } from "./api";
-    import type { AccountDto } from "./types/AccountDto";
-    import logo from "./logo/bookbuddy-logo-mywristhurts.png";
-    import "./Styling/signup.css"
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import {addAccount, addLogin} from "./api";
+import type { AccountDto } from "./types/AccountDto";
+import logo from "./logo/bookbuddy-logo-mywristhurts.png";
+import "./Styling/signup.css"
+import type { LoginDto } from "./types/LoginDto";
 
+
+//////////////////////////// SIGNUP CODE ////////////////////////////
     const Signup: React.FC = () => {
       const navigate = useNavigate();
       const [form, setForm] = useState<AccountDto>({ name: "", password: "" });
       const [confirm, setConfirm] = useState<string>("");
       const [loading, setLoading] = useState(false);
       const [error, setError] = useState<string | null>(null);
+      const [seeSignup, setSeeSignup] = useState(false);
+        ////////////////////////////LOGIN CODE ////////////////////////////
+        const [formLN, setFormLN] = useState<LoginDto>({ name: "", password: "" });
+        const [loadingLN, setLoadingLN] = useState(false);
+        const [errorLN, setErrorLN] = useState<string | null>(null);
+        const [seeLogin, setSeeLogin] = useState(false);
+        ////////////////////////////LOGIN CODE ////////////////////////////
+
+
+
+        const onChangeLN = (e: React.ChangeEvent<HTMLInputElement>) => {
+            setFormLN({ ...formLN, [e.target.name]: e.target.value });
+        };
+
+        const logIn = async (e: React.FormEvent) => {
+            e.preventDefault();
+            setErrorLN(null);
+            setLoadingLN(true);
+            try {
+                await addLogin({ name: formLN.name.trim(), password: formLN.password });
+                navigate("/search");
+
+            } catch (err: any) {
+                setErrorLN(err?.message ?? "Login failed. Please check your credentials.");
+            } finally {
+                setLoadingLN(false);
+
+            }
+        };
+////////////////////////////LOGIN CODE ////////////////////////////
+
 
       const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -20,6 +54,8 @@
             setForm({ ...form, [name]: value });
         }
       };
+
+
 
       const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,6 +80,7 @@
           setLoading(false);
         }
       };
+        //////////////////////////// SIGNUP CODE ////////////////////////////
 
         return (
             // Main container with relative positioning and high Z-index to establish a stacking context
@@ -189,11 +226,24 @@
                   </div>
               </div>
 
-              <div className="w-2 bg-gray-700 shadow-xl z-5"></div>
 
-              <div className="w-2/4 h-full max-w-md m-2 p-2  z-5   " >
+                <div className="w-2 bg-gray-700 shadow-xl z-5"/>
+                {/*just add some logic so they cant be the same state at the same time*/}
+                <button className="p-2" type="button"onClick={() => {
+                    setSeeSignup(!seeSignup);
+                    setSeeLogin(!seeLogin);
+                }}>
+                    Click Me!
+                </button>
+
+                <button className="p-2" type="button" onClick={() => setSeeLogin(!seeLogin)}>
+                    NO NO CLICK MEEE!
+                </button>
+
+                {seeSignup && (
+                <div className="w-2/4 h-full max-w-md m-2 p-2  z-5 " >
                   {/* Header / Branding */}
-                  <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
+                    <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
                       <img
                           src={logo}
                           alt="BookBuddy"
@@ -206,7 +256,7 @@
                       <p className="text-sm text-gray-600">
                           Join BookBuddy today
                       </p>
-                  </div>
+                     </div>
 
                   <div className="card">
                       {error && (
@@ -227,10 +277,10 @@
                                   placeholder="Choose a username"
                                   className="input text-xl transition-all form-input-hover"
                                   value={form.name}
-                    onChange={onChange}
-                    required
+                                  onChange={onChange}
+                                  required
                   />
-                </div>
+                          </div>
 
                 <div>
                     <label htmlFor="password" className="label font-bold text-xl t ">
@@ -285,8 +335,93 @@
                 </Link>
               </p>
             </div>
-          </div>
-        </div>
+          </div> )}
+
+
+                {/*////////////////////////////LOGIN CODE ////////////////////////////*/}
+                {seeLogin && (
+
+                <div className="w-2/4 h-full max-w-md m-2 p-2  z-5 " >
+                    {/* Header / Branding */}
+                    <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
+                        <img
+                            src={logo}
+                            alt="BookBuddy"
+                            className="h-20 w-auto sm:h-50 sm:w-auto rounded-4xl  "
+                        />
+                        <h1 className="text-2xl tracking-tight   z-10
+                      transition-all form-label-hover">
+                            Log into your account
+                        </h1>
+
+                    </div>
+
+                    <div className="card">
+                        {error && (
+                            <div className="  rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
+                                {error}
+                            </div>
+                        )}
+
+                        <form onSubmit={logIn} className="space-y-4">
+                                <div>
+                                    <label htmlFor="nameLN" className="labelLN label font-bold text-xl ">
+                                        Username
+                                    </label>
+                                    <input
+                                        id="nameLN"
+                                        name="name"
+                                        type="text"
+                                        autoComplete="username"
+                                        placeholder="e.g. jdoe"
+                                        className="input text-xl transition-all form-input-hover"
+                                        value={formLN.name}
+                                        onChange={onChangeLN}
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="password" className="label font-bold text-xl">
+                                        Password
+                                    </label>
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        autoComplete="current-password"
+                                        placeholder="••••••••"
+                                        className="input text-xl transition-all form-input-hover"
+                                        value={formLN.password}
+                                        onChange={onChangeLN}
+                                        required
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]
+                                                hover:bg-[#F1DADE]  duration-300 focus:outline-none"                                    disabled={loading}
+                                >
+                                    {loadingLN ? "Signing in..." : "Sign in"}
+                                </button>
+                            </form>
+
+                            <p className="mt-6 text-center text-sm text-gray-600">
+                                Don’t have an account?{" "}
+                                <Link
+                                    to="/signup"
+                                    className="text-indigo-600 hover:underline"
+                                >
+                                    Create one
+                                </Link>
+                            </p>
+                        </div>
+                    </div>  ) }
+                </div>
+
+
+
       );
     };
 
