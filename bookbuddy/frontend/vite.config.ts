@@ -2,12 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-    plugins: [react()],
-    build: {
-        outDir: 'dist',        // ✅ build into /frontend/dist (default)
-        emptyOutDir: true,
-        assetsDir: '',         // optional: keep assets flat
-    },
+  plugins: [react()],
+  build: {
+    outDir: '../src/main/resources/static', // Spring Boot serves this
+    emptyOutDir: true,
+    assetsDir: '', // optional: keep assets flat for simplicity
+  },
     server: {
         proxy: {
             '/api': {
@@ -50,16 +50,14 @@ export default defineConfig({
                 changeOrigin: true,
                 secure: false,
             },
-        },
+        }
     },
-    test: {
-        environment: 'jsdom',
-        globals: true,
-        coverage: {
+     test: {
+       environment: 'jsdom',
+       globals: true,
+       coverage: {
             enabled: true, // Enable coverage
             reporter: ['text', 'html', 'lcov'], // Configure desired reporters
-            // Other coverage options like include, exclude, etc.
-        },
-    },
+       },
+   },
 })
-
