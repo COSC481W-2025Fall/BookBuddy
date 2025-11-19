@@ -1,39 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { searchBookViaTitle } from "./searchBookViaTitle";
 import { addCSVBooks } from "./addCSVBooks";
 
 export default function CSVReader() {
-    let [columnData, setColumnData] = useState<string[]>([]);
-
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) {
-          setFileName(file.name);
-      } else {
-          setFileName('No File Chosen!');
-          return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target?.result as string;
-        if (!text) return;
-
-        const lines = text.split(/\r?\n/).filter((line) => line.trim() !== "");
-        const firstColumn = lines.map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[1]);
-        setColumnData(firstColumn);
-      };
-
-      reader.readAsText(file);
-    };
-
-    const [books, setBooks] = useState<any[]>([]);
-
-   //helper function for google crybabies.
-   async function delay(ms: number) {
-       return new Promise(resolve => setTimeout(resolve, ms));
-   }
-   const BASE = "";
+    const [columnData, setColumnData] = useState<string[]>([]);
+    const [bookMessages, setBookMessages] = useState<BookMessage[]>([]);
+    const [fileName, setFileName] = useState("No File Chosen!");
 
     interface BookMessage {
         title: string;
@@ -41,73 +13,118 @@ export default function CSVReader() {
         success: boolean;
     }
 
-   const [bookMessages, setBookMessages] = useState<BookMessage[]>([]);
-   const [fileName, setFileName] = useState('No File Chosen!');
+    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setFileName(file.name);
+        } else {
+            setFileName("No File Chosen!");
+            return;
+        }
 
-   useEffect(() => {
-       async function processBooks() {
-           if (columnData.length === 0) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const text = e.target?.result as string;
+            if (!text) return;
 
-           //Splice to skip header information
-           if(columnData.length > 25) {
-               columnData = columnData.splice(1, 25);
-           } else {
-               columnData = columnData.splice(1, columnData.length);
-           }
+            const lines = text.split(/\r?\n/).filter((line) => line.trim() !== "");
+            const firstColumnRaw = lines.map(
+                (line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[1]
+            );
 
-           const messages: BookMessage[] = [];
+            // 🔥 FIX: Remove undefined values so TypeScript is happy
+            const firstColumn = firstColumnRaw.filter(
+                (x): x is string => x !== undefined
+            );
 
-           for (const title of columnData) {
-               const titleClean = title.replaceAll("#","")
+            setColumnData(firstColumn);
+        };
 
-               // 1. Search the book
-               const found = await searchBookViaTitle(titleClean, BASE); // gets the first book
-               if (!found) {
-                   messages.push({ titleClean, message: "No result found", success: false });
-                   await delay(100); // IMPORTANT: prevents rate limit so google doesn't cry :(
-                   continue;
-               }
+        reader.readAsText(file);
+    };
+
+    // little delay so google doesn't cry :)
+    async function delay(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    const BASE = "";
+
+    useEffect(() => {
+        async function processBooks() {
+            if (columnData.length === 0) return;
+
+            // remove header row & limit to first 25
+            let data = [...columnData];
+            data = data.length > 25 ? data.splice(1, 25) : data.splice(1);
+
+            const messages: BookMessage[] = [];
+
+            for (const title of data) {
+                let titleClean = title.replaceAll("#", "");
+
+                // If you want replaceAll fallback instead, uncomment:
+                // titleClean = title.split("#").join("");
+
+                // 1. Search book
+                const found = await searchBookViaTitle(titleClean, BASE);
+
+                if (!found) {
+                    messages.push({
+                        title: titleClean,
+                        message: "No result found",
+                        success: false,
+                    });
+
+                    await delay(100);
+                    continue;
+                }
+
                 // 2. Add book to backend
                 const result = await addCSVBooks(found, BASE);
 
                 messages.push({
                     title: found.bookname,
-                    message: result.ok ? "Added successfully" : result.message || "Failed",
+                    message: result.ok
+                        ? "Added successfully"
+                        : result.message || "Failed",
                     success: result.ok,
                 });
 
-               await delay(100);
+                await delay(100);
+            }
 
-           }
-           messages.push({title: "Done", message: "Added successfully", success: true})
-           // 3. Display final summary
-           setBookMessages(messages);
-       }
+            messages.push({
+                title: "Done",
+                message: "Added successfully",
+                success: true,
+            });
 
-       processBooks();
-   }, [columnData]);
+            setBookMessages(messages);
+        }
 
+        processBooks();
+    }, [columnData]);
 
     return (
-      <div>
-        {/*<h2 className="text-xl font-semibold mb-2">Upload CSV File</h2>*/}
-        <label htmlFor="fileUpload" className="bb-btn">{fileName}</label>
-        <input
-          style={{ display: "none" }}
-          id="fileUpload"
-          type="file"
-          accept=".csv"
-          onChange={handleFileUpload}
-        />
+        <div>
+            <label htmlFor="fileUpload" className="bb-btn">
+                {fileName}
+            </label>
+            <input
+                style={{ display: "none" }}
+                id="fileUpload"
+                type="file"
+                accept=".csv"
+                onChange={handleFileUpload}
+            />
 
-        {/*<div  className="space-y-1">
-            {bookMessages.map((b, i) => (
-                <div key={i} style={{ color: b.success ? "green" : "red" }}>
-                    {b.title}: {b.message}
-                </div>
-            ))}
-        </div> */}
-        <div> <br /> {bookMessages.map((b) => ("Completed"))}</div>
-      </div>
+            <div>
+                <br />
+                {bookMessages.map((b, i) => (
+                    <div key={i}>Completed</div>
+                ))}
+            </div>
+        </div>
     );
 }
