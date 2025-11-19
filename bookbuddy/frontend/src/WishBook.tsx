@@ -4,6 +4,7 @@ import type {WishBookDto} from "./types/WishBookDto";
 import {getMyWishBook} from "./api";
 import { removeFromWishlist } from "./api";
 import "./logo/noCoverFound.png";
+import type { BookDto } from "./types/BookDto";
 
 export default function WishList() {
     // allows us to navigate to different pages
@@ -39,6 +40,29 @@ export default function WishList() {
             }
         })();
     }, [navigate]);
+
+    async function addToLibraryFromWishBook(w: WishBookDto): Promise<void> {
+        const newBook: BookDto = {
+            bookname: w.bookname ?? "Unknown",
+            author: w.author ?? "Unknown",
+            isbn: w.isbn ?? "Unknown",
+            genre: w.genre ?? "Unknown",
+            coverid: w.coverid ?? "Unknown",
+            publication: w.publication ?? "Unknown",
+            pagecount: w.pagecount ?? 0,
+            description: w.description ?? "No description available",
+           };
+
+        const res = await fetch(`/books/add`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newBook),
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to add to library");
+        }
+    }
 
     // render loading, error, or the library
     if (loading) {
@@ -117,20 +141,20 @@ export default function WishList() {
                                 </button>
                                 {/**Add to Library Button */}
                                 <button
-                                   className="bb-btn bb-btn--danger"
-                                   style={{ marginTop: "10px" }}
-                                   onClick={async () => {
-                                       try {
-                                           add_book_to_library(book)
-                                           await removeFromWishlist(b.isbn!);
-                                           setWishBooks(wishbooks.filter(w => w.isbn !== b.isbn));
-                                       } catch (err: any) {
-                                           alert(err.message ?? "Failed to remove from wishlist");
-                                       }
-                                   }}
-                               >
-                                   Add to Library
-                               </button>
+                                    className="bb-btn bb-btn--danger"
+                                    style={{ marginTop: "10px" }}
+                                    onClick={async () => {
+                                        try {
+                                            await addToLibraryFromWishBook(b);  // add to library
+                                            await removeFromWishlist(b.isbn!);  // delete from wishlist
+                                            setWishBooks(wishbooks.filter(w => w.isbn !== b.isbn)); // update UI
+                                        } catch (err: any) {
+                                            alert(err.message ?? "Failed to move book to library");
+                                        }
+                                    }}
+                                >
+                                    Add to Library
+                                </button>
                             </div>
                         </li>
                     ))}
