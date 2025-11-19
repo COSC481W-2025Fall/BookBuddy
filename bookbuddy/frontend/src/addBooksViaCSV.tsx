@@ -55,7 +55,7 @@ export default function CSVReader() {
                columnData = columnData.splice(1, columnData.length);
            }
 
-           const messages: string[] = [];
+           const messages: BookMessage[] = [];
 
            for (const title of columnData) {
                const titleClean = title.replaceAll("#","")
