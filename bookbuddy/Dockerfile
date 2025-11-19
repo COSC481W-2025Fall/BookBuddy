@@ -38,7 +38,7 @@ RUN echo "=== Starting backend build ===" \
 # ===========================
 # RUNTIME STAGE
 # ===========================
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
 # Copy compiled JAR from backend build

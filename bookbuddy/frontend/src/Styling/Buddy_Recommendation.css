@@ -1,3 +1,4 @@
+/*Form CSS*/
 .questions-container {
     max-width: 800px;
     margin: 80px auto;
@@ -5,10 +6,10 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-    background: #ECF5FF;
+    background: whitesmoke;
     text-align: center;
 }
-
+/*#ECF5FF*/
 .questionBlock {
     margin-bottom: 24px;
 }
@@ -24,10 +25,10 @@
 .aBox {
     width: 100%;
     max-width: 700px;
-    padding: 8px;
+    padding: 12px;
     margin-top: 4px;
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 18px;
     background: white;
     outline: #0056b3;
 }
@@ -53,14 +54,62 @@
     padding: 10px;
     width: 100%;
     max-width: 300px;
-    background: #007bff;
+    background: #F1DADE;
     border: none;
-    color: #fff;
-    border-radius: 6px;
+    color: #000;
+    border-radius: 15px;
     font-size: 16px;
     cursor: pointer;
+    outline: 1px solid #ccc;
+    margin-bottom: 15px;
 }
 
 .submitButton:hover {
-    background: #0056b3;
+    background: #E2B4BD;
+
+}
+
+.filterQuestionBlock {
+    margin-bottom: 24px;
+}
+
+.filterQuestionLabel {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+/*Results CSS*/
+.resultBox {
+    position: relative;
+    max-width: 90%;
+    max-height: 100%;
+    min-width: 200px;
+    min-height: 200px;
+    margin: 2rem auto;
+    background-image: url("buddyresultbackground.jpg");
+    background-position: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    text-align: center;
+    z-index: 10;
+    color: #000;
+    font-size: 20px;
+}
+
+.eStyle {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: palevioletred;
+    font-size: 1.1rem;
 }

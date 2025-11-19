@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {SendQeustions} from "./api";
 import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
-import "./components/Book_loading.css";
+import "./Styling/Book_loading.css";
 import "./Styling/Buddy_Recommendation.css";
 
 
@@ -26,9 +26,10 @@ function Buddy() {
     const [RQ5, setRQ5] = useState("");
     // element we use to show user how meny chars they have left
     const [textlengs, setTextlengs] = useState(maxInput)
+    // state we use to show the result box
+    const [isResBoxVisible, setResBoxVisible] = useState(false);
     // state we use to show the rec div
     const [isDivVisible, setIsDivVisible] = useState(false);
-    const [darkbox, setDarkBox] = useState(false);
     // hook we use to hold the openAI respones
     const [bookrec,setBookrec] = useState("I WOULD RECOMMEND THIS BOOK");
     // value that holds the book title and sometimes the book author ( basically everything up until the first ','
@@ -36,7 +37,7 @@ function Buddy() {
     //example of this is the book 1984 by George Orwell. the book will not show less the author is there too.
     //however if you just search George Orwell it wont come up at all so this is epic
     const [booktitle, setBooktitle] = useState("");
-
+    const [buttonPressed, setButtonPressed] = useState(false);
 
     const parseBookTitle = (responseString: string) => {
         // Finds the position of the first ","
@@ -134,7 +135,7 @@ function Buddy() {
 
 
         if (
-            RQ0 ===""||
+            RQ0 === "" ||
             RQ1 === "" ||
             RQ2 === "" ||
             RQ3 === "" ||
@@ -144,8 +145,8 @@ function Buddy() {
             seterror("No questions can be left blank");
             return;
         }
-        setDarkBox(true);
-
+        setResBoxVisible(true)
+        
         // CATS each Question with the Answer
         const Q_A0 = `${Q0} ${RQ0}`;
         const Q_A1 = `${Q1} ${RQ1}`;
@@ -184,19 +185,18 @@ function Buddy() {
         }
 
         setIsDivVisible(true);
+        setButtonPressed(true)
     };
     // ya know the basic html we update the react hook each time the user enters a value
     return (
         <div style={{width: '', overflowWrap: 'break-word'}}>
             <>
-
-                <h1>{error}</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="questions-container">
 
-                    {/* Question 1 */}
-                        <div className="questionBlock">
-                            <label className="questionLabel" >Filter question: {Q0}</label>
+                    {/* Initial Filter Question */}
+                        <div className="filterQuestionBlock">
+                            <label className="filterQuestionLabel" >{Q0}</label>
                             <input
                                 className="aBox"
                                 type="text"
@@ -214,7 +214,7 @@ function Buddy() {
                                 type="text"
                                 value={RQ1}
                                 onChange={(e) => setRQ1(e.target.value)}
-                                placeholder=""
+                                placeholder="..."
                             />
                         </div>
 
@@ -226,7 +226,7 @@ function Buddy() {
                                 type="text"
                                 value={RQ2}
                                 onChange={(e) => setRQ2(e.target.value)}
-                                placeholder=""
+                                placeholder="..."
                             />
                         </div>
 
@@ -238,7 +238,7 @@ function Buddy() {
                                 type="text"
                                 value={RQ3}
                                 onChange={(e) => setRQ3(e.target.value)}
-                                placeholder=""
+                                placeholder="..."
                             />
                         </div>
 
@@ -250,7 +250,7 @@ function Buddy() {
                                 type="text"
                                 value={RQ4}
                                 onChange={(e) => setRQ4(e.target.value)}
-                                placeholder=""
+                                placeholder="..."
                             />
                         </div>
 
@@ -262,44 +262,32 @@ function Buddy() {
                                 type="text"
                                 value={RQ5}
                                 onChange={(e) => setRQ5(e.target.value)}
-                                placeholder=""
+                                placeholder="..."
                             />
                         </div>
+                        {!buttonPressed && (
+                            <button type="submit" className="submitButton">Ask a Buddy!</button>
+                        )}
 
-                        <button type="submit" className="submitButton">Ask a Buddy!</button>
+                        <div className="eStyle">
+                            {error}
+                        </div>
                     </div>
                 </form>
             </>
 
+            {isResBoxVisible && (
 
-            {darkbox && (
-
-                <div style={{
-
-                    position: 'fixed', // 2. Absolute positioning is key
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Black with 50% opacity
-                    display: 'flex',
-
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: 0, // 3. Ensure it's on top of everything
-                    color: 'white',
-                    fontSize: '20px',
-                    textAlign: 'center'
-                }}>
+                <div className="resultBox">
                     {!isDivVisible && (
-                    <div className="book">
-                        <div className="book__pg-shadow"></div>
-                        <div className="book__pg"></div>
-                        <div className="book__pg book__pg--2"></div>
-                        <div className="book__pg book__pg--3"></div>
-                        <div className="book__pg book__pg--4"></div>
-                        <div className="book__pg book__pg--5"></div>
-                    </div>)}
+                        <div className="book">
+                            <div className="book__pg-shadow"></div>
+                            <div className="book__pg"></div>
+                            <div className="book__pg book__pg--2"></div>
+                            <div className="book__pg book__pg--3"></div>
+                            <div className="book__pg book__pg--4"></div>
+                            <div className="book__pg book__pg--5"></div>
+                        </div>)}
 
                     {isDivVisible && (
                         <div style={{
@@ -310,7 +298,7 @@ function Buddy() {
                             height: 'auto',
                             minWidth: '200px',
                             minHeight: '200px',
-                            backgroundColor: 'rgba(255, 255, 255, 1)',
+                            backgroundColor: 'whitesmoke',
                             border: 'black',
                             borderStyle: 'solid',
                             borderWidth: '5px',
