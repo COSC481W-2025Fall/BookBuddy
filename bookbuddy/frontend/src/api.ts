@@ -77,7 +77,11 @@ export async function getAccountById(id: number): Promise<AccountDto> {
     if (!res.ok) throw new Error(`GetAccount failed: ${res.status}`);
     return res.json();
 }
-
+export async function getCurrentUser(): Promise<AccountDto> {
+    const res = await fetch(`/Account/getCurrentUser`, { credentials: "include" });
+    if (!res.ok) throw new Error(`GetCurrentUser failed: ${res.status}`);
+    return res.json();
+}
 // ===========================
 // Get user's library
 // ===========================
