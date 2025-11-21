@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { BookDto } from "./types/BookDto";
 import { getMyLibrary } from "./api";
-import "./components/Library.css";
 import "./logo/noCoverFound.png";
 
 type SortKey = "name" | "author" | "genre";
@@ -101,123 +100,166 @@ export default function Library() {
 
   if (loading) {
     return (
-      <div className="bb-lib wrap">
-        <h1 className="bb-lib__title">My Library</h1>
-        <p className="bb-lib__status">Loading your books…</p>
+      <div className="min-h-[60vh] bg-slate-50">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-16">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+            My Library
+          </h1>
+          <p className="mt-4 text-sm text-slate-500">
+            Loading your books…
+          </p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bb-lib wrap">
-        <h1 className="bb-lib__title">My Library</h1>
-        <div className="bb-lib__error" role="alert">
-          {error}
+      <div className="min-h-[60vh] bg-slate-50">
+        <div className="mx-auto max-w-6xl px-4 py-10">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+              My Library
+            </h1>
+          </div>
+
+          <div
+            className="mt-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700"
+            role="alert"
+          >
+            {error}
+          </div>
+
+          <button
+            className="mt-6 inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+            onClick={() => navigate("/search")}
+          >
+            Go to Search
+          </button>
         </div>
-        <button className="bb-btn" onClick={() => navigate("/search")}>
-          Go to Search
-        </button>
       </div>
     );
   }
 
   return (
-    <div className="bb-lib wrap">
-      <div className="bb-lib__header">
-        <h1 className="bb-lib__title">My Library</h1>
+    <div className="min-h-[60vh] bg-slate-50">
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        {/* Header + controls */}
+        <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+              My Library
+            </h1>
+            <p className="mt-1 text-sm text-slate-500">
+              Browse the books you&apos;ve added to your collection.
+            </p>
+          </div>
 
-        {/* Sort controls */}
-        <div className="bb-lib__controls" aria-label="Sort options">
-          <label className="bb-field">
-            <span className="bb-field__label">Sort by</span>
-            <select
-              className="bb-select"
-              value={sortKey}
-              onChange={(e) => setSortKey(e.target.value as SortKey)}
-            >
-              <option value="name">Name (Title)</option>
-              <option value="author">Author</option>
-              <option value="genre">Genre</option>
-            </select>
-          </label>
-
-          <button
-            type="button"
-            className="bb-btn bb-btn--ghost"
-            onClick={() =>
-              setSortDir((d) => (d === "asc" ? "desc" : "asc"))
-            }
-            aria-label={`Toggle sort direction, currently ${
-              sortDir === "asc" ? "ascending" : "descending"
-            }`}
-            title={`Sort ${sortDir === "asc" ? "A→Z" : "Z→A"}`}
+          {/* Sort controls */}
+          <div
+            className="flex flex-wrap items-center gap-3"
+            aria-label="Sort options"
           >
-            {sortDir === "asc" ? "A→Z" : "Z→A"}
-          </button>
-        </div>
-      </div>
+            <label className="flex items-center gap-2 text-sm text-slate-600">
+              <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                Sort by
+              </span>
+              <select
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                value={sortKey}
+                onChange={(e) => setSortKey(e.target.value as SortKey)}
+              >
+                <option value="name">Name (Title)</option>
+                <option value="author">Author</option>
+                <option value="genre">Genre</option>
+              </select>
+            </label>
 
-      {sortedBooks.length === 0 ? (
-        <div className="bb-empty">
-          <p>You haven't added any books yet.</p>
-          <button className="bb-btn" onClick={() => navigate("/search")}>
-            Search for books
-          </button>
-        </div>
-      ) : (
-        <ul className="bb-grid" aria-label="Your saved books">
-          {sortedBooks.map((b, i) => (
-            <li
-              key={(b.isbn ?? "no-isbn") + "-" + i}
-              className="bb-card"
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              onClick={() =>
+                setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+              }
+              aria-label={`Toggle sort direction, currently ${
+                sortDir === "asc" ? "ascending" : "descending"
+              }`}
+              title={`Sort ${sortDir === "asc" ? "A→Z" : "Z→A"}`}
             >
-              <div className="bb-card__media">
-                {/* Book cover image with fallback on error */}
-                <img
-                  src={coverUrl((b as any).coverid)}
-                  alt={`${b.bookname ?? "Book"} cover`}
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src =
-                      "/hobbit-placeholder.jpg";
-                  }}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
-              </div>
-              <div className="bb-card__body">
-                {/* Book title */}
-                <h2 className="bb-card__title">
-                  {b.bookname || "Untitled"}
-                </h2>
+              <span>{sortDir === "asc" ? "A→Z" : "Z→A"}</span>
+            </button>
+          </div>
+        </div>
 
-                {/* Author */}
-                {b.author && (
-                  <div className="bb-card__meta">{b.author}</div>
-                )}
+        {sortedBooks.length === 0 ? (
+          <div className="mt-16 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
+            <p className="text-sm text-slate-600">
+              You haven&apos;t added any books yet.
+            </p>
+            <button
+              className="mt-6 inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+              onClick={() => navigate("/search")}
+            >
+              Search for books
+            </button>
+          </div>
+        ) : (
+          <ul
+            className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            aria-label="Your saved books"
+          >
+            {sortedBooks.map((b, i) => (
+              <li
+                key={(b.isbn ?? "no-isbn") + "-" + i}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className="relative aspect-[2/3] w-full bg-slate-100">
+                  {/* Book cover image with fallback on error */}
+                  <img
+                    src={coverUrl((b as any).coverid)}
+                    alt={`${b.bookname ?? "Book"} cover`}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        "/hobbit-placeholder.jpg";
+                    }}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
 
-                {/* ISBN + Genre tags */}
-                {(b.isbn || (b as any).genre) && (
-                  <div className="bb-card__tags">
-                    {b.isbn && (
-                      <span className="bb-tag">ISBN: {b.isbn}</span>
-                    )}
-                    {(b as any).genre && (
-                      <span className="bb-tag">
-                        {(b as any).genre}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+                <div className="flex flex-1 flex-col gap-2 p-4">
+                  {/* Book title */}
+                  <h2 className="text-base font-semibold text-slate-900">
+                    {b.bookname || "Untitled"}
+                  </h2>
+
+                  {/* Author */}
+                  {b.author && (
+                    <div className="text-sm text-slate-600">
+                      {b.author}
+                    </div>
+                  )}
+
+                  {/* ISBN + Genre tags */}
+                  {(b.isbn || (b as any).genre) && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {b.isbn && (
+                        <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                          ISBN: {b.isbn}
+                        </span>
+                      )}
+                      {(b as any).genre && (
+                        <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">
+                          {(b as any).genre}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
