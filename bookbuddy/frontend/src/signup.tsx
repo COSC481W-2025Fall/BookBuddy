@@ -142,84 +142,83 @@ import type { LoginDto } from "./types/LoginDto";
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-one book-8-pos">
+                      <div className="book-3d book-cover-eight book-8-pos">
                           <div className="page"></div>
                       </div>
 
 
-                      <div className="book-3d book-cover-two book-9-pos">
+                      <div className="book-3d book-cover-nine book-9-pos">
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-three book-10-pos">
-                          <div className="page"></div>
-                      </div>
-
-
-                      <div className="book-3d book-cover-five book-13-pos">
+                      <div className="book-3d book-cover-ten book-10-pos">
                           <div className="page"></div>
                       </div>
 
 
-                      <div className="book-3d book-cover-six book-minus-one-pos">
-                          <div className="page"></div>
-                      </div>
-
-                      <div className="book-3d book-cover-seven book-minus-two-pos">
-                          <div className="page"></div>
-                      </div>
-
-                      <div className="book-3d book-cover-four book-minus-three-pos">
-                          <div className="page"></div>
-                      </div>
-
-                      <div className="book-3d book-cover-four book-minus-four-pos">
-                          <div className="page"></div>
-                      </div>
-
-                      <div className="book-3d six book-minus-five-pos">
-                          <div className="page"></div>
-                      </div>
-
-                      <div className="book-3d book-cover-six book-minus-six-pos">
-                          <div className="page"></div>
-                      </div>
-
-                      <div className="book-3d book-cover-four book-minus-seven-pos">
+                      <div className="book-3d book-cover-eleven book-13-pos">
                           <div className="page"></div>
                       </div>
 
 
-
-                      <div className="book-3d book-cover-four book-plus-1-pos">
+                      <div className="book-3d book-cover-twelve book-minus-one-pos">
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-four book-plus-2-pos">
+                      <div className="book-3d book-cover-thirteen book-minus-two-pos">
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-four book-plus-3-pos">
+                      <div className="book-3d book-cover-fourteten book-minus-three-pos">
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-four book-plus-4-pos">
+                      <div className="book-3d book-cover-fifteen book-minus-four-pos">
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-four book-plus-5-pos">
+                      <div className="book-3d book-cover-sixteen book-minus-five-pos">
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-four book-plus-6-pos">
+                      <div className="book-3d book-cover-seventeen book-minus-six-pos">
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-four book-plus-7-pos">
+                      <div className="book-3d book-cover-eighteen book-minus-seven-pos">
                           <div className="page"></div>
                       </div>
 
-                      <div className="book-3d book-cover-four book-plus-8-pos">
+
+                      <div className="book-3d book-cover-nineteen book-plus-1-pos">
+                          <div className="page"></div>
+                      </div>
+
+                      <div className="book-3d book-cover-twenty book-plus-2-pos">
+                          <div className="page"></div>
+                      </div>
+
+                      <div className="book-3d book-cover-twenty-one book-plus-3-pos">
+                          <div className="page"></div>
+                      </div>
+
+                      <div className="book-3d book-cover-twenty-two book-plus-4-pos">
+                          <div className="page"></div>
+                      </div>
+
+                      <div className="book-3d book-cover-twenty-three book-plus-5-pos">
+                          <div className="page"></div>
+                      </div>
+
+                      <div className="book-3d book-cover-twenty-four book-plus-6-pos">
+                          <div className="page"></div>
+                      </div>
+
+                      <div className="book-3d book-cover-twenty-five book-plus-7-pos">
+                          <div className="page"></div>
+                      </div>
+
+                      <div className="book-3d book-cover-twenty-six book-plus-8-pos">
                           <div className="page"></div>
                       </div>
 
