@@ -188,24 +188,7 @@ export default function Library() {
             </div>
           </li>
           <li className="bb-card">
-            <div className="bb-card__media">
-              <img
-                src={tempAddBook}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-            </div>
-            <div className="bb-card__body">
-              <h2 className="bb-card__title">
-                Add your Goodreads™ Library!
-              </h2>
-              <br />
-              <CSVReader />
-            </div>
+            <CSVReader />
           </li>
             </ul>
         </div>
@@ -276,24 +259,7 @@ export default function Library() {
             </li>
           ))}
           <li className="bb-card">
-            <div className="bb-card__media">
-              <img
-                src={tempAddBook}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-            </div>
-            <div className="bb-card__body">
-              <h2 className="bb-card__title">
-                Add your Goodreads™ Library!
-              </h2>
-              <br />
-              <CSVReader />
-            </div>
+                <CSVReader />
           </li>
           </ul>
       )}
