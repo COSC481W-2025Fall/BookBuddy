@@ -4,6 +4,9 @@ import type { BookDto } from "./types/BookDto";
 import { getMyLibrary } from "./api";
 import "./components/Library.css";
 import "./logo/noCoverFound.png";
+import tempAddBook from "./logo/tempAddBook.png";
+import tempSearchBook from "./logo/tempSearchBook.png";
+import CSVReader from "./addBooksViaCSV"
 
 type SortKey = "name" | "author" | "genre";
 type SortDir = "asc" | "desc";
@@ -160,10 +163,33 @@ export default function Library() {
 
       {sortedBooks.length === 0 ? (
         <div className="bb-empty">
-          <p>You haven't added any books yet.</p>
-          <button className="bb-btn" onClick={() => navigate("/search")}>
-            Search for books
-          </button>
+            <ul className="bb-grid" aria-label="Your saved books">
+            <li className="bb-card">
+              <div className="bb-card__media">
+                <img
+                  src={tempSearchBook}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              </div>
+              <div className="bb-card__body">
+              <h2 className="bb-card__title">
+                  You haven't added any books!
+              </h2>
+              <br />
+              <button className="bb-btn" onClick={() => navigate("/search")}>
+                  Add Some!
+              </button>
+            </div>
+          </li>
+          <li className="bb-card">
+            <CSVReader />
+          </li>
+            </ul>
         </div>
       ) : (
         <ul className="bb-grid" aria-label="Your saved books">
@@ -216,7 +242,10 @@ export default function Library() {
               </div>
             </li>
           ))}
-        </ul>
+          <li className="bb-card">
+                <CSVReader />
+          </li>
+          </ul>
       )}
     </div>
   );
