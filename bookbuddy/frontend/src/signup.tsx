@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {addAccount, addLogin} from "./api";
 import type { AccountDto } from "./types/AccountDto";
@@ -46,6 +46,15 @@ import type { LoginDto } from "./types/LoginDto";
 ////////////////////////////LOGIN CODE ////////////////////////////
 
 
+            // state to track if the sidebar is open (true) or closed (false)
+            const [isOpen, setIsOpen] = useState(false);
+
+            // function to toggle the state
+            const toggleSidebar = () => {
+                setIsOpen(!isOpen);
+            }
+
+
       const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if (name === "confirm") {
@@ -79,7 +88,12 @@ import type { LoginDto } from "./types/LoginDto";
         } finally {
           setLoading(false);
         }
+
       };
+
+
+
+
         //////////////////////////// SIGNUP CODE ////////////////////////////
 
         return (
@@ -95,17 +109,24 @@ import type { LoginDto } from "./types/LoginDto";
                 {/* ---------------------------- */}
 
 
-                {/* LEFT COLUMN: Animated background section */}
+
                 <div
                     className="flex-grow flex items-center justify-center gradient-background-books relative h-screen p-8 overflow-hidden z-[-2]">
 
-                    {/* --- NEW OVERLAY LAYER --- */}
-                    {/* This div covers the entire left column (inset-0) and applies the red transparency.
-                  It has a higher z-index than the animated books, but lower than the text. */}
                     <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-1"></div>
                     {/* ------------------------- */}
 
+                    <button className="p-2 z-50 button-bubble  left-3" type="button"onClick={() => {
+                        setSeeSignup(!seeSignup);
 
+                    }}>
+                        Click Me!
+                    </button>
+
+
+                    <button className="p-2 button-bubble z-10" type="button" onClick={() => setSeeLogin(!seeLogin)}>
+                        NO NO CLICK MEEE!
+                    </button>
 
 
 
@@ -226,18 +247,132 @@ import type { LoginDto } from "./types/LoginDto";
               </div>
 
 
-                <div className="w-2 bg-gray-700 shadow-xl z-5"/>
-                {/*just add some logic so they cant be the same state at the same time*/}
-                <button className="p-2" type="button"onClick={() => {
-                    setSeeSignup(!seeSignup);
-                    setSeeLogin(!seeLogin);
-                }}>
-                    Click Me!
-                </button>
+                <>
+                    <div
+                        className={`
+                              w-64  <-- **Change: Set a definitive width (e.g., 256px)**
+                              bg-gray-700 
+                              shadow-xl 
+                              z-50 
+                              fixed 
+                              top-0 
+                              h-full 
+                              transition-all 
+                              duration-300 
+                              ease-in-out
+                              ${isOpen ? 'right-50' : 'right-[-256px]'}  <-- **Crucial Change: Hide it fully**
+                            `}
 
-                <button className="p-2" type="button" onClick={() => setSeeLogin(!seeLogin)}>
-                    NO NO CLICK MEEE!
-                </button>
+                    >
+                        {/*{seeSignup && (*/}
+                        <div className="w-full h-full max-w-md m-2 p-2  z-5 " >
+                            {/* Header / Branding */}
+                            <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
+                                <img
+                                    src={logo}
+                                    alt="BookBuddy"
+                                    className="h-20 w-auto sm:h-50 sm:w-auto rounded-4xl  "
+                                />
+                                <h1 className="text-2xl tracking-tight   z-10
+                      transition-all form-label-hover">
+                                    Create your account
+                                </h1>
+                                <p className="text-sm text-gray-600">
+                                    Join BookBuddy today
+                                </p>
+                            </div>
+
+                            <div className="card">
+                                {error && (
+                                    <div className="  rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
+                                        {error}
+                                    </div>
+                                )}
+
+                                <form onSubmit={onSubmit} className="space-y-12" >
+                                    <div>
+                                        <label htmlFor="name" className="label font-bold text-xl " >
+                                            Username
+                                        </label>
+                                        <input
+                                            id="name"
+                                            name="name"
+                                            type="text"
+                                            placeholder="Choose a username"
+                                            className="input text-xl transition-all form-input-hover"
+                                            value={form.name}
+                                            onChange={onChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="password" className="label font-bold text-xl t ">
+                                            Password
+                                        </label>
+                                        <input
+                                            id="password"
+                                            name="password"
+                                            type="password"
+                                            placeholder="Create a password"
+                                            className="input text-xl transition-all form-input-hover"
+                                            value={form.password}
+                                            onChange={onChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="confirm" className="label font-bold text-xl " >
+                                            Confirm password
+                                        </label>
+                                        <input
+                                            id="confirm"
+                                            name="confirm"
+                                            type="password"
+                                            placeholder="Re-enter your password"
+                                            className="input text-xl transition-all form-input-hover"
+                                            value={confirm}
+                                            onChange={onChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]
+                  hover:bg-[#F1DADE]  duration-300 focus:outline-none"
+                                        disabled={loading}
+
+                                    >
+                                        {loading ? "Creating account..." : "Create account"}
+                                    </button>
+                                </form>
+
+                                <p className="mt-6 text-center text-sm text-gray-600">
+                                    Already have an account?{" "}
+                                    <Link
+                                        to="/login"
+                                        className="text-indigo-600 hover:underline"
+                                    >
+                                        Sign in
+                                    </Link>
+                                </p>
+                            </div>
+                      </div>    {/*)}*/}
+
+                        {/* Content of your sidebar/div */}
+                    </div>
+
+                    <button
+                        onClick={toggleSidebar}
+                        className="fixed top-4 right-4 p-2 bg-blue-500 text-white rounded z-50"
+                    >
+                        {isOpen ? 'Close Sidebar' : 'Open Sidebar'}
+                    </button>
+                </>
+
+
 
                 {seeSignup && (
                 <div className="w-2/4 h-full max-w-md m-2 p-2  z-5 " >
@@ -340,7 +475,7 @@ import type { LoginDto } from "./types/LoginDto";
                 {/*////////////////////////////LOGIN CODE ////////////////////////////*/}
                 {seeLogin && (
 
-                <div className="w-2/4 h-full max-w-md m-2 p-2  z-5 " >
+                <div className="w-2/4 h-full max-w-md m-2 p-2  z-5 signin-box" >
                     {/* Header / Branding */}
                     <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
                         <img

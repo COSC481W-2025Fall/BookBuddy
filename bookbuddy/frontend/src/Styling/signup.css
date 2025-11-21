@@ -19,6 +19,34 @@ html, body {
     }
 }
 
+
+
+/* In your CSS file */
+
+/* In your CSS file */
+
+.sidebar-closed {
+    /* Hides the element off the screen to the right */
+    transform: translateX(100vw);
+    left: 0;
+}
+
+.sidebar-open {
+    /* **Crucial Change:** Centers the element horizontally. */
+    /* 1. Start half the viewport width (50vw). */
+    /* 2. Subtract half the element's width (224px, which is 448px / 2). */
+
+    transform: translateX(0);
+
+    /* We use 50% here as the form is w-2/4 (50%) */
+    left: calc(50vw - 224px); /* Assuming max-w-md is 448px, half is 224px */
+}
+
+.sidebar-transition {
+    /* Animate both 'left' and 'transform' */
+    transition: left 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
 .gradient-background-books {
     background: radial-gradient(
             circle at center,
@@ -458,6 +486,11 @@ book-cover-eighteen .page {
     transform: scale(1.05) translateY(-2px);
 }
 
+.button-bubble {
+
+    background-color: rgb(240, 240, 240);
+    margin-left: 200px;
+}
 /* #424b54 gray
 # 235789 blue
 #91abc4 fish
