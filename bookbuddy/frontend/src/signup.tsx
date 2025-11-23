@@ -22,7 +22,9 @@ import type { LoginDto } from "./types/LoginDto";
         const [seeLogin, setSeeLogin] = useState(false);
         ////////////////////////////LOGIN CODE ////////////////////////////
 
-
+        const sleep = (ms: number | undefined) => {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
 
         const onChangeLN = (e: React.ChangeEvent<HTMLInputElement>) => {
             setFormLN({ ...formLN, [e.target.name]: e.target.value });
@@ -49,10 +51,11 @@ import type { LoginDto } from "./types/LoginDto";
             // state to track if the sidebar is open (true) or closed (false)
             const [isOpen, setIsOpen] = useState(false);
 
-            // function to toggle the state
+            // functional update form ( gets around reacts batch updates
             const toggleSidebar = () => {
-                setIsOpen(!isOpen);
-            }
+
+            setIsOpen(prevIsOpen => !prevIsOpen);
+        }
 
 
       const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,17 +119,36 @@ import type { LoginDto } from "./types/LoginDto";
                     <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-1"></div>
                     {/* ------------------------- */}
 
-                    <button className="p-2 z-50 button-bubble  left-3" type="button"onClick={() => {
-                        setSeeSignup(!seeSignup);
+                    <button className="p-2 z-50 button-bubble  left-3" type="button"onClick={async () => {
+                        toggleSidebar();
+                        await sleep(700);
+                        setSeeLogin(true); // Action 1
+                        setSeeSignup( false);
+                        toggleSidebar();
 
                     }}>
-                        Click Me!
+                        Login
                     </button>
 
 
-                    <button className="p-2 button-bubble z-10" type="button" onClick={() => setSeeLogin(!seeLogin)}>
-                        NO NO CLICK MEEE!
+
+
+                    <button className="p-2 button-bubble z-10" type="button"onClick={async () => {
+                        toggleSidebar();
+                        await sleep(700);
+                        setSeeLogin(false);
+                        setSeeSignup(true);// Action 1
+                        toggleSidebar();       // Action 2
+                    }}>
+                        signup {isOpen ? 'Close Sidebar' : 'Open Sidebar'}
                     </button>
+
+                    {/*<button*/}
+                    {/*    onClick={toggleSidebar}*/}
+                    {/*    className="fixed top-4 right-4 p-2 bg-blue-500 text-white rounded z-50"*/}
+                    {/*>*/}
+
+                    {/*</button>*/}
 
 
 
@@ -246,26 +268,117 @@ import type { LoginDto } from "./types/LoginDto";
                   </div>
               </div>
 
+            <>
+                <div
+                    className={`
+                          w-vh
+                          bg-white 
+                          shadow-xl 
+                          fixed 
+                          top-0 
+                          h-full 
+                          transition-all 
+                          duration-700 
+                          ease-in-out
+                          ${isOpen ? 'right-0' : 'right-[-456px]'}  <-- **Crucial Change: Hide it fully**`} >
 
-                <>
-                    <div
-                        className={`
-                              w-64  <-- **Change: Set a definitive width (e.g., 256px)**
-                              bg-gray-700 
-                              shadow-xl 
-                              z-50 
-                              fixed 
-                              top-0 
-                              h-full 
-                              transition-all 
-                              duration-300 
-                              ease-in-out
-                              ${isOpen ? 'right-50' : 'right-[-256px]'}  <-- **Crucial Change: Hide it fully**
-                            `}
+                        {seeSignup && (
 
-                    >
-                        {/*{seeSignup && (*/}
-                        <div className="w-full h-full max-w-md m-2 p-2  z-5 " >
+
+                    <div className="w-full h-full max-w-md m-2 p-2  z-5 " >
+                        {/* Header / Branding */}
+                        <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
+                            <img
+                                src={logo}
+                                alt="BookBuddy"
+                                className="h-20 w-auto sm:h-50 sm:w-auto rounded-4xl "/>
+                            <h1 className="text-2xl tracking-tight   z-10
+                                 transition-all form-label-hover">
+                                Create your account
+                            </h1>
+                            <p className="text-sm text-gray-600">
+                                Join BookBuddy today
+                            </p>
+                        </div>
+
+                        <div className="card">
+                            {error && (
+                                <div className="  rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
+                                    {error}
+                                </div>
+                            )}
+                            <form onSubmit={onSubmit} className="space-y-12" >
+                                <div>
+                                    <label htmlFor="name" className="label font-bold text-xl " >
+                                        Username
+                                    </label>
+                                    <input
+                                        id="name"
+                                        name="name"
+                                        type="text"
+                                        placeholder="Choose a username"
+                                        className="input text-xl transition-all form-input-hover"
+                                        value={form.name}
+                                        onChange={onChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="password" className="label font-bold text-xl t ">
+                                        Password
+                                    </label>
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        placeholder="Create a password"
+                                        className="input text-xl transition-all form-input-hover"
+                                        value={form.password}
+                                        onChange={onChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="confirm" className="label font-bold text-xl " >
+                                        Confirm password
+                                    </label>
+                                    <input
+                                        id="confirm"
+                                        name="confirm"
+                                        type="password"
+                                        placeholder="Re-enter your password"
+                                        className="input text-xl transition-all form-input-hover"
+                                        value={confirm}
+                                        onChange={onChange}
+                                        required
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]
+                                  hover:bg-[#F1DADE]  duration-300 focus:outline-none"
+                                    disabled={loading}>
+                                    {loading ? "Creating account..." : "Create account"}
+                                </button>
+                            </form>
+
+                            <p className="mt-6 text-center text-sm text-gray-600">
+                                Already have an account?{" "}
+                                <Link
+                                    to="/login"
+                                    className="text-indigo-600 hover:underline">
+                                    Sign in
+                                </Link>
+                            </p>
+                        </div>
+                  </div>    )}
+
+                    {seeLogin && (
+
+                        <div className="w-full h-full max-w-md m-2 p-2  z-5 signin-box" >
                             {/* Header / Branding */}
                             <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
                                 <img
@@ -275,11 +388,9 @@ import type { LoginDto } from "./types/LoginDto";
                                 />
                                 <h1 className="text-2xl tracking-tight   z-10
                       transition-all form-label-hover">
-                                    Create your account
+                                    Log into your account
                                 </h1>
-                                <p className="text-sm text-gray-600">
-                                    Join BookBuddy today
-                                </p>
+
                             </div>
 
                             <div className="card">
@@ -289,51 +400,37 @@ import type { LoginDto } from "./types/LoginDto";
                                     </div>
                                 )}
 
-                                <form onSubmit={onSubmit} className="space-y-12" >
+                                <form onSubmit={logIn} className="space-y-4">
                                     <div>
-                                        <label htmlFor="name" className="label font-bold text-xl " >
+                                        <label htmlFor="nameLN" className="labelLN label font-bold text-xl ">
                                             Username
                                         </label>
                                         <input
-                                            id="name"
+                                            id="nameLN"
                                             name="name"
                                             type="text"
-                                            placeholder="Choose a username"
+                                            autoComplete="username"
+                                            placeholder="e.g. jdoe"
                                             className="input text-xl transition-all form-input-hover"
-                                            value={form.name}
-                                            onChange={onChange}
+                                            value={formLN.name}
+                                            onChange={onChangeLN}
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label htmlFor="password" className="label font-bold text-xl t ">
+                                        <label htmlFor="password" className="label font-bold text-xl">
                                             Password
                                         </label>
                                         <input
                                             id="password"
                                             name="password"
                                             type="password"
-                                            placeholder="Create a password"
+                                            autoComplete="current-password"
+                                            placeholder="••••••••"
                                             className="input text-xl transition-all form-input-hover"
-                                            value={form.password}
-                                            onChange={onChange}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="confirm" className="label font-bold text-xl " >
-                                            Confirm password
-                                        </label>
-                                        <input
-                                            id="confirm"
-                                            name="confirm"
-                                            type="password"
-                                            placeholder="Re-enter your password"
-                                            className="input text-xl transition-all form-input-hover"
-                                            value={confirm}
-                                            onChange={onChange}
+                                            value={formLN.password}
+                                            onChange={onChangeLN}
                                             required
                                         />
                                     </div>
@@ -341,217 +438,207 @@ import type { LoginDto } from "./types/LoginDto";
                                     <button
                                         type="submit"
                                         className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]
-                  hover:bg-[#F1DADE]  duration-300 focus:outline-none"
-                                        disabled={loading}
-
+                                                hover:bg-[#F1DADE]  duration-300 focus:outline-none"                                    disabled={loading}
                                     >
-                                        {loading ? "Creating account..." : "Create account"}
+                                        {loadingLN ? "Signing in..." : "Sign in"}
                                     </button>
                                 </form>
 
                                 <p className="mt-6 text-center text-sm text-gray-600">
-                                    Already have an account?{" "}
+                                    Don’t have an account?{" "}
                                     <Link
-                                        to="/login"
+                                        to="/signup"
                                         className="text-indigo-600 hover:underline"
                                     >
-                                        Sign in
+                                        Create one
                                     </Link>
                                 </p>
                             </div>
-                      </div>    {/*)}*/}
-
-                        {/* Content of your sidebar/div */}
-                    </div>
-
-                    <button
-                        onClick={toggleSidebar}
-                        className="fixed top-4 right-4 p-2 bg-blue-500 text-white rounded z-50"
-                    >
-                        {isOpen ? 'Close Sidebar' : 'Open Sidebar'}
-                    </button>
-                </>
-
-
-
-                {seeSignup && (
-                <div className="w-2/4 h-full max-w-md m-2 p-2  z-5 " >
-                  {/* Header / Branding */}
-                    <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
-                      <img
-                          src={logo}
-                          alt="BookBuddy"
-                          className="h-20 w-auto sm:h-50 sm:w-auto rounded-4xl  "
-                      />
-                      <h1 className="text-2xl tracking-tight   z-10
-                      transition-all form-label-hover">
-                          Create your account
-                      </h1>
-                      <p className="text-sm text-gray-600">
-                          Join BookBuddy today
-                      </p>
-                     </div>
-
-                  <div className="card">
-                      {error && (
-                          <div className="  rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
-                              {error}
-                          </div>
-                      )}
-
-                      <form onSubmit={onSubmit} className="space-y-12" >
-                          <div>
-                              <label htmlFor="name" className="label font-bold text-xl " >
-                                  Username
-                              </label>
-                              <input
-                                  id="name"
-                                  name="name"
-                                  type="text"
-                                  placeholder="Choose a username"
-                                  className="input text-xl transition-all form-input-hover"
-                                  value={form.name}
-                                  onChange={onChange}
-                                  required
-                  />
-                          </div>
-
-                <div>
-                    <label htmlFor="password" className="label font-bold text-xl t ">
-                        Password
-                  </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="Create a password"
-                    className="input text-xl transition-all form-input-hover"
-                    value={form.password}
-                    onChange={onChange}
-                    required
-                  />
+                        </div>  ) }
                 </div>
+            </>
 
-                <div>
-                    <label htmlFor="confirm" className="label font-bold text-xl " >
-                    Confirm password
-                  </label>
-                  <input
-                    id="confirm"
-                    name="confirm"
-                    type="password"
-                    placeholder="Re-enter your password"
-                    className="input text-xl transition-all form-input-hover"
-                    value={confirm}
-                    onChange={onChange}
-                    required
-                  />
-                </div>
 
-                <button
-                  type="submit"
-                  className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]
-                  hover:bg-[#F1DADE]  duration-300 focus:outline-none"
-                  disabled={loading}
 
-                >
-                  {loading ? "Creating account..." : "Create account"}
-                </button>
-              </form>
 
-              <p className="mt-6 text-center text-sm text-gray-600">
-                Already have an account?{" "}
-                <Link
-                  to="/login"
-                  className="text-indigo-600 hover:underline"
-                >
-                  Sign in
-                </Link>
-              </p>
-            </div>
-          </div> )}
+          {/*      {seeSignup && (*/}
+          {/*      <div className="w-2/4 h-full max-w-md m-2 p-2  z-5 " >*/}
+          {/*        /!* Header / Branding *!/*/}
+          {/*          <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">*/}
+          {/*            <img*/}
+          {/*                src={logo}*/}
+          {/*                alt="BookBuddy"*/}
+          {/*                className="h-20 w-auto sm:h-50 sm:w-auto rounded-4xl  "*/}
+          {/*            />*/}
+          {/*            <h1 className="text-2xl tracking-tight   z-10*/}
+          {/*            transition-all form-label-hover">*/}
+          {/*                Create your account*/}
+          {/*            </h1>*/}
+          {/*            <p className="text-sm text-gray-600">*/}
+          {/*                Join BookBuddy today*/}
+          {/*            </p>*/}
+          {/*           </div>*/}
+
+          {/*        <div className="card">*/}
+          {/*            {error && (*/}
+          {/*                <div className="  rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">*/}
+          {/*                    {error}*/}
+          {/*                </div>*/}
+          {/*            )}*/}
+
+          {/*            <form onSubmit={onSubmit} className="space-y-12" >*/}
+          {/*                <div>*/}
+          {/*                    <label htmlFor="name" className="label font-bold text-xl " >*/}
+          {/*                        Username*/}
+          {/*                    </label>*/}
+          {/*                    <input*/}
+          {/*                        id="name"*/}
+          {/*                        name="name"*/}
+          {/*                        type="text"*/}
+          {/*                        placeholder="Choose a username"*/}
+          {/*                        className="input text-xl transition-all form-input-hover"*/}
+          {/*                        value={form.name}*/}
+          {/*                        onChange={onChange}*/}
+          {/*                        required*/}
+          {/*        />*/}
+          {/*                </div>*/}
+
+          {/*      <div>*/}
+          {/*          <label htmlFor="password" className="label font-bold text-xl t ">*/}
+          {/*              Password*/}
+          {/*        </label>*/}
+          {/*        <input*/}
+          {/*          id="password"*/}
+          {/*          name="password"*/}
+          {/*          type="password"*/}
+          {/*          placeholder="Create a password"*/}
+          {/*          className="input text-xl transition-all form-input-hover"*/}
+          {/*          value={form.password}*/}
+          {/*          onChange={onChange}*/}
+          {/*          required*/}
+          {/*        />*/}
+          {/*      </div>*/}
+
+          {/*      <div>*/}
+          {/*          <label htmlFor="confirm" className="label font-bold text-xl " >*/}
+          {/*          Confirm password*/}
+          {/*        </label>*/}
+          {/*        <input*/}
+          {/*          id="confirm"*/}
+          {/*          name="confirm"*/}
+          {/*          type="password"*/}
+          {/*          placeholder="Re-enter your password"*/}
+          {/*          className="input text-xl transition-all form-input-hover"*/}
+          {/*          value={confirm}*/}
+          {/*          onChange={onChange}*/}
+          {/*          required*/}
+          {/*        />*/}
+          {/*      </div>*/}
+
+          {/*      <button*/}
+          {/*        type="submit"*/}
+          {/*        className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]*/}
+          {/*        hover:bg-[#F1DADE]  duration-300 focus:outline-none"*/}
+          {/*        disabled={loading}*/}
+
+          {/*      >*/}
+          {/*        {loading ? "Creating account..." : "Create account"}*/}
+          {/*      </button>*/}
+          {/*    </form>*/}
+
+          {/*    <p className="mt-6 text-center text-sm text-gray-600">*/}
+          {/*      Already have an account?{" "}*/}
+          {/*      <Link*/}
+          {/*        to="/login"*/}
+          {/*        className="text-indigo-600 hover:underline"*/}
+          {/*      >*/}
+          {/*        Sign in*/}
+          {/*      </Link>*/}
+          {/*    </p>*/}
+          {/*  </div>*/}
+          {/*</div> )}*/}
 
 
                 {/*////////////////////////////LOGIN CODE ////////////////////////////*/}
-                {seeLogin && (
+                {/*{seeLogin && (*/}
 
-                <div className="w-2/4 h-full max-w-md m-2 p-2  z-5 signin-box" >
-                    {/* Header / Branding */}
-                    <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
-                        <img
-                            src={logo}
-                            alt="BookBuddy"
-                            className="h-20 w-auto sm:h-50 sm:w-auto rounded-4xl  "
-                        />
-                        <h1 className="text-2xl tracking-tight   z-10
-                      transition-all form-label-hover">
-                            Log into your account
-                        </h1>
+                {/*<div className="w-2/4 h-full max-w-md m-2 p-2  z-5 signin-box" >*/}
+                {/*    /!* Header / Branding *!/*/}
+                {/*    <div className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">*/}
+                {/*        <img*/}
+                {/*            src={logo}*/}
+                {/*            alt="BookBuddy"*/}
+                {/*            className="h-20 w-auto sm:h-50 sm:w-auto rounded-4xl  "*/}
+                {/*        />*/}
+                {/*        <h1 className="text-2xl tracking-tight   z-10*/}
+                {/*      transition-all form-label-hover">*/}
+                {/*            Log into your account*/}
+                {/*        </h1>*/}
 
-                    </div>
+                {/*    </div>*/}
 
-                    <div className="card">
-                        {error && (
-                            <div className="  rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
-                                {error}
-                            </div>
-                        )}
+                {/*    <div className="card">*/}
+                {/*        {error && (*/}
+                {/*            <div className="  rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">*/}
+                {/*                {error}*/}
+                {/*            </div>*/}
+                {/*        )}*/}
 
-                        <form onSubmit={logIn} className="space-y-4">
-                                <div>
-                                    <label htmlFor="nameLN" className="labelLN label font-bold text-xl ">
-                                        Username
-                                    </label>
-                                    <input
-                                        id="nameLN"
-                                        name="name"
-                                        type="text"
-                                        autoComplete="username"
-                                        placeholder="e.g. jdoe"
-                                        className="input text-xl transition-all form-input-hover"
-                                        value={formLN.name}
-                                        onChange={onChangeLN}
-                                        required
-                                    />
-                                </div>
+                {/*        <form onSubmit={logIn} className="space-y-4">*/}
+                {/*                <div>*/}
+                {/*                    <label htmlFor="nameLN" className="labelLN label font-bold text-xl ">*/}
+                {/*                        Username*/}
+                {/*                    </label>*/}
+                {/*                    <input*/}
+                {/*                        id="nameLN"*/}
+                {/*                        name="name"*/}
+                {/*                        type="text"*/}
+                {/*                        autoComplete="username"*/}
+                {/*                        placeholder="e.g. jdoe"*/}
+                {/*                        className="input text-xl transition-all form-input-hover"*/}
+                {/*                        value={formLN.name}*/}
+                {/*                        onChange={onChangeLN}*/}
+                {/*                        required*/}
+                {/*                    />*/}
+                {/*                </div>*/}
 
-                                <div>
-                                    <label htmlFor="password" className="label font-bold text-xl">
-                                        Password
-                                    </label>
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        autoComplete="current-password"
-                                        placeholder="••••••••"
-                                        className="input text-xl transition-all form-input-hover"
-                                        value={formLN.password}
-                                        onChange={onChangeLN}
-                                        required
-                                    />
-                                </div>
+                {/*                <div>*/}
+                {/*                    <label htmlFor="password" className="label font-bold text-xl">*/}
+                {/*                        Password*/}
+                {/*                    </label>*/}
+                {/*                    <input*/}
+                {/*                        id="password"*/}
+                {/*                        name="password"*/}
+                {/*                        type="password"*/}
+                {/*                        autoComplete="current-password"*/}
+                {/*                        placeholder="••••••••"*/}
+                {/*                        className="input text-xl transition-all form-input-hover"*/}
+                {/*                        value={formLN.password}*/}
+                {/*                        onChange={onChangeLN}*/}
+                {/*                        required*/}
+                {/*                    />*/}
+                {/*                </div>*/}
 
-                                <button
-                                    type="submit"
-                                    className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]
-                                                hover:bg-[#F1DADE]  duration-300 focus:outline-none"                                    disabled={loading}
-                                >
-                                    {loadingLN ? "Signing in..." : "Sign in"}
-                                </button>
-                            </form>
+                {/*                <button*/}
+                {/*                    type="submit"*/}
+                {/*                    className="w-full  shadow-xl  rounded-xl font-black border-1  bg-[#e2b4bd]*/}
+                {/*                                hover:bg-[#F1DADE]  duration-300 focus:outline-none"                                    disabled={loading}*/}
+                {/*                >*/}
+                {/*                    {loadingLN ? "Signing in..." : "Sign in"}*/}
+                {/*                </button>*/}
+                {/*            </form>*/}
 
-                            <p className="mt-6 text-center text-sm text-gray-600">
-                                Don’t have an account?{" "}
-                                <Link
-                                    to="/signup"
-                                    className="text-indigo-600 hover:underline"
-                                >
-                                    Create one
-                                </Link>
-                            </p>
-                        </div>
-                    </div>  ) }
+                {/*            <p className="mt-6 text-center text-sm text-gray-600">*/}
+                {/*                Don’t have an account?{" "}*/}
+                {/*                <Link*/}
+                {/*                    to="/signup"*/}
+                {/*                    className="text-indigo-600 hover:underline"*/}
+                {/*                >*/}
+                {/*                    Create one*/}
+                {/*                </Link>*/}
+                {/*            </p>*/}
+                {/*        </div>*/}
+                {/*    </div>  ) }*/}
                 </div>
 
 
