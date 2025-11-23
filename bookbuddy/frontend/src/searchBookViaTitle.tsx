@@ -1,6 +1,6 @@
 export async function searchBookViaTitle(title: string, BASE: string): Promise<BookDto | null> {
        const res = await fetch(`${BASE}/googlebooks/search/${encodeURIComponent(title)}`);
-       if (!res.ok) throw new Error(`Search failed: ${res.status}`);
+       if (!res.ok) return;
 
        const data = await res.json();
 

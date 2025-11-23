@@ -21,9 +21,20 @@ export default function CSVReader() {
         const text = e.target?.result as string;
         if (!text) return;
 
+
         const lines = text.split(/\r?\n/).filter((line) => line.trim() !== "");
-        const firstColumn = lines.map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[1]);
-            setColumnData(firstColumn);
+        let firstColumn = "";
+        //code to find the index of the title column
+        for(let i = 0; i < lines.length; i++) {
+            const first = lines.map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[i])
+            alert(first[0].toLowerCase() + " " + (first[0].toLowerCase() === "title"));
+            if(first[0].toLowerCase() === "title") {
+                firstColumn = lines.map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[i]);
+                break;
+            }
+        }
+
+        setColumnData(firstColumn);
         };
 
         reader.readAsText(file);
