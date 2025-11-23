@@ -4,6 +4,7 @@ import {SendQeustions} from "./api";
 import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
 import "./components/Book_loading.css"
+import { ChangeAiUse } from "./api";
 
 
 // MAN i gotta learn vim
@@ -135,6 +136,13 @@ function Buddy() {
         ) {
             seterror("No questions can be left blank");
             return;
+        }
+
+        try {
+            await ChangeAiUse(); // session identifies the user
+        } catch (err) {
+            seterror("You have 0 AI uses remaining.");
+            return; // stop here so AI isn’t called
         }
         setDarkBox(true);
 
