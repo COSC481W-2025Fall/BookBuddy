@@ -36,6 +36,8 @@ function Buddy() {
     //however if you just search George Orwell it wont come up at all so this is epic
     const [booktitle, setBooktitle] = useState("");
 
+    const [question_length, setQuestionLength] = useState(0);
+
 
     const parseBookTitle = (responseString: string) => {
         // Finds the position of the first ","
@@ -61,7 +63,19 @@ function Buddy() {
             const text = await res.text();
             // separates the file into questions via splitting at new lines and removing trailing space
             const lines = text.split('\n').filter(line => line.trim() !== '');
+
             const maxIndex = lines.length;
+            const random_Numbers: number[] = [];
+            let i = 0;
+
+            // loops until 5 unique random numbers (0-210) are made
+            while (i < 5) {
+                let curr_num = Math.floor(Math.random() * maxIndex);
+                if (!random_Numbers.includes(curr_num)) {
+                    random_Numbers.push(curr_num);
+                    i++;
+                }
+            }
 
             // number of questions we have
             const numQuestionsToSelect = 5
@@ -87,17 +101,7 @@ function Buddy() {
             return []; // Return an empty array of the correct type on error
         }
     };
-        const random_Numbers: number[] = [];
-        let i = 0;
 
-        // loops until 5 unique random numbers (0-210) are made
-        while (i < 5) {
-            let curr_num = Math.floor(Math.random() * 211);
-            if (!random_Numbers.includes(curr_num)) {
-                random_Numbers.push(curr_num);
-                i++;
-            }
-        }
         //more hooks to be used in sprint 3
         const [questions, setQuestions] = useState<string[]>([]);
         const [isLoading, setIsLoading] = useState<boolean>(true);
