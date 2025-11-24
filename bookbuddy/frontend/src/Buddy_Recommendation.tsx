@@ -6,7 +6,7 @@ import WishlistButton from "./Add_Result_to_Wishlist";
 import "./components/Book_loading.css";
 
 // ⭐ NEW IMPORT — Vite will bundle Questions.txt from src/
-import questionsUrl from "./Questions.txt";
+import questionsUrl from "../Questions.txt";
 
 function Buddy() {
     const maxInput = 50;
