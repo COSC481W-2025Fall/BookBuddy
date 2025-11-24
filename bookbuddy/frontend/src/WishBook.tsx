@@ -27,6 +27,22 @@ function compareStr(
   return dir === "asc" ? res : -res;
 }
 
+// Amazon search URL builder
+const amazonSearchUrl = (title?: string | null) => {
+  const safeTitle = title ?? "";
+  return `https://www.amazon.com/s?k=${encodeURIComponent(
+    safeTitle
+  ).replace(/%20/g, "+")}&i=stripbooks`;
+};
+
+// Google Play Books URL builder (by coverid)
+const playStoreUrl = (coverid?: string | null) =>
+  coverid
+    ? `https://play.google.com/store/books/details?id=${encodeURIComponent(
+        coverid
+      )}`
+    : "";
+
 export default function WishWishBook() {
   const navigate = useNavigate();
 
@@ -223,11 +239,11 @@ export default function WishWishBook() {
                   <h2 className="text-base font-semibold text-slate-900">
                     {b.bookname || "Untitled"}
                   </h2>
+
                   {b.author && (
-                    <div className="text-sm text-slate-600">
-                      {b.author}
-                    </div>
+                    <div className="text-sm text-slate-600">{b.author}</div>
                   )}
+
                   {(b.isbn || b.genre) && (
                     <div className="mt-2 flex flex-wrap gap-2">
                       {b.isbn && (
@@ -242,6 +258,29 @@ export default function WishWishBook() {
                       )}
                     </div>
                   )}
+
+                  {/* Description + Amazon buttons pinned to bottom */}
+                  <div className="mt-auto pt-2 flex flex-col gap-2">
+                    {b.coverid && (
+                      <a
+                        href={playStoreUrl(b.coverid)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+                      >
+                        Description
+                      </a>
+                    )}
+
+                    <a
+                      href={amazonSearchUrl(b.bookname)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex w-full items-center justify-center rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+                    >
+                      View on Amazon
+                    </a>
+                  </div>
                 </div>
               </li>
             ))}

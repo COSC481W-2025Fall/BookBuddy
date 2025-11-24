@@ -51,7 +51,7 @@ export default function Search() {
       <div className="w-full space-y-6 p-6 shadow-md rounded-xl border border-gray-200 bg-white min-h-[220px]">
         <div className="space-y-3">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-            Find your next <span className="underline decoration-pink-300 underline-offset-4">book</span>
+            Find your book
           </h1>
           <p className="text-base text-gray-600">
             Search any title and explore available book details.
