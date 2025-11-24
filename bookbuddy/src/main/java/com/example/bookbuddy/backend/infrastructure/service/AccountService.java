@@ -21,12 +21,12 @@ public class AccountService {
 
     public AccountDto createAccount(AccountDto accountDto) {
         try {
-            System.out.println("➡️ Entering createAccount()");
-            System.out.println("📥 Incoming DTO: name=" + accountDto.name + ", password=" + accountDto.password);
+            System.out.println("➡ Entering createAccount()");
+            System.out.println(" Incoming DTO: name=" + accountDto.name + ", password=" + accountDto.password);
 
             // Validate input
             if (accountDto == null || !StringUtils.hasText(accountDto.name) || !StringUtils.hasText(accountDto.password)) {
-                System.out.println("❌ Validation failed: empty username or password");
+                System.out.println(" Validation failed: empty username or password");
                 throw new IllegalArgumentException("Username and password must not be empty");
             }
 
@@ -34,7 +34,7 @@ public class AccountService {
 
             // Check duplicate username
             if (accountRepository.existsByName(accountDto.name)) {
-                System.out.println("⚠️ Duplicate username: " + accountDto.name);
+                System.out.println(" Duplicate username: " + accountDto.name);
                 throw new IllegalStateException("Account name already exists");
             }
 
@@ -43,7 +43,7 @@ public class AccountService {
 
             // Convert to entity
             Account newAccount = AccountMapper.INSTANCE.convertToAccount(accountDto);
-            System.out.println("✅ Mapped entity (before save): " + newAccount);
+            System.out.println(" Mapped entity (before save): " + newAccount);
 
             // Save to DB
             newAccount = accountRepository.save(newAccount);
@@ -51,12 +51,12 @@ public class AccountService {
 
             // Convert back to DTO
             AccountDto result = AccountMapper.INSTANCE.convertToDto(newAccount);
-            System.out.println("📤 Returning DTO: accountId=" + result.accountId + ", name=" + result.name);
+            System.out.println(" Returning DTO: accountId=" + result.accountId + ", name=" + result.name);
 
             return result;
 
         } catch (Exception e) {
-            System.out.println("🔥 ERROR inside createAccount(): " + e.getMessage());
+            System.out.println(" ERROR inside createAccount(): " + e.getMessage());
             e.printStackTrace(); // full stack trace in Render logs
             throw e; // rethrow so controller’s @ExceptionHandler catches it
         }
