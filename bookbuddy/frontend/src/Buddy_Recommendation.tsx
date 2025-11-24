@@ -1,21 +1,19 @@
 import {useNavigate} from "react-router-dom";
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {SendQeustions} from "./api";
 import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
 import "./Styling/Book_loading.css";
 import "./Styling/Buddy_Recommendation.css";
 
-
 // MAN i gotta learn vim
-
 
 //our main function. kinda just holds everything
 function Buddy() {
     // max answer length
     const maxInput = 50
     // just so meny hooks
-    //error status
+    // error status
     const [error, seterror] = useState("");
     // answers from user
     const [RQ0, setRQ0] = useState("");
@@ -24,20 +22,20 @@ function Buddy() {
     const [RQ3, setRQ3] = useState("");
     const [RQ4, setRQ4] = useState("");
     const [RQ5, setRQ5] = useState("");
-    // element we use to show user how meny chars they have left
-    const [textlengs, setTextlengs] = useState(maxInput)
     // state we use to show the result box
     const [isResBoxVisible, setResBoxVisible] = useState(false);
     // state we use to show the rec div
     const [isDivVisible, setIsDivVisible] = useState(false);
-    // hook we use to hold the openAI respones
+    // hook we use to hold the openAI responses
     const [bookrec,setBookrec] = useState("I WOULD RECOMMEND THIS BOOK");
     // value that holds the book title and sometimes the book author ( basically everything up until the first ','
     // this actually works out great because sometimes the book wont show less you enter an auther with it, a good
-    //example of this is the book 1984 by George Orwell. the book will not show less the author is there too.
-    //however if you just search George Orwell it wont come up at all so this is epic
+    // example of this is the book 1984 by George Orwell. the book will not show less the author is there too.
+    // however if you just search George Orwell it wont come up at all so this is epic
     const [booktitle, setBooktitle] = useState("");
     const [buttonPressed, setButtonPressed] = useState(false);
+    // Auto scroll reference
+    const resultRef = useRef<HTMLDivElement>(null);
 
     const parseBookTitle = (responseString: string) => {
         // Finds the position of the first ","
@@ -126,13 +124,9 @@ function Buddy() {
             Q5 = ''
         ] = questions;
 
-
-
-
         //function that deals with the submit button
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
 
         if (
             RQ0 === "" ||
@@ -146,7 +140,15 @@ function Buddy() {
             return;
         }
         setResBoxVisible(true)
-        
+        setButtonPressed(true)
+
+        setTimeout(() => {
+            resultRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }, 0);
+
         // CATS each Question with the Answer
         const Q_A0 = `${Q0} ${RQ0}`;
         const Q_A1 = `${Q1} ${RQ1}`;
@@ -185,7 +187,6 @@ function Buddy() {
         }
 
         setIsDivVisible(true);
-        setButtonPressed(true)
     };
     // ya know the basic html we update the react hook each time the user enters a value
     return (
@@ -203,7 +204,11 @@ function Buddy() {
                                 value={RQ0}
                                 onChange={(e) => setRQ0(e.target.value)}
                                 placeholder="I'm looking for a light read to wind down with every night"
+                                maxLength={maxInput}
                             />
+                            <p className="char-count">
+                                {maxInput - RQ0.length} / {maxInput} characters remaining
+                            </p>
                         </div>
 
                         {/* Question 1 */}
@@ -215,7 +220,11 @@ function Buddy() {
                                 value={RQ1}
                                 onChange={(e) => setRQ1(e.target.value)}
                                 placeholder="..."
+                                maxLength={maxInput}
                             />
+                            <p className="char-count">
+                                {maxInput - RQ1.length} / {maxInput} characters remaining
+                            </p>
                         </div>
 
                         {/* Question 2 */}
@@ -227,7 +236,11 @@ function Buddy() {
                                 value={RQ2}
                                 onChange={(e) => setRQ2(e.target.value)}
                                 placeholder="..."
+                                maxLength={maxInput}
                             />
+                            <p className="char-count">
+                                {maxInput - RQ2.length} / {maxInput} characters remaining
+                            </p>
                         </div>
 
                         {/* Question 3 */}
@@ -239,7 +252,11 @@ function Buddy() {
                                 value={RQ3}
                                 onChange={(e) => setRQ3(e.target.value)}
                                 placeholder="..."
+                                maxLength={maxInput}
                             />
+                            <p className="char-count">
+                                {maxInput - RQ3.length} / {maxInput} characters remaining
+                            </p>
                         </div>
 
                         {/* Question 4 */}
@@ -251,7 +268,11 @@ function Buddy() {
                                 value={RQ4}
                                 onChange={(e) => setRQ4(e.target.value)}
                                 placeholder="..."
+                                maxLength={maxInput}
                             />
+                            <p className="char-count">
+                                {maxInput - RQ4.length} / {maxInput} characters remaining
+                            </p>
                         </div>
 
                         {/* Question 5 */}
@@ -263,7 +284,11 @@ function Buddy() {
                                 value={RQ5}
                                 onChange={(e) => setRQ5(e.target.value)}
                                 placeholder="..."
+                                maxLength={maxInput}
                             />
+                            <p className="char-count">
+                                {maxInput - RQ5.length} / {maxInput} characters remaining
+                            </p>
                         </div>
                         {!buttonPressed && (
                             <button type="submit" className="submitButton">Ask a Buddy!</button>
@@ -277,8 +302,7 @@ function Buddy() {
             </>
 
             {isResBoxVisible && (
-
-                <div className="resultBox">
+                <div className="resultBox" ref={resultRef}>
                     {!isDivVisible && (
                         <div className="book">
                             <div className="book__pg-shadow"></div>
@@ -290,46 +314,17 @@ function Buddy() {
                         </div>)}
 
                     {isDivVisible && (
-                        <div style={{
-                            position: 'relative',
-                            maxWidth: '85%',
-                            maxHeight: '85%',
-                            width: 'auto',
-                            height: 'auto',
-                            minWidth: '200px',
-                            minHeight: '200px',
-                            backgroundColor: 'whitesmoke',
-                            border: 'black',
-                            borderStyle: 'solid',
-                            borderWidth: '5px',
-                            padding: '20px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            overflowY: 'auto',
-                            overflowX: 'hidden',
-                            wordWrap: 'break-word',
-                            textAlign: 'center',
-
-                            // Other properties:
-                            zIndex: 10,
-                            color: 'black',
-                            fontSize: '20px',
-                        }}>
-                            <p style={{wordWrap: 'break-word', padding: '10px 0'}}>{bookrec}</p>
-                            {isDivVisible && <WishlistButton nameOfBook={booktitle}/>}
-
+                        <div className="resultContainer">
+                            <div className="resultLeft">
+                                {isDivVisible && <WishlistButton nameOfBook={booktitle}/>}
+                            </div>
+                            <div className="resultRight">
+                                <p style={{wordWrap: 'break-word', padding: '10px 0'}}>{bookrec}</p>
+                            </div>
                         </div>)}
-                    {/* Could add a spinner component here
-                that is what ill be doing however i still feel petty about this comment */}
-
                 </div>)}
-
         </div>
-
     )
 }
 
 export default Buddy
-

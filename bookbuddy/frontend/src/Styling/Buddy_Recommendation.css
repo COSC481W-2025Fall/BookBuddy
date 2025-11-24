@@ -45,8 +45,8 @@
 }
 
 .charCounter {
-    margin-top: 6px;
-    font-size: 0.9rem;
+    margin-top: 4px;
+    font-size: 12px;
     color: black;
 }
 
@@ -112,4 +112,32 @@
     font-weight: 500;
     color: palevioletred;
     font-size: 1.1rem;
+}
+
+.resultContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: flex-start;
+    padding: 2rem;
+    background: whitesmoke;
+    border: 5px solid black;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: 2rem auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.resultLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    min-width: 200px;
+    flex-shrink: 0;
+}
+
+.resultRight {
+    flex: 1;
+    min-width: 0;
 }
