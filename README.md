@@ -100,7 +100,7 @@ with default options for everything else, note the case because it matters.
 ```
 git clone https://github.com/COSC481W-2025Fall/BookBuddy.git
 
-cd /bookbuddy/frontend
+cd Bookbuddy/bookbuddy/frontend
 
 npm install
 
