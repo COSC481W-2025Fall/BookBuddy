@@ -31,6 +31,7 @@ public class AccountController {
             System.out.println("name=" + accountDto.name + ", password=" + accountDto.password);
         }
         AccountDto newAccount = accountService.createAccount(accountDto);
+        System.out.println("=== Account created with ai count: " + newAccount.aiLimit + " ===");
         session.setAttribute("userId", newAccount.accountId);
 
         return new ResponseEntity<>(newAccount, HttpStatus.CREATED);
@@ -47,7 +48,7 @@ public class AccountController {
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
+        System.out.println("Session userId = " + session.getAttribute("userId"));
         try {
             Long id = Long.parseLong(userId.toString());
             AccountDto account = accountService.getAccountById(id);
@@ -69,5 +70,28 @@ public class AccountController {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @PostMapping("/changeAiUse")
+    public ResponseEntity<?> changeAiUse(HttpSession session) {
+        Object userId = session.getAttribute("userId");
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("User is not logged in.");
+        }
+
+        try {
+            Long accountId = Long.parseLong(userId.toString());
+            AccountDto updatedAccount = accountService.changeAiUse(accountId);
+            return ResponseEntity.ok(updatedAccount);
+        } catch (IllegalStateException e) {
+            // AI limit reached
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body("AI usage limit reached.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error consuming AI usage.");
+        }
     }
 }
