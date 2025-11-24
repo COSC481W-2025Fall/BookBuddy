@@ -14,7 +14,7 @@ export default function Sidebar() {
     { to: "/library", label: "Library" },
     { to: "/WishList", label: "WishList" },
       { to:"/Buddy_Recommendation", label: "Ask a buddy"},
-      { to:"/Profile", label: Profile},
+      { to:"/Profile", label: "Profile"},
     { to: "/login", label: "Sign Out" }
 
   ];
