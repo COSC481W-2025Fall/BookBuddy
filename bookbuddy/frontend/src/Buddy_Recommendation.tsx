@@ -54,7 +54,7 @@ function Buddy() {
     const getUniqueRandomQuestions = async (): Promise<string[]> => {
         try {
             //snags the text file
-            const res = await fetch("/Questions.txt");
+            const res = await fetch("../Questions.txt");
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
