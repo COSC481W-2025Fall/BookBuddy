@@ -59,3 +59,17 @@ touch-action: manipulation;
         padding: 0 40px;
     }
 }
+
+/* Fade-in animation for search results */
+.result-fade-in {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: resultFadeIn 0.90s ease-out forwards;
+}
+
+@keyframes resultFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

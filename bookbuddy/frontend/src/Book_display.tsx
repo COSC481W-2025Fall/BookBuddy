@@ -17,7 +17,7 @@ export default function Book_display({ result }: Props) {
   function add_book_to_library(selected_book: BookDto) {
     return async (e: React.FormEvent) => {
       e.preventDefault();
-      setStatus("Added book to library…");
+      setStatus("Adding book to your library…");
 
       const newBook: BookDto = {
         bookname: selected_book.bookname ?? "Unknown",
@@ -38,19 +38,18 @@ export default function Book_display({ result }: Props) {
           body: JSON.stringify(newBook),
         });
 
-        // handles case where book already exists in user’s library
         if (res.status === 409) {
           const msg = await res.text();
-          setStatus(msg || "Book already exists in user's library.");
+          setStatus(msg || "This book is already in your library.");
           return;
         }
 
         if (!res.ok) throw new Error("Add failed: " + res.status);
 
-        const added = await res.json(); // backend now returns JSON via Map.of()
+        const added = await res.json();
         console.log("Book saved to DB:", added);
         setStatus(
-          `Book added! ${added.bookname} by ${added.author} is now in your library!`,
+          `✅ Book added! ${added.bookname} by ${added.author} is now in your library.`,
         );
       } catch (err: any) {
         console.error("Add book error:", err);
@@ -90,11 +89,11 @@ export default function Book_display({ result }: Props) {
         const added = await res.json();
         console.log("Book added to wishlist:", added);
         setStatus(
-          `Added to wishlist: ${added.bookname} by ${added.author}`,
+          `⭐ Added to wishlist: ${added.bookname} by ${added.author}.`,
         );
       } catch (err: any) {
         console.error("Wishlist error:", err);
-        setStatus(err?.message ?? "Error adding to wishlist");
+        setStatus(err?.message ?? "Error adding to wishlist.");
       }
     };
   }
@@ -107,38 +106,56 @@ export default function Book_display({ result }: Props) {
     if (book.coverid) {
       return `https://books.google.com/books/content?id=${book.coverid}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`;
     }
-    // falls back to the local "no cover" asset (already imported above)
     return "./logo/noCoverFound.png";
   };
 
   return (
-    <div className="mt-10">
-      <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-        <h2 className="text-2xl font-semibold tracking-tight">
-          Search results
-        </h2>
+    <div className="">
+      {/* Header / status */}
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="">
+          <h2 className="text-2xl font-semibold tracking-tight text-gray-900">
+            Search results
+          </h2>
+          {result.length > 0 && (
+            <p className="text-xs text-gray-500">
+              Showing <span className="font-medium">{result.length}</span>{" "}
+              result{result.length === 1 ? "" : "s"}
+            </p>
+          )}
+        </div>
+
         {status && (
-          <p className="text-sm text-indigo-700" role="status">
+          <div
+            className="inline-flex items-center rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 shadow-sm"
+            role="status"
+          >
             {status}
-          </p>
+          </div>
         )}
       </div>
 
+      {/* Empty state */}
       {result.length === 0 ? (
         <p className="text-sm text-gray-600">
-          No results to display. Try searching for something!
+          No results to display yet. Try searching for a title above to see
+          matching books.
         </p>
       ) : (
         <ul className="space-y-4">
-          {result.map((book) => (
-            <li key={book.isbn ?? book.bookname} className="card">
+          {result.map((book, index) => (
+            <li
+              key={book.isbn ?? book.bookname}
+              className="card rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-[1px] hover:shadow-md sm:p-5 result-fade-in"
+              style={{ animationDelay: `${index * 80}ms` }}
+            >
               <div className="flex flex-col gap-4 sm:flex-row">
                 {/* Cover */}
-                <div className="sm:w-32 sm:flex-shrink-0 flex justify-center sm:justify-start">
+                <div className="flex justify-center sm:w-32 sm:flex-shrink-0 sm:justify-start">
                   {book.coverid ? (
                     <a
                       href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
-                        book.coverid
+                        book.coverid,
                       )}&source=gbs_api`}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -160,16 +177,16 @@ export default function Book_display({ result }: Props) {
 
                 {/* Text content */}
                 <div className="flex-1 space-y-3">
-                  <div>
-                    <h3 className="text-lg font-semibold">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-semibold text-gray-900">
                       {book.coverid ? (
                         <a
                           href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
-                            book.coverid
+                            book.coverid,
                           )}&source=gbs_api`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:underline"
+                          className="hover:underline decoration-pink-300 underline-offset-4"
                         >
                           {book.bookname || "Untitled book"}
                         </a>
@@ -183,14 +200,35 @@ export default function Book_display({ result }: Props) {
                     </p>
                   </div>
 
-                  <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-1 text-sm text-gray-700">
-                    <dt className="font-medium">Genre: {book.genre || "Unknown"}</dt>
+                  {/* Meta info */}
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs sm:text-sm text-gray-700">
+                    <div>
+                      <dt className="font-medium text-gray-500 uppercase tracking-wide">
+                        Genre
+                      </dt>
+                      <dd>{book.genre || "Unknown"}</dd>
+                    </div>
 
-                    <dt className="font-medium">Pages: {book.pagecount ?? "Unknown"}</dt>
+                    <div>
+                      <dt className="font-medium text-gray-500 uppercase tracking-wide">
+                        Pages
+                      </dt>
+                      <dd>{book.pagecount ?? "Unknown"}</dd>
+                    </div>
 
-                    <dt className="font-medium">Publication: {book.publication || "Unknown"}</dt>
+                    <div>
+                      <dt className="font-medium text-gray-500 uppercase tracking-wide">
+                        Publication
+                      </dt>
+                      <dd>{book.publication || "Unknown"}</dd>
+                    </div>
 
-                    <dt className="font-medium">ISBN: {book.isbn || "N/A"}</dt>
+                    <div>
+                      <dt className="font-medium text-gray-500 uppercase tracking-wide">
+                        ISBN
+                      </dt>
+                      <dd>{book.isbn || "N/A"}</dd>
+                    </div>
                   </dl>
 
                   {book.description && (
@@ -201,17 +239,18 @@ export default function Book_display({ result }: Props) {
                 </div>
               </div>
 
+              {/* Actions */}
               <div className="mt-4 flex flex-wrap gap-3">
                 <button
                   type="button"
-                  className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] drop-shadow-2xl"
+                  className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-pink-200"
                   onClick={add_book_to_library(book)}
                 >
                   Add to my library
                 </button>
                 <button
                   type="button"
-                  className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white drop-shadow-2xl"
+                  className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-indigo-200"
                   onClick={add_book_to_wishlist(book as WishBookDto)}
                 >
                   Add to wishlist
@@ -221,12 +260,12 @@ export default function Book_display({ result }: Props) {
                   onClick={() => {
                     const title = book.bookname ?? "";
                     const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(
-                      title
+                      title,
                     ).replace(/%20/g, "+")}&i=stripbooks`;
 
                     window.open(amazonSearchUrl, "_blank");
                   }}
-                  className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white px-4 py-2 rounded-md drop-shadow-2xl"
+                  className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] focus:outline-none focus:ring-2 focus:ring-amber-200"
                 >
                   Search on Amazon
                 </button>
