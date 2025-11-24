@@ -56,6 +56,7 @@ Not be a repeat offender of using AI solely to write code.
 A website like goodReads. Where the user can have a personal library and get recommendations for books as well.
 
 🙌 Team Member Bios
+
 🧑 Ben
 [Computer Science major with experience in Java, Python, SQL, and Spring Boot Frameworks. I am comforable using both Windows and IOS machines. I am on the backend development team while also maintaining the role of Team Lead and overseeing the development of the entirety of BookBuddy and the team as a whole. ]
 
@@ -78,7 +79,7 @@ Running the Project
 
 To run this project locally, you need to have the following software installed:
 
-JDK 17
+JDK 17+
 
 Node.js
 
@@ -96,33 +97,28 @@ For password: password
 
 with default options for everything else, note the case because it matters.
 
-
+```
 git clone https://github.com/COSC481W-2025Fall/BookBuddy.git
 
-cd BookBuddy/bookbuddy/frontend
+cd /bookbuddy/frontend
 
 npm install
 
-npm ci
+npm run dev
 
-cd .. (So you are now in the bookbuddy directory)
+cd ..
+```
+
+Open a new tab in your IDE/Terminal
+
+You should now be in the bookbuddy directory
 
 MAKE SURE DOCKER IS OPEN AND ON NOW
 
+```
 mvn clean install
 
-docker build -t bookbuddy .
-
 docker compose up --build
+```
 
-mvn clean package
-
-cd .. (So now you are in the BookBuddy directory (Yes I know the same folder name is bad))
-
-Now just run the python script to start all the services needed!
-
-python3 runProgram.py
-
-You can now go to http://localhost:5173/ and see the book buddy website
-
-Note: sometimes at this point I would get errors like “port in use”, restarting Docker fixes these problems.
+You can now go to http://localhost:5173/ and see the book buddy website with these two terminals running
