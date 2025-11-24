@@ -22,7 +22,7 @@ export default function App() {
                 <Route path="/library" element={<Library />} />
                 <Route path="/WishList" element={<WishList />} />
                 <Route path="/Buddy_Recommendation" element ={<Buddy />} />
-                <Route path="/Profile" element={Profile} />
+                <Route path="/Profile" element={<Profile />} />
 
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />
