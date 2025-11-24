@@ -22,6 +22,12 @@ function Buddy() {
     const [RQ3, setRQ3] = useState("");
     const [RQ4, setRQ4] = useState("");
     const [RQ5, setRQ5] = useState("");
+    const [randomIndices, setRandomIndices] = useState<number[]>([]);
+    const [questions, setQuestions] = useState<string[]>([]);
+    const [allQuestionLines, setAllQuestionLines] = useState<string[]>([]);
+
+    // element we use to show user how meny chars they have left
+    const [textlengs, setTextlengs] = useState(maxInput)
     // state we use to show the result box
     const [isResBoxVisible, setResBoxVisible] = useState(false);
     // state we use to show the rec div
@@ -34,6 +40,8 @@ function Buddy() {
     // however if you just search George Orwell it wont come up at all so this is epic
     const [booktitle, setBooktitle] = useState("");
     const [buttonPressed, setButtonPressed] = useState(false);
+    const [questionlength, setQuestionlength] = useState(0);
+
     // Auto scroll reference
     const resultRef = useRef<HTMLDivElement>(null);
 
@@ -62,6 +70,7 @@ function Buddy() {
             // separates the file into questions via splitting at new lines and removing trailing space
             const lines = text.split('\n').filter(line => line.trim() !== '');
             const maxIndex = lines.length;
+            setQuestionlength(maxIndex);
 
             // number of questions we have
             const numQuestionsToSelect = 5
@@ -77,15 +86,19 @@ function Buddy() {
             }
             // Map the random numbers to the corresponding lines (questions)
             const Questions: string[] = random_Numbers.map(index => lines[index] || "Question not found");
+            setAllQuestionLines (Questions);
 
             // testing values to show what questions were pulled
             console.log("Random Indices:", random_Numbers);
+
             return Questions;
+
 
         } catch (e) {
             console.error("Error fetching file:", e instanceof Error ? e.message : "Unknown error");
             return []; // Return an empty array of the correct type on error
         }
+
     };
         const random_Numbers: number[] = [];
         let i = 0;
@@ -99,7 +112,7 @@ function Buddy() {
             }
         }
         //more hooks to be used in sprint 3
-        const [questions, setQuestions] = useState<string[]>([]);
+
         const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
@@ -114,15 +127,66 @@ function Buddy() {
             loadQuestions();
         }, []);
 
+    const handleNewQuestion = async (questionIndexToReplace: number) => {
+
+        let new_index = 0;
+        let isUnique = false;
+
+        //check if there are questions
+        if (questionlength === 0) return "Error: Question pool size is zero.";
+
+        //  ensure the new index isn't already one of the 5 displayed questions
+        while (!isUnique) {
+            new_index = Math.floor(Math.random() * questionlength);
+
+              if (!random_Numbers.includes(new_index)) {
+                random_Numbers.push(new_index);
+                isUnique = true;
+            }
+        }
+        try {
+            console.log(new_index);
+            const res = await fetch("/Questions.txt");
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            const text = await res.text();
+
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+
+            const newQuestionText: string = lines[new_index] ?? "Question not found";
+
+            //functional update form
+            setQuestions(prevQuestions => {
+                //spread operator, gives the old version of questions
+                const newQuestions = [...prevQuestions];
+                // Replace the question text at the target index
+                newQuestions[questionIndexToReplace] = newQuestionText;
+                return newQuestions;
+            });
+
+            // Update the indices state to reflect the replacement
+
+
+            return newQuestionText;
+
+        } catch (e) {
+            console.error("Error fetching file:", e instanceof Error ? e.message : "Unknown error");
+            return "Failed to load a new question.";
+        }
+    }
+
         let Q0 = "Tell us about the reading experience you're hoping for. Where and why are you reading this book?"
 
-        const [
+        let [
             Q1 = '',
             Q2 = '',
             Q3 = '',
             Q4 = '',
             Q5 = ''
-        ] = questions;
+        ] = questions; //react hook
+
+
 
         //function that deals with the submit button
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -148,6 +212,7 @@ function Buddy() {
                 block: 'start'
             });
         }, 0);
+
 
         // CATS each Question with the Answer
         const Q_A0 = `${Q0} ${RQ0}`;
@@ -187,8 +252,24 @@ function Buddy() {
         }
 
         setIsDivVisible(true);
+
+
+        const handleNewQuestion = () => {
+            let new_number;
+            let isUnique = false;
+            while (!isUnique) {
+                new_number = Math.floor(Math.random() * 5);
+
+                // Check if the new number is already in the list of 5 questions
+                if (!random_Numbers.includes(new_number)) {
+                    isUnique = true;
+                }
+            }
+        }
+
     };
     // ya know the basic html we update the react hook each time the user enters a value
+
     return (
         <div style={{width: '', overflowWrap: 'break-word'}}>
             <>
@@ -213,7 +294,12 @@ function Buddy() {
 
                         {/* Question 1 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">1: {Q1}</label>
+                            <label className="questionLabel">1: {Q1}
+
+                                <button className="aBox" onClick={() => handleNewQuestion(0)} >Dont like this question? get a new one </button>
+
+                            </label>
+
                             <input
                                 className="aBox"
                                 type="text"
@@ -229,7 +315,9 @@ function Buddy() {
 
                         {/* Question 2 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">2: {Q2}</label>
+                            <label className="questionLabel">2: {Q2}
+                                <button className="aBox" onClick={() => handleNewQuestion(1)} >Dont like this question? get a new one </button>
+                            </label>
                             <input
                                 className="aBox"
                                 type="text"
@@ -245,7 +333,9 @@ function Buddy() {
 
                         {/* Question 3 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">3: {Q3}</label>
+                            <label className="questionLabel">3: {Q3}
+                                <button className="aBox" onClick={() => handleNewQuestion(2)} >Dont like this question? get a new one </button>
+                            </label>
                             <input
                                 className="aBox"
                                 type="text"
@@ -261,7 +351,9 @@ function Buddy() {
 
                         {/* Question 4 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">4: {Q4}</label>
+                            <label className="questionLabel">4: {Q4}
+                                <button className="aBox" onClick={() => handleNewQuestion(3)} >Dont like this question? get a new one </button>
+                            </label>
                             <input
                                 className="aBox"
                                 type="text"
@@ -277,7 +369,9 @@ function Buddy() {
 
                         {/* Question 5 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">5: {Q5}</label>
+                            <label className="questionLabel">5: {Q5}
+                                <button className="aBox" onClick={() => handleNewQuestion(4)} >Dont like this question? get a new one </button>
+                            </label>
                             <input
                                 className="aBox"
                                 type="text"
