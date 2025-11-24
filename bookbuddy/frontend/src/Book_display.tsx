@@ -84,7 +84,7 @@ export default function Book_display({ result }: Props) {
           body: JSON.stringify(newWishBook),
         });
 
-        if (!res.ok) throw new Error("Add to wishlist failed: " + res.status);
+        if (!res.ok) throw new Error("This book is already in your wishlist, or add failed");
 
         const added = await res.json();
         console.log("Book added to wishlist:", added);
