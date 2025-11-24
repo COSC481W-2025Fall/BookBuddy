@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { WishBookDto } from "./types/WishBookDto";
-import { getMyWishBook } from "./api";
-import "./logo/noCoverFound.png";
+import type { BookDto } from "./types/BookDto";
+import { getMyWishBook, removeFromWishlist } from "./api";
+import noCoverFound from "./logo/noCoverFound.png";
 
 type SortKey = "name" | "author" | "genre";
 type SortDir = "asc" | "desc";
@@ -43,7 +44,7 @@ const playStoreUrl = (coverid?: string | null) =>
       )}`
     : "";
 
-export default function WishWishBook() {
+export default function WishBook() {
   const navigate = useNavigate();
 
   const [wishbooks, setWishBooks] = useState<WishBookDto[]>([]);
@@ -54,11 +55,35 @@ export default function WishWishBook() {
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
+  // helper to add a wishbook as a regular library Book
+  async function addToLibraryFromWishBook(w: WishBookDto): Promise<void> {
+    const newBook: BookDto = {
+      bookname: w.bookname ?? "Unknown",
+      author: w.author ?? "Unknown",
+      isbn: w.isbn ?? "Unknown",
+      genre: w.genre ?? "Unknown",
+      coverid: w.coverid ?? "Unknown",
+      publication: w.publication ?? "Unknown",
+      pagecount: w.pagecount ?? 0,
+      description: w.description ?? "No description available",
+    };
+
+    const res = await fetch(`/books/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newBook),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to add to library");
+    }
+  }
+
   // cover retrieval using Google Books coverid
-  const coverUrl = (coverid?: string) =>
+  const coverUrl = (coverid?: string | null) =>
     coverid
       ? `https://books.google.com/books/content?id=${coverid}&fife=w400-h600&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`
-      : "./logo/noCoverFound.png";
+      : (noCoverFound as string);
 
   // on component load, fetch the user's wishlist
   useEffect(() => {
@@ -109,6 +134,7 @@ export default function WishWishBook() {
       .map((entry) => entry.b);
   }, [wishbooks, sortKey, sortDir]);
 
+  // render loading, error, or the wishlist
   if (loading) {
     return (
       <div className="min-h-[60vh] bg-slate-50">
@@ -259,7 +285,7 @@ export default function WishWishBook() {
                     </div>
                   )}
 
-                  {/* Description + Amazon buttons pinned to bottom */}
+                  {/* Actions pinned to the bottom */}
                   <div className="mt-auto pt-2 flex flex-col gap-2">
                     {b.coverid && (
                       <a
@@ -280,6 +306,51 @@ export default function WishWishBook() {
                     >
                       View on Amazon
                     </a>
+
+                    {b.isbn && (
+                      <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:gap-3">
+                        <button
+                          type="button"
+                          className="inline-flex flex-1 items-center justify-center rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                          onClick={async () => {
+                            try {
+                              await removeFromWishlist(b.isbn!);
+                              setWishBooks((prev) =>
+                                prev.filter((w) => w.isbn !== b.isbn)
+                              );
+                            } catch (err: any) {
+                              alert(
+                                err?.message ??
+                                  "Failed to remove from wishlist"
+                              );
+                            }
+                          }}
+                        >
+                          Remove
+                        </button>
+
+                        <button
+                          type="button"
+                          className="inline-flex flex-1 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+                          onClick={async () => {
+                            try {
+                              await addToLibraryFromWishBook(b);
+                              await removeFromWishlist(b.isbn!);
+                              setWishBooks((prev) =>
+                                prev.filter((w) => w.isbn !== b.isbn)
+                              );
+                            } catch (err: any) {
+                              alert(
+                                err?.message ??
+                                  "Failed to move book to library"
+                              );
+                            }
+                          }}
+                        >
+                          Add to Library
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </li>

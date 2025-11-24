@@ -1,8 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { BookDto } from "./types/BookDto";
-import { getMyLibrary } from "./api";
-import "./logo/noCoverFound.png";
+import { getMyLibrary, removeFromLibrary } from "./api";
+import "./components/Library.css";
+import noCoverFound from "./logo/noCoverFound.png";
+import tempAddBook from "./logo/tempAddBook.png";
+import tempSearchBook from "./logo/tempSearchBook.png";
+import CSVReader from "./addBooksViaCSV";
 
 type SortKey = "name" | "author" | "genre";
 type SortDir = "asc" | "desc";
@@ -32,7 +36,7 @@ export default function Library() {
   const coverUrl = (coverid?: string) =>
     coverid
       ? `https://books.google.com/books/content?id=${coverid}&fife=w400-h600&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api`
-      : "./logo/noCoverFound.png";
+      : noCoverFound;
 
   useEffect(() => {
     (async () => {
@@ -151,28 +155,49 @@ export default function Library() {
         </div>
 
         {sortedBooks.length === 0 ? (
-          <div className="mt-16 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
-            <p className="text-sm text-slate-600">You haven't added any books yet.</p>
-            <button
-              className="mt-6 inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500"
-              onClick={() => navigate("/search")}
-            >
-              Search for books
-            </button>
+          <div className="mt-16 grid items-center gap-10 md:grid-cols-2">
+            <div className="flex justify-center">
+              <img
+                src={tempSearchBook}
+                alt="No books yet"
+                className="max-w-xs w-full rounded-2xl shadow-sm"
+              />
+            </div>
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center">
+              <p className="text-sm text-slate-600">
+                You haven&apos;t added any books yet.
+              </p>
+              <div className="mt-6 flex flex-col items-center gap-4">
+                <button
+                  className="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500"
+                  onClick={() => navigate("/search")}
+                >
+                  Search for books
+                </button>
+
+                <div className="w-full max-w-md rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-left">
+                  <p className="text-sm font-medium text-slate-800 mb-2">
+                    Or import from a CSV file
+                  </p>
+                  <CSVReader />
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {sortedBooks.map((b, i) => (
               <li
                 key={(b.isbn ?? "no-isbn") + "-" + i}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm hover:-translate-y-1 hover:shadow-lg"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm hover:-translate-y-1 hover:shadow-lg transition"
               >
                 <div className="relative aspect-[2/3] bg-slate-100">
                   <img
                     src={coverUrl((b as any).coverid)}
                     alt={`${b.bookname ?? "Book"} cover`}
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
+                      (e.currentTarget as HTMLImageElement).src =
+                        "/hobbit-placeholder.jpg";
                     }}
                     className="h-full w-full object-cover"
                   />
@@ -182,7 +207,9 @@ export default function Library() {
                   <h2 className="text-base font-semibold text-slate-900">
                     {b.bookname || "Untitled"}
                   </h2>
-                  {b.author && <div className="text-sm text-slate-600">{b.author}</div>}
+                  {b.author && (
+                    <div className="text-sm text-slate-600">{b.author}</div>
+                  )}
 
                   {(b.isbn || (b as any).genre) && (
                     <div className="mt-2 flex flex-wrap gap-2">
@@ -199,22 +226,64 @@ export default function Library() {
                     </div>
                   )}
 
-                  {/* Google Play Books link button */}
-                  {(b as any).coverid && (
-                    <a
-                      href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
-                        (b as any).coverid
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-auto inline-flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500"
-                    >
-                      Description
-                    </a>
-                  )}
+                  <div className="mt-auto flex flex-col gap-2">
+                    {(b as any).coverid && (
+                      <a
+                        href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
+                          (b as any).coverid
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500"
+                      >
+                        Description
+                      </a>
+                    )}
+
+                    {b.isbn && (
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-100"
+                        onClick={async () => {
+                          try {
+                            await removeFromLibrary(b.isbn!);
+                            setBooks((prev) =>
+                              prev.filter((book) => book.isbn !== b.isbn)
+                            );
+                          } catch (err: any) {
+                            alert(err?.message ?? "Failed to remove book");
+                          }
+                        }}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
                 </div>
               </li>
             ))}
+
+            {/* Extra card for CSV import when you already have books */}
+            <li className="flex flex-col overflow-hidden rounded-2xl border border-dashed border-slate-200 bg-white p-4 shadow-sm">
+              <div className="relative aspect-[2/3] rounded-xl bg-slate-50 flex items-center justify-center mb-4">
+                <img
+                  src={tempAddBook}
+                  alt="Add more books"
+                  className="max-h-full max-w-full object-contain p-4"
+                />
+              </div>
+              <div className="flex flex-1 flex-col gap-3">
+                <h2 className="text-base font-semibold text-slate-900">
+                  Import more books
+                </h2>
+                <p className="text-sm text-slate-600">
+                  Use a CSV file to quickly add multiple books to your library.
+                </p>
+                <div className="mt-auto">
+                  <CSVReader />
+                </div>
+              </div>
+            </li>
           </ul>
         )}
       </div>
