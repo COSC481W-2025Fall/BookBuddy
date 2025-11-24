@@ -105,13 +105,11 @@ cd Bookbuddy/bookbuddy/frontend
 npm install
 
 npm run dev
-
-cd ..
 ```
 
-Open a new tab in your IDE/Terminal
+Open a new tab in your IDE/Terminal and get back to the lowercase bookbuddy directory
 
-You should now be in the bookbuddy directory
+Upload the .env file with your openAI and GoogleBooks api key 
 
 MAKE SURE DOCKER IS OPEN AND ON NOW
 
