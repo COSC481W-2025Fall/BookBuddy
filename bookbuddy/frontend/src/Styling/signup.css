@@ -5,6 +5,64 @@ html, body {
     overflow-x: hidden; /* Prevents horizontal scroll from massive background content */
 }
 
+/* ======================================= */
+/* Mobile Phone Breakpoint (e.g., iPhone/Android) */
+/* ======================================= */
+@media (max-width: 480px) {
+
+    /* --- 1. BOOK SCALING --- */
+
+    /* Reduce the Base Size of the Book */
+    .book-3d .page {
+        width: 200px;
+        height: 300px;
+        /* Re-calculate the overall 3D transformation scaling factor */
+        transform: rotate(-45deg) skewX(10deg) scale(0.35); /* Apply smaller scale */
+        box-shadow: -25px 25px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Adjust the Spine/Side Edge */
+    .book-3d .page:before {
+        width: 15px;
+        transform: skewY(-45deg) translate(-29px, -21.5px);
+    }
+
+    /* Adjust the Bottom Edge */
+    .book-3d .page:after {
+        height: 15px;
+        transform: skewX(-45deg) translate(-5.5px, 15px);
+    }
+
+    /* --- 2. SCENE ADJUSTMENTS --- */
+
+    .book-scene {
+        /* Set a smaller initial size, relative to phone viewport */
+        width: 100vw;
+        height: 50vh;
+    }
+
+    /* Adjust the pan animation to be smaller and less frantic on phones */
+    @keyframes book-pan {
+        0% {
+            transform: translate3d(0vw, 0vh, 0);
+        }
+        100% {
+            /* Reduce the pan distance significantly to match the smaller viewport */
+            transform: translate3d(50vw, 50vh, 0);
+        }
+    }
+
+    /* --- 3. SIDEBAR ADJUSTMENT --- */
+
+    .sidebar-open {
+        /* Set it to occupy most of the phone width */
+        width: 90vw;
+        /* Re-center it */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
 
 
 /* Moves the scene up and right to create the illusion of the camera panning down and left. */
@@ -486,61 +544,9 @@ book-cover-eighteen .page {
     transform: scale(1.05) translateY(-2px);
 }
 
-/* Existing button-bubble base styles (keep these, or adjust as needed) */
-.button-bubble {
-    padding: 10px;
-    border-radius: 7px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    position: absolute;
-    background-color: #235789;
-    color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.button-bubble:hover {
-    background-color: #e2b4bd;
-
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-}
-
-.button-bubble:active {
-    background-color: #7175c0;
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.button-bubble:disabled {
-    background-color: #cccccc;
-    color: #666666;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
 
 
-.question-circle {
-    display: block;
-    background: #424b54;
-    color: #fff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    line-height: 4px;
-    text-align: center;
-    font-size: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s ease-in-out;
-}
-.question-circle:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 
-
-}
 /* #424b54 gray
 # 235789 blue
 #91abc4 fish
