@@ -120,11 +120,17 @@
 }
 
 .eStyle {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 500;
-    color: palevioletred;
-    font-size: 1.1rem;
+    /*display: block;*/
+    /*margin-bottom: 10px;*/
+    /*font-weight: 500;*/
+    /*color: palevioletred;*/
+    /*font-size: 1.1rem;*/
+    background: #fee2e2;
+    color: #7f1d1d;
+    margin-top: 4px;
+    padding: var(--bb-space-2) var(--bb-space-3);
+    border-radius: .75rem;
+    margin-bottom: var(--bb-space-3);
 }
 
 .resultContainer {

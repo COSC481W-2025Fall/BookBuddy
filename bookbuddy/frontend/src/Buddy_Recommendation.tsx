@@ -209,8 +209,10 @@ function Buddy() {
             await ChangeAiUse(); // session identifies the user
         } catch (err) {
             seterror("You have 0 AI uses remaining.");
+            setButtonPressed(true); // remove button so that the user doesn't try again
             return; // stop here so AI isn’t called
         }
+
         setResBoxVisible(true)
         setButtonPressed(true)
 
@@ -419,9 +421,12 @@ function Buddy() {
                             <button type="submit" className="submitButton">Ask a Buddy!</button>
                         )}
 
-                        <div className="eStyle">
-                            {error}
-                        </div>
+                        {error && (
+                            <div className="eStyle">
+                                {error}
+                            </div>
+                        )}
+
                     </div>
                 </form>
             </>
