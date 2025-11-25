@@ -21,16 +21,16 @@ export async function addCSVBooks(selected_book: BookDto, BASE: string) {
 
         if (res.status === 409) {
             const msg = await res.text();
-            return { ok: false, status: 409, message: msg || "Book already exists." };
+            return { ok: false, status: 409, message: "Already exists in your library!" };
         }
 
         if (!res.ok) {
-            return { ok: false, status: res.status, message: "Failed to add book." };
+            return { ok: false, status: res.status, message: "Failed to add book!" };
         }
 
         return { ok: true };
 
     } catch (err: any) {
-        return { ok: false, message: err.message ?? "Network error" };
+        return { ok: false, message: err.message ?? "Network error!" };
     }
 }
