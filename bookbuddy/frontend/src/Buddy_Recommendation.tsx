@@ -5,7 +5,7 @@ import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
 import "./components/Book_loading.css"
 import { ChangeAiUse } from "./api";
-
+import "./Styling/Buddy_Recommendation.css";
 
 // MAN i gotta learn vim
 
@@ -210,7 +210,6 @@ function Buddy() {
             seterror("You have 0 AI uses remaining.");
             return; // stop here so AI isn’t called
         }
-        setDarkBox(true);
 
         // CATS each Question with the Answer
         const Q_A0 = `${Q0} ${RQ0}`;
