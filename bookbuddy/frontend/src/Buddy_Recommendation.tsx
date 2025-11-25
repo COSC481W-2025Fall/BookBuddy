@@ -5,6 +5,7 @@ import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
 import "./Styling/Book_loading.css";
 import "./Styling/Buddy_Recommendation.css";
+import "./Styling/buddyresultbackground.jpg";
 
 // MAN i gotta learn vim
 
@@ -271,6 +272,7 @@ function Buddy() {
     // ya know the basic html we update the react hook each time the user enters a value
 
     return (
+        <div className="pageBackground">
         <div style={{width: '', overflowWrap: 'break-word'}}>
             <>
                 <form onSubmit={handleSubmit}>
@@ -294,20 +296,22 @@ function Buddy() {
 
                         {/* Question 1 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">1: {Q1}
-
-                                <button className="aBox" onClick={() => handleNewQuestion(0)} >Dont like this question? get a new one </button>
-
-                            </label>
-
-                            <input
-                                className="aBox"
-                                type="text"
-                                value={RQ1}
-                                onChange={(e) => setRQ1(e.target.value)}
-                                placeholder="..."
-                                maxLength={maxInput}
-                            />
+                            <label className="questionLabel">1: {Q1}</label>
+                            <div className="answerBlock">
+                                <input
+                                    className="aBox"
+                                    type="text"
+                                    value={RQ1}
+                                    onChange={(e) => setRQ1(e.target.value)}
+                                    placeholder="..."
+                                    maxLength={maxInput}
+                                />
+                                <button
+                                    className="refreshButton"
+                                    title="Don't like this question? Get a new one!"
+                                    onClick={() => handleNewQuestion(0)}
+                                />
+                            </div>
                             <p className="char-count">
                                 {maxInput - RQ1.length} / {maxInput} characters remaining
                             </p>
@@ -315,17 +319,22 @@ function Buddy() {
 
                         {/* Question 2 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">2: {Q2}
-                                <button className="aBox" onClick={() => handleNewQuestion(1)} >Dont like this question? get a new one </button>
-                            </label>
-                            <input
-                                className="aBox"
-                                type="text"
-                                value={RQ2}
-                                onChange={(e) => setRQ2(e.target.value)}
-                                placeholder="..."
-                                maxLength={maxInput}
-                            />
+                            <label className="questionLabel">2: {Q2}</label>
+                            <div className="answerBlock">
+                                <input
+                                    className="aBox"
+                                    type="text"
+                                    value={RQ2}
+                                    onChange={(e) => setRQ2(e.target.value)}
+                                    placeholder="..."
+                                    maxLength={maxInput}
+                                />
+                                <button
+                                    className="refreshButton"
+                                    title="Don't like this question? Get a new one!"
+                                    onClick={() => handleNewQuestion(1)}
+                                />
+                            </div>
                             <p className="char-count">
                                 {maxInput - RQ2.length} / {maxInput} characters remaining
                             </p>
@@ -333,17 +342,22 @@ function Buddy() {
 
                         {/* Question 3 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">3: {Q3}
-                                <button className="aBox" onClick={() => handleNewQuestion(2)} >Dont like this question? get a new one </button>
-                            </label>
-                            <input
-                                className="aBox"
-                                type="text"
-                                value={RQ3}
-                                onChange={(e) => setRQ3(e.target.value)}
-                                placeholder="..."
-                                maxLength={maxInput}
-                            />
+                            <label className="questionLabel">3: {Q3}</label>
+                            <div className="answerBlock">
+                                <input
+                                    className="aBox"
+                                    type="text"
+                                    value={RQ3}
+                                    onChange={(e) => setRQ3(e.target.value)}
+                                    placeholder="..."
+                                    maxLength={maxInput}
+                                />
+                                <button
+                                    className="refreshButton"
+                                    title="Don't like this question? Get a new one!"
+                                    onClick={() => handleNewQuestion(2)}
+                                />
+                            </div>
                             <p className="char-count">
                                 {maxInput - RQ3.length} / {maxInput} characters remaining
                             </p>
@@ -351,17 +365,22 @@ function Buddy() {
 
                         {/* Question 4 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">4: {Q4}
-                                <button className="aBox" onClick={() => handleNewQuestion(3)} >Dont like this question? get a new one </button>
-                            </label>
-                            <input
-                                className="aBox"
-                                type="text"
-                                value={RQ4}
-                                onChange={(e) => setRQ4(e.target.value)}
-                                placeholder="..."
-                                maxLength={maxInput}
-                            />
+                            <label className="questionLabel">4: {Q4}</label>
+                            <div className="answerBlock">
+                                <input
+                                    className="aBox"
+                                    type="text"
+                                    value={RQ4}
+                                    onChange={(e) => setRQ4(e.target.value)}
+                                    placeholder="..."
+                                    maxLength={maxInput}
+                                />
+                                <button
+                                    className="refreshButton"
+                                    title="Don't like this question? Get a new one!"
+                                    onClick={() => handleNewQuestion(3)}
+                                />
+                            </div>
                             <p className="char-count">
                                 {maxInput - RQ4.length} / {maxInput} characters remaining
                             </p>
@@ -369,17 +388,22 @@ function Buddy() {
 
                         {/* Question 5 */}
                         <div className="questionBlock">
-                            <label className="questionLabel">5: {Q5}
-                                <button className="aBox" onClick={() => handleNewQuestion(4)} >Dont like this question? get a new one </button>
-                            </label>
-                            <input
-                                className="aBox"
-                                type="text"
-                                value={RQ5}
-                                onChange={(e) => setRQ5(e.target.value)}
-                                placeholder="..."
-                                maxLength={maxInput}
-                            />
+                            <label className="questionLabel">5: {Q5}</label>
+                            <div className="answerBlock">
+                                <input
+                                    className="aBox"
+                                    type="text"
+                                    value={RQ5}
+                                    onChange={(e) => setRQ5(e.target.value)}
+                                    placeholder="..."
+                                    maxLength={maxInput}
+                                />
+                                <button
+                                    className="refreshButton"
+                                    title="Don't like this question? Get a new one!"
+                                    onClick={() => handleNewQuestion(4)}
+                                />
+                            </div>
                             <p className="char-count">
                                 {maxInput - RQ5.length} / {maxInput} characters remaining
                             </p>
@@ -417,6 +441,7 @@ function Buddy() {
                             </div>
                         </div>)}
                 </div>)}
+        </div>
         </div>
     )
 }
