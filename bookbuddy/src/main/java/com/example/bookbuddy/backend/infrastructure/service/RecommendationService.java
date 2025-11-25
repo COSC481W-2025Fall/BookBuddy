@@ -27,15 +27,25 @@ public class RecommendationService {
 
 
 
-        String prompt = "You are a professional Book Recommender. A client has answered these questions in question/answer format: " + list + ".\n\n" +
-                "Please analyze these questions and the clients answers and provide the following:\n" +
-                "1. give the top book you would recommend for the client after analyzing the answers to their given questions only giving the book title first.\n" +
-                "2. Provide a small one paragraph response as to why you belive this book is a good recommendation for the client.\n" +
-                "   - For your response:\n" +
-                "     • Give the book title ONLY on the first line.\n" +
-                "     • Give the Author name and Genre after adding 1 blank line from the book title.\n" +
-                "     • Provide a **concise explanation** (no more than 70 words).\n\n" +
-                "Be thorough and precise, and format your response clearly to enhance quick understanding and decision-making.";
+        String prompt =  "You are a professional Book Recommender. A client has answered these questions in question/answer format: "
+                + list + ".\n\n"
+                + "You MUST return EXACTLY ONE book recommendation.\n\n"
+                + "Your ENTIRE output MUST consist of EXACTLY THREE LINES in THIS EXACT format (follow the shape only):\n\n"
+                + "\"The Hobbit J.R.R. Tolkien\",\n"
+                + "Fantasy\n"
+                + "This is a short explanation describing why this book fits the user's answers. Keep it under 80 words.\n\n"
+                + "STRICT RULES YOU MUST FOLLOW (NO EXCEPTIONS):\n"
+                + "- Output MUST be EXACTLY THREE lines and NOTHING else.\n"
+                + "- Do NOT add ANY extra text, disclaimers, suggestions, questions, or commentary.\n"
+                + "- Do NOT recommend more than one book. ONLY ONE BOOK IS ALLOWED.\n"
+                + "- Line 1 MUST be in quotes AND must end with a comma.\n"
+                + "- Line 1 MUST contain ONLY: TITLE + one space + AUTHOR.\n"
+                + "- REMOVE any # symbols from the title.\n"
+                + "- Line 2 MUST contain ONLY ONE genre.\n"
+                + "- Line 3 MUST be the explanation (under 80 words).\n"
+                + "- DO NOT merge lines. DO NOT combine genre with line 1.\n"
+                + "- DO NOT output additional book titles, authors, or recommendations.\n"
+                + "- DO NOT start or end with blank lines.\n";
 
 
         return recomendationClient.getAPIResponse(prompt);
