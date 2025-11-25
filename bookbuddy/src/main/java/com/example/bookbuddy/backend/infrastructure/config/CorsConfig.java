@@ -14,7 +14,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "https://bookbuddy-sprint-1.onrender.com", "https://bookbuddy-6vft.onrender.com", "https://bookbuddy-2-dw06.onrender.com") // React dev server
+                        .allowedOrigins("http://localhost:5173","http://frontend:5173",
+                                "http://bookbuddy-backend:8080",  "https://bookbuddy-sprint-1.onrender.com", "https://bookbuddy-6vft.onrender.com", "https://bookbuddy-2-dw06.onrender.com") // React dev server
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

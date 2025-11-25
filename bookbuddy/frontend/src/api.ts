@@ -77,7 +77,11 @@ export async function getAccountById(id: number): Promise<AccountDto> {
     if (!res.ok) throw new Error(`GetAccount failed: ${res.status}`);
     return res.json();
 }
-
+export async function getCurrentUser(): Promise<AccountDto> {
+    const res = await fetch(`/Account/getCurrentUser`, { credentials: "include" });
+    if (!res.ok) throw new Error(`GetCurrentUser failed: ${res.status}`);
+    return res.json();
+}
 // ===========================
 // Get user's library
 // ===========================
@@ -157,4 +161,17 @@ export async function SendQeustions(body: string[]): Promise<{ response: string 
         const text = await res.text();
         return { response: text };
     }
+}
+
+export async function ChangeAiUse() {
+    const response = await fetch("/Account/changeAiUse", {
+        method: "POST",
+        credentials: "include"
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return response.json();
 }
