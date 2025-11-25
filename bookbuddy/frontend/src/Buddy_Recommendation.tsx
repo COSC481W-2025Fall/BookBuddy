@@ -3,6 +3,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {SendQeustions} from "./api";
 import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
+import { ChangeAiUse } from "./api";
 import "./Styling/Book_loading.css";
 import "./Styling/Buddy_Recommendation.css";
 import "./Styling/buddyresultbackground.jpg";
@@ -99,7 +100,6 @@ function Buddy() {
             console.error("Error fetching file:", e instanceof Error ? e.message : "Unknown error");
             return []; // Return an empty array of the correct type on error
         }
-
     };
         const random_Numbers: number[] = [];
         let i = 0;
@@ -203,6 +203,13 @@ function Buddy() {
         ) {
             seterror("No questions can be left blank");
             return;
+        }
+
+        try {
+            await ChangeAiUse(); // session identifies the user
+        } catch (err) {
+            seterror("You have 0 AI uses remaining.");
+            return; // stop here so AI isn’t called
         }
         setResBoxVisible(true)
         setButtonPressed(true)
