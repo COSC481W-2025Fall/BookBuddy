@@ -27,7 +27,7 @@ export default function CSVReader() {
         //code to find the index of the title column
         for(let i = 0; i < lines.length; i++) {
             const first = lines.map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[i])
-            alert(first[0].toLowerCase() + " " + (first[0].toLowerCase() === "title"));
+            //alert(first[0].toLowerCase() + " " + (first[0].toLowerCase() === "title"));
             if(first[0].toLowerCase() === "title") {
                 firstColumn = lines.map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[i]);
                 break;
@@ -62,9 +62,13 @@ export default function CSVReader() {
        async function processBooks() {
            if (columnData.length === 0) return;
 
-           //Splice to skip header information
-           if(columnData.length > 25) {
-               columnData = columnData.splice(1, 25);
+           //default the amount of delay between books to be 1 second
+           let delayBetween = 1000;
+           // Splice to skip header information
+           if(columnData.length > 26) {
+               //future area to make it where if there are more than 25 books to make the delay .5 second
+               //delayBetween = 500;
+               columnData = columnData.splice(1, 26);
            } else {
                columnData = columnData.splice(1, columnData.length);
            }
@@ -73,13 +77,12 @@ export default function CSVReader() {
 
            setIsLoading(true); // Start loading
            for (const title of columnData) {
-               const titleClean = title.replaceAll("#","")
-
+               const titleClean = title.replaceAll("/","").replaceAll("#","")
                // 1. Search the book
                const found = await searchBookViaTitle(titleClean, BASE); // gets the first book
                if (!found) {
                    message = ({ titleClean, message: "No result found", success: false });
-                   await delay(25); // IMPORTANT: prevents rate limit so google doesn't cry :(
+                   await delay(25);
                    continue;
                }
                 // 2. Add book to backend
@@ -111,6 +114,13 @@ export default function CSVReader() {
            }
        }
 
+       function helpBox() {
+            const element = document.getElementById('help_box');
+            if (element) {
+                element.classList.toggle('hidden');
+            }
+       }
+
        processBooks();
    }, [columnData]);
 
@@ -118,33 +128,35 @@ export default function CSVReader() {
     return (
         <div>
         <label htmlFor="fileUpload" style={{ cursor: "pointer" }}>
-                            <div className="bb-card__media">
-                                  <img
-                                    src={tempAddBook}
-                                    style={{
-                                      width: "100%",
-                                      height: "100%",
-                                      objectFit: "cover",
-                                      display: "block",
-                                    }}
-                                  />
-                            </div>
-                            <div className="bb-card__body" >
-                                <h2 className="bb-card__title">
-                                    Add your Goodreads™ Library!
-                                </h2>
-                                <br />
+        <div className="bb-card__media">
 
-                                <label htmlFor="fileUpload" className="bb-btn">{fileName}</label>
-                                <input
-                                  style={{ display: "none" }}
-                                  id="fileUpload"
-                                  type="file"
-                                  accept=".csv"
-                                  onChange = {handleFileUpload}
-                                />
-                            </div>
-                            </label>
+              <img
+                src={tempAddBook}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+
+        </div>
+        <div className="bb-card__body" >
+            <h2 className="bb-card__title">
+                Add your Goodreads™ Library!
+            </h2>
+            <br />
+
+            <label htmlFor="fileUpload" className="bb-btn">{fileName}</label>
+            <input
+              style={{ display: "none" }}
+              id="fileUpload"
+              type="file"
+              accept=".csv"
+              onChange = {handleFileUpload}
+            />
+        </div>
+        </label>
 
             {isLoading && (
             <div style={{
@@ -170,9 +182,8 @@ export default function CSVReader() {
                    <div className="book__pg book__pg--4"></div>
                    <div className="book__pg book__pg--5"></div>
                 </div>
-                <div id="userUpdate" style={{position: 'fixed', marginTop: '170px', fontSize: '25px',}}>
-
-                </div>
+                <div style={{position: 'fixed', marginBottom: '175px', fontSize: '25px', color: '#B6D15C'}}> For now, users are limited to 25 Books from their imported library!</div>
+                <div id="userUpdate" style={{position: 'fixed', marginTop: '175px', fontSize: '25px',}}></div>
             </div>)}
         </div>
     );
