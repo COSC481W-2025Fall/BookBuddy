@@ -16,7 +16,11 @@ function norm(v?: string | null): string {
   return (v ?? "").toString().trim().toLowerCase();
 }
 
-function compareStr(a?: string | null, b?: string | null, dir: SortDir = "asc") {
+function compareStr(
+  a?: string | null,
+  b?: string | null,
+  dir: SortDir = "asc"
+) {
   const aa = norm(a);
   const bb = norm(b);
   if (!aa && !bb) return 0;
@@ -87,7 +91,11 @@ export default function Library() {
             primary = compareStr(x.b.author, y.b.author, sortDir);
             break;
           case "genre":
-            primary = compareStr((x.b as any).genre, (y.b as any).genre, sortDir);
+            primary = compareStr(
+              (x.b as any).genre,
+              (y.b as any).genre,
+              sortDir
+            );
             break;
         }
         if (primary !== 0) return primary;
@@ -148,7 +156,9 @@ export default function Library() {
             onClick={async () => {
               try {
                 await removeFromLibrary(b.isbn!);
-                setBooks((prev) => prev.filter((book) => book.isbn !== b.isbn));
+                setBooks((prev) =>
+                  prev.filter((book) => book.isbn !== b.isbn)
+                );
               } catch (err: any) {
                 alert(err?.message ?? "Failed to remove book");
               }
@@ -165,7 +175,8 @@ export default function Library() {
             src={coverUrl((b as any).coverid)}
             alt={`${b.bookname ?? "Book"} cover`}
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
+              (e.currentTarget as HTMLImageElement).src =
+                "/hobbit-placeholder.jpg";
             }}
             className="h-full w-full object-cover"
           />
@@ -211,7 +222,7 @@ export default function Library() {
     // Extra card for CSV import when you already have books
     <li
       key="csv-card"
-      className="rounded-2xl border border-dashed border-slate-200 bg-white text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center p-4"
+      className="rounded-2xl border border-dashed border-slate-200 bg-white text-center shadow-sm transition hover:shadow-lg cursor-pointer flex flex-col items-center justify-center p-4"
     >
       <CSVReader />
     </li>,
@@ -252,7 +263,9 @@ export default function Library() {
               <button
                 type="button"
                 className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-2 focus:ring-indigo-500 cursor-pointer"
-                onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+                onClick={() =>
+                  setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+                }
               >
                 {sortDir === "asc" ? "A→Z" : "Z→A"}
               </button>
@@ -261,7 +274,7 @@ export default function Library() {
 
           {sortedBooks.length === 0 ? (
             <div className="mt-8 grid items-center gap-5 md:grid-cols-2">
-              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:-translate-y-1 hover:shadow-lg">
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:shadow-lg">
                 <div className="flex justify-center">
                   <img
                     src={tempSearchBook}
@@ -285,7 +298,7 @@ export default function Library() {
                   </button>
                 </div>
               </div>
-              <div className="cursor-pointer rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:-translate-y-1 hover:shadow-lg">
+              <div className="cursor-pointer rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:shadow-lg">
                 <CSVReader />
               </div>
             </div>
@@ -294,10 +307,7 @@ export default function Library() {
               {/* Books present: bookshelf grid with shelf under each row */}
               <ul className="mt-8 space-y-10">
                 {rows.map((row, rowIndex) => (
-                  <li
-                    key={`row-${rowIndex}`}
-                    className="relative list-none"
-                  >
+                  <li key={`row-${rowIndex}`} className="relative list-none">
                     <ul className="grid grid-cols-1 gap-6 pb-6 sm:grid-cols-2 lg:grid-cols-4">
                       {row}
                     </ul>
@@ -327,7 +337,7 @@ export default function Library() {
             {/* Close button */}
             <button
               type="button"
-              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer cursor-pointer"
+              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
               onClick={() => setDescriptionBook(null)}
             >
               Close
