@@ -3,6 +3,7 @@ import type { BookDto } from "./types/BookDto";
 import type { WishBookDto } from "./types/WishBookDto";
 import "./components/Searchpage.css";
 import noCoverFound from "./logo/noCoverFound.png";
+import ToastHost from "./ToastHost"; // 👈 NEW import
 
 const BASE = ""; // keep empty, proxy or relative path handles backend
 
@@ -84,7 +85,9 @@ const SearchPage: React.FC = () => {
       );
     } catch (err: any) {
       console.error("Error searching books", err);
-      setSearchStatus("❌ Something went wrong while searching. Please try again.");
+      setSearchStatus(
+        "❌ Something went wrong while searching. Please try again.",
+      );
       setBookResults([]);
     }
   };
@@ -164,7 +167,9 @@ const SearchPage: React.FC = () => {
         });
 
         if (!res.ok) {
-          throw new Error("This book is already in your wishlist, or add failed");
+          throw new Error(
+            "This book is already in your wishlist, or add failed",
+          );
         }
 
         const added = await res.json();
@@ -179,44 +184,8 @@ const SearchPage: React.FC = () => {
 
   return (
     <>
-      {/* Toast notifications */}
-      {toasts.length > 0 && (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-          {toasts.map((toast) => (
-            <div
-              key={toast.id}
-              className={[
-                "w-80 sm:w-96 rounded-xl shadow-2xl px-5 py-4 text-base text-white flex items-start gap-3",
-                "transition-all duration-500 transform",
-                toast.closing
-                  ? "opacity-0 translate-y-2"
-                  : "opacity-100 translate-y-0",
-                toast.type === "success"
-                  ? "bg-emerald-500"
-                  : toast.type === "error"
-                    ? "bg-rose-500"
-                    : "bg-slate-800",
-              ].join(" ")}
-            >
-              <span className="mt-0.5 text-lg">
-                {toast.type === "success"
-                  ? "✨"
-                  : toast.type === "error"
-                    ? "⚠️"
-                    : "ℹ️"}
-              </span>
-              <p className="flex-1 leading-snug">{toast.message}</p>
-              <button
-                type="button"
-                onClick={() => closeToast(toast.id)}
-                className="ml-2 text-xs opacity-70 hover:opacity-100 whitespace-nowrap cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Toasts rendered via portal so they're always in viewport */}
+      <ToastHost toasts={toasts} closeToast={closeToast} />
 
       {/* Main content layer */}
       <div className="relative min-h-screen">
@@ -284,7 +253,10 @@ const SearchPage: React.FC = () => {
 
             {bookResults.length === 0 ? (
               <p className="text-2xl text-gray-600">
-              <span className="font-medium">No results to display yet. Try searching for a title above to see matching books.</span>
+                <span className="font-medium">
+                  No results to display yet. Try searching for a title above to
+                  see matching books.
+                </span>
               </p>
             ) : (
               <ul className="space-y-4 pb-10">
