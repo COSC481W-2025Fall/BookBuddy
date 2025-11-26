@@ -73,8 +73,11 @@ const Signup: React.FC = () => {
 
     return (
 
-        {/* ⬅ scroll now isolated to signup only (fix for no-scroll issue) */}
+        /* ⭐ FIXED — comment moved *inside* return container */
+
         <div className="signup-page flex w-full min-h-screen relative z-1">
+
+            {/* scroll now isolated to signup only */}
 
             <div className="wave-container absolute bottom-180 left-370 transform -translate-x-1/2 -translate-y-1/2 z-2.">
                 <h1 className="wave-text">
@@ -113,8 +116,7 @@ const Signup: React.FC = () => {
             {/* ================= BACKGROUND ================= */}
             <div className="flex-grow flex items-center justify-center gradient-background-books relative h-screen p-8 overflow-hidden z-[-2]">
 
-                {/* ❗ REMOVED WHITE OVERLAY — THIS WAS THE CAUSE OF THE SCREEN BLOCKING */}
-                {/* <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-5"></div> */}
+                {/* ❗ overlay removed */}
 
                 {/* LOGIN BUTTON */}
                 <button className="p-2 z-[100] relative button-bubble left-25 top-2" type="button"
@@ -154,7 +156,7 @@ const Signup: React.FC = () => {
                 <button className="p-2 z-[100] absolute question-circle top-3 left-45"
                         onClick={() => setShowinfo(true)}>?</button>
 
-                {/* BOOK FIELD (unchanged from your file) */}
+                {/* BOOK FIELD (full list preserved exactly) */}
                 <div className="book-scene">
                     <div className="book-3d book-1-pos"><div className="page"></div></div>
                     <div className="book-3d book-cover-two book-2-pos"><div className="page"></div></div>
@@ -185,11 +187,9 @@ const Signup: React.FC = () => {
                 </div>
             </div>
 
-            {/* SIDEBAR — fixed JSX comment */}
-            <div className={`
-                w-vh bg-white shadow-xl fixed top-0 h-full transition-all duration-700 ease-in-out
-                ${isOpen ? 'right-0' : 'right-[-456px]'}
-            `}>
+            {/* SIDEBAR */}
+            <div className={`w-vh bg-white shadow-xl fixed top-0 h-full transition-all duration-700 ease-in-out
+                ${isOpen ? 'right-0' : 'right-[-456px]'}`}>
 
                 {/* SIGNUP PANEL */}
                 {seeSignup && (
@@ -277,8 +277,7 @@ const Signup: React.FC = () => {
                                            onChange={onChangeLN} required/>
                                 </div>
 
-                                <button type="submit" className="w-full
-                                    rounded-xl bg-[#e2b4bd] hover:bg-[#F1DADE]"
+                                <button type="submit" className="w-full rounded-xl bg-[#e2b4bd] hover:bg-[#F1DADE]"
                                         disabled={loadingLN}>
                                     {loadingLN ? "Signing in..." : "Sign in"}
                                 </button>
@@ -286,6 +285,7 @@ const Signup: React.FC = () => {
                         </div>
                     </div>
                 )}
+
             </div>
         </div>
     );
