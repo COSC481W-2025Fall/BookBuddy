@@ -1,23 +1,38 @@
-import {useEffect, useState} from "react";
-import {AccountDto} from "./types/AccountDto";
-import {getCurrentUser, getMyLibrary} from "./api";
-import {BookDto} from "./types/BookDto";
-import {useNavigate} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { AccountDto } from "./types/AccountDto";
+import { getCurrentUser, getMyLibrary } from "./api";
+import { BookDto } from "./types/BookDto";
+import { useNavigate } from "react-router-dom";
 import "./Styling/Profile.css";
-
 
 export default function Profile() {
     const navigate = useNavigate();
-	@@ -11,7 +13,6 @@ export default function Profile() {
+
+    const [account, setAccount] = useState<AccountDto | null>(null);
+    const [books, setBooks] = useState<BookDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const totalPages = books.reduce((sum, b) => sum + (b.pagecount || 0), 0);
 
     useEffect(() => {
-	@@ -39,26 +40,22 @@ export default function Profile() {
-        );
-    }
+        async function loadData() {
+            try {
+                const userData = await getCurrentUser();
+                const libraryData = await getMyLibrary();
+                setAccount(userData);
+                setBooks(libraryData);
+            } catch (err) {
+                setError("Failed to load profile data");
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadData();
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
         <div className="profile-page">
@@ -37,4 +52,5 @@ export default function Profile() {
 
             </div>
         </div>
-    );}
+    );
+}
