@@ -105,7 +105,7 @@ export default function Book_display({ result }: { result: BookDto[] }) {
                     {/*sets up book mapping so that we can  access the object*/ }
                     {result.map((book) => (
                         // obtains each property from the book object start
-                        <div key={book.isbn} style={{width:' 800px', border: '2px solid black', margin: '15px', padding: '15px' }}>
+                        <div key={book.isbn} style={{width:' 800px', border: '2px solid black', margin: '15px', padding: '15px' , overflow: 'scroll' }}>
 
                             {/*set up formatting so we can have book image next to text*/}
                             <div style={{ display: 'flex' }}>

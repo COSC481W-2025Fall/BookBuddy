@@ -17,7 +17,9 @@ import "./Styling/AboutUS.css";
     const [confirm, setConfirm] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [seeSignup, setSeeSignup] = useState(false);
+    const [success, setSuccess] = useState<string | null>(null);
+
+        const [seeSignup, setSeeSignup] = useState(false);
     ////////////////////////////LOGIN CODE ////////////////////////////
     const [formLN, setFormLN] = useState<LoginDto>({ name: "", password: "" });
     const [loadingLN, setLoadingLN] = useState(false);
@@ -39,15 +41,24 @@ import "./Styling/AboutUS.css";
             e.preventDefault();
             setErrorLN(null);
             setLoadingLN(true);
+
             try {
-                await addLogin({ name: formLN.name.trim(), password: formLN.password });
+                const account = await addLogin({
+                    name: formLN.name.trim(),
+                    password: formLN.password
+                });
+
+                if (!account) {
+                    setErrorLN("Invalid username or password.");
+                    return;
+                }
+
                 navigate("/search");
 
             } catch (err: any) {
                 setErrorLN(err?.message ?? "Login failed. Please check your credentials.");
             } finally {
                 setLoadingLN(false);
-
             }
         };
 ////////////////////////////LOGIN CODE ////////////////////////////
@@ -88,7 +99,10 @@ import "./Styling/AboutUS.css";
         setLoading(true);
         try {
           await addAccount({ name: form.name.trim(), password: form.password });
-          navigate("/login");
+            setSuccess("Account created! Proceed to login.");
+            setForm({ name: "", password: "" });    // clear form
+            setConfirm("");
+          navigate("/");
         } catch (err: any) {
           setError(err?.message ?? "Sign up failed. Please try again.");
         } finally {
@@ -402,6 +416,12 @@ import "./Styling/AboutUS.css";
                                             {error}
                                         </div>
                                     )}
+                                    {success && (
+                                        <div
+                                            className="rounded-xl bg-green-50 p-3 text-sm text-green-700 border border-green-200">
+                                            {success}
+                                        </div>
+                                    )}
                                     <form onSubmit={onSubmit} className="space-y-12">
                                         <div>
                                             <label htmlFor="name" className="label font-bold text-xl ">
@@ -482,10 +502,10 @@ import "./Styling/AboutUS.css";
                                 </div>
 
                                 <div className="card">
-                                    {error && (
+                                    {errorLN && (
                                         <div
                                             className="  rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
-                                            {error}
+                                            {errorLN}
                                         </div>
                                     )}
 

@@ -104,7 +104,7 @@ const Login: React.FC = () => {
           <p className="mt-6 text-center text-sm text-gray-600">
             Don’t have an account?{" "}
             <Link
-              to="/signup"
+              to="/"
               className="text-indigo-600 hover:underline"
             >
               Create one
