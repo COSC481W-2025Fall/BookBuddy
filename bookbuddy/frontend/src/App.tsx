@@ -8,7 +8,6 @@ import Library from "./Library";
 import WishList from "./WishBook";
 import Buddy from "./Buddy_Recommendation";
 import Profile from "./Profile";
-import ProtectedRoute from "./ProtectedRoute"; // make sure this exists
 
 export default function App() {
   const location = useLocation();
@@ -23,48 +22,13 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected routes inside Layout */}
+        {/* Routes inside Layout */}
         <Route element={<Layout />}>
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/search"
-            element={
-              <ProtectedRoute>
-                <Search />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/library"
-            element={
-              <ProtectedRoute>
-                <Library />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/WishList"
-            element={
-              <ProtectedRoute>
-                <WishList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Buddy_Recommendation"
-            element={
-              <ProtectedRoute>
-                <Buddy />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/WishList" element={<WishList />} />
+          <Route path="/Buddy_Recommendation" element={<Buddy />} />
         </Route>
 
         {/* Catch-all redirect */}
