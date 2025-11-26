@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import {addAccount, addLogin} from "./api";
+import { addAccount } from "./api";
 import type { AccountDto } from "./types/AccountDto";
 import type { LoginDto } from "./types/LoginDto";
 import logo from "./logo/bookbuddy-logo-mywristhurts.png";

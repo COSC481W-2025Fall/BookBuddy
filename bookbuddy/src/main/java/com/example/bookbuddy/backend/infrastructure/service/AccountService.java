@@ -21,7 +21,7 @@ public class AccountService {
 
     public AccountDto createAccount(AccountDto accountDto) {
         try {
-            System.out.println("➡ Entering createAccount()");
+            System.out.println(" Entering createAccount()");
             System.out.println(" Incoming DTO: name=" + accountDto.name + ", password=" + accountDto.password);
 
             // Validate input
@@ -45,13 +45,20 @@ public class AccountService {
             Account newAccount = AccountMapper.INSTANCE.convertToAccount(accountDto);
             System.out.println(" Mapped entity (before save): " + newAccount);
 
+            newAccount.setAiLimit(7);
+
+
             // Save to DB
             newAccount = accountRepository.save(newAccount);
-            System.out.println("💾 Saved entity (after save): accountId=" + newAccount.getAccountId());
+            System.out.println(" Saved entity (after save): accountId=" + newAccount.getAccountId());
 
             // Convert back to DTO
             AccountDto result = AccountMapper.INSTANCE.convertToDto(newAccount);
-            System.out.println(" Returning DTO: accountId=" + result.accountId + ", name=" + result.name);
+            System.out.println(" Returning DTO: accountId=" + result.accountId +
+                    ", name=" + result.name +
+                    ", aiLimit=" + result.aiLimit);
+
+
 
             return result;
 
@@ -61,10 +68,55 @@ public class AccountService {
             throw e; // rethrow so controller’s @ExceptionHandler catches it
         }
     }
+    public AccountDto getAccountAiLimit(Long accountId) {
+        System.out.println("Fetching AI limit for account ID=" + accountId);
+        Account account = accountRepository.getById(accountId);
+        AccountDto accountDto = AccountMapper.INSTANCE.convertToDto(account);
+        System.out.println(" AI limit for account ID=" + accountId + " is " + accountDto.aiLimit);
+        return accountDto;
+    }
 
     public AccountDto getAccountById(Long accountId) {
-        System.out.println("🔎 Looking up account with ID=" + accountId);
+        System.out.println(" Looking up account with ID=" + accountId);
         Account account = accountRepository.getById(accountId);
         return AccountMapper.INSTANCE.convertToDto(account);
     }
+//    public AccountDto changeAccountAiLimit(Long accountId, int newAiLimit) {
+//        System.out.println("Updating AI limit for account =" + accountId + " to " + newAiLimit);
+//        Account account = accountRepository.getById(accountId);
+//        account.setAiLimit(newAiLimit);
+//        Account updatedAccount = accountRepository.save(account);
+//        System.out.println(" Updated AI limit for account =" + accountId + " to " + updatedAccount.getAiLimit());
+//        return AccountMapper.INSTANCE.convertToDto(updatedAccount);
+//    }  ============================ Ben keep for future use to change ai limit directly
+
+    public AccountDto changeAiUse(Long accountId) {
+        System.out.println("Entering consumeAiUse() for account ID=" + accountId);
+
+        // Fetch account safely
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+        int currentLimit = account.getAiLimit();
+        System.out.println("Current AI limit: " + currentLimit);
+
+        // Check if limit reached
+        if (currentLimit <= 0) {
+            System.out.println("AI limit reached for account ID=" + accountId);
+            throw new IllegalStateException("AI usage limit reached");
+        }
+
+        // Reduce limit by 1
+        int updatedLimit = currentLimit - 1;
+        account.setAiLimit(updatedLimit);
+
+        // Save new value
+        Account updatedAccount = accountRepository.save(account);
+
+        System.out.println("AI limit decremented. New limit: " + updatedLimit);
+
+        // Return updated DTO
+        return AccountMapper.INSTANCE.convertToDto(updatedAccount);
+    }
 }
+

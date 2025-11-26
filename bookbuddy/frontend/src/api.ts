@@ -162,3 +162,16 @@ export async function SendQeustions(body: string[]): Promise<{ response: string 
         return { response: text };
     }
 }
+
+export async function ChangeAiUse() {
+    const response = await fetch("/Account/changeAiUse", {
+        method: "POST",
+        credentials: "include"
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return response.json();
+}
