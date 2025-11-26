@@ -209,7 +209,7 @@ const SearchPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => closeToast(toast.id)}
-                className="ml-2 text-xs opacity-70 hover:opacity-100 whitespace-nowrap"
+                className="ml-2 text-xs opacity-70 hover:opacity-100 whitespace-nowrap cursor-pointer"
               >
                 Close
               </button>
@@ -252,7 +252,7 @@ const SearchPage: React.FC = () => {
 
               <button
                 type="submit"
-                className="btn btn-primary w-full sm:w-auto bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-semibold px-6 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px]"
+                className="btn btn-primary w-full sm:w-auto bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-semibold px-6 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
               >
                 Search
               </button>
@@ -385,7 +385,7 @@ const SearchPage: React.FC = () => {
                     <div className="mt-4 flex flex-wrap gap-3">
                       <button
                         type="button"
-                        className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px]"
+                        className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
                         onClick={addBookToLibrary(book)}
                       >
                         Add to my library
@@ -393,7 +393,7 @@ const SearchPage: React.FC = () => {
 
                       <button
                         type="button"
-                        className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px]"
+                        className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
                         onClick={addBookToWishlist(book as WishBookDto)}
                       >
                         Add to wishlist
@@ -408,7 +408,7 @@ const SearchPage: React.FC = () => {
                           ).replace(/%20/g, "+")}&i=stripbooks`;
                           window.open(amazonSearchUrl, "_blank");
                         }}
-                        className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px]"
+                        className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
                       >
                         Search on Amazon
                       </button>

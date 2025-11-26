@@ -145,7 +145,7 @@ export default function Library() {
                   Sort by
                 </span>
                 <select
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:ring-2 focus:ring-indigo-500"
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value as SortKey)}
                 >
@@ -157,7 +157,7 @@ export default function Library() {
 
               <button
                 type="button"
-                className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-2 focus:ring-indigo-500"
+                className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                 onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
               >
                 {sortDir === "asc" ? "A→Z" : "Z→A"}
@@ -213,7 +213,7 @@ export default function Library() {
                           alert(err?.message ?? "Failed to remove book");
                         }
                       }}
-                      className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100"
+                      className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100 cursor-pointer"
                       title="Remove from Library"
                     >
                       <TrashIcon className="h-5 w-5" />
@@ -260,7 +260,7 @@ export default function Library() {
                       <button
                         type="button"
                         onClick={() => setDescriptionBook(b)}
-                        className="flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+                        className="flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 cursor-pointer"
                       >
                         Description
                       </button>
@@ -293,7 +293,7 @@ export default function Library() {
             {/* Close button */}
             <button
               type="button"
-              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
+              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
               onClick={() => setDescriptionBook(null)}
             >
               Close
