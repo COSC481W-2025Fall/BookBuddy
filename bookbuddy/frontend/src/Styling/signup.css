@@ -1,69 +1,3 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Prevents vertical scroll from massive background content */
-    overflow-x: hidden; /* Prevents horizontal scroll from massive background content */
-}
-
-/* ======================================= */
-/* Mobile Phone Breakpoint (e.g., iPhone/Android) */
-/* ======================================= */
-@media (max-width: 480px) {
-
-    /* --- 1. BOOK SCALING --- */
-
-    /* Reduce the Base Size of the Book */
-    .book-3d .page {
-        width: 200px;
-        height: 300px;
-        /* Re-calculate the overall 3D transformation scaling factor */
-        transform: rotate(-45deg) skewX(10deg) scale(0.35); /* Apply smaller scale */
-        box-shadow: -25px 25px 25px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Adjust the Spine/Side Edge */
-    .book-3d .page:before {
-        width: 15px;
-        transform: skewY(-45deg) translate(-29px, -21.5px);
-    }
-
-    /* Adjust the Bottom Edge */
-    .book-3d .page:after {
-        height: 15px;
-        transform: skewX(-45deg) translate(-5.5px, 15px);
-    }
-
-    /* --- 2. SCENE ADJUSTMENTS --- */
-
-    .book-scene {
-        /* Set a smaller initial size, relative to phone viewport */
-        width: 100vw;
-        height: 50vh;
-    }
-
-    /* Adjust the pan animation to be smaller and less frantic on phones */
-    @keyframes book-pan {
-        0% {
-            transform: translate3d(0vw, 0vh, 0);
-        }
-        100% {
-            /* Reduce the pan distance significantly to match the smaller viewport */
-            transform: translate3d(50vw, 50vh, 0);
-        }
-    }
-
-    /* --- 3. SIDEBAR ADJUSTMENT --- */
-
-    .sidebar-open {
-        /* Set it to occupy most of the phone width */
-        width: 90vw;
-        /* Re-center it */
-        left: 50%;
-        transform: translateX(-50%);
-    }
-}
-
-
 
 /* Moves the scene up and right to create the illusion of the camera panning down and left. */
 @keyframes book-pan {
@@ -116,23 +50,15 @@ html, body {
 
 body {
 
-    font-family: Quicksand
+    font-family: 'Times New Roman', sans-serif;
 }
 
-.To {
-    margin-left:75px;
-
-}
-.welcome {
-    margin-left:10px;
-}
 .wave-text span {
     margin-top: 100%;
     margin-bottom: -100%;
     display: flex;
     font-size: 3rem;
-
-    animation: wave 6s ease-in-out infinite;
+    animation: wave 7s ease-in-out infinite;
 }
 
 .wave-text span:nth-child(1) {
@@ -540,28 +466,6 @@ vertical of 300
     left: -2350px; /* Further right */
     transform: translate(-50%, -50%) rotate(5deg) scale(0.8);
 }
-
-.form-label-hover:hover {
-    color: #235789 !important;
-    /* Added this line: */
-    transform: scale(1.05) translateY(-2px);
-}
-
-.form-input-hover:hover {
-    background-color: rgb(240, 240, 240);
-
-    /* Added this line: */
-    transform: scale(1.05) translateY(-2px);
-}
-
-.Cover_logo {
-    margin-left: 1300px;
-    margin-top: 550px;
-
-
-}
-
-
 
 /* #424b54 gray
 # 235789 blue

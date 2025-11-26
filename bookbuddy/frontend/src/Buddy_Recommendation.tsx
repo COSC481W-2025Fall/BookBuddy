@@ -3,9 +3,10 @@ import React, {useState, useEffect, useRef} from 'react';
 import {SendQeustions} from "./api";
 import "./components/Searchpage.css";
 import WishlistButton from "./Add_Result_to_Wishlist";
-import "./components/Book_loading.css"
 import { ChangeAiUse } from "./api";
-
+import "./components/Book_loading.css";
+import "./Styling/Buddy_Recommendation.css";
+import "./Styling/buddyresultbackground.jpg";
 
 // MAN i gotta learn vim
 
@@ -208,9 +209,20 @@ function Buddy() {
             await ChangeAiUse(); // session identifies the user
         } catch (err) {
             seterror("You have 0 AI uses remaining.");
+            setButtonPressed(true); // remove button so that the user doesn't try again
             return; // stop here so AI isn’t called
         }
-        setDarkBox(true);
+
+        setResBoxVisible(true)
+        setButtonPressed(true)
+
+        setTimeout(() => {
+            resultRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }, 0);
+
 
         // CATS each Question with the Answer
         const Q_A0 = `${Q0} ${RQ0}`;
@@ -304,6 +316,7 @@ function Buddy() {
                                         maxLength={maxInput}
                                     />
                                     <button
+                                        type="button"
                                         className="refreshButton"
                                         title="Don't like this question? Get a new one!"
                                         onClick={() => handleNewQuestion(0)}
@@ -327,6 +340,7 @@ function Buddy() {
                                         maxLength={maxInput}
                                     />
                                     <button
+                                        type="button"
                                         className="refreshButton"
                                         title="Don't like this question? Get a new one!"
                                         onClick={() => handleNewQuestion(1)}
@@ -350,6 +364,7 @@ function Buddy() {
                                         maxLength={maxInput}
                                     />
                                     <button
+                                        type="button"
                                         className="refreshButton"
                                         title="Don't like this question? Get a new one!"
                                         onClick={() => handleNewQuestion(2)}
@@ -373,6 +388,7 @@ function Buddy() {
                                         maxLength={maxInput}
                                     />
                                     <button
+                                        type="button"
                                         className="refreshButton"
                                         title="Don't like this question? Get a new one!"
                                         onClick={() => handleNewQuestion(3)}
@@ -396,6 +412,7 @@ function Buddy() {
                                         maxLength={maxInput}
                                     />
                                     <button
+                                        type="button"
                                         className="refreshButton"
                                         title="Don't like this question? Get a new one!"
                                         onClick={() => handleNewQuestion(4)}

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import type { AccountDto } from "./types/AccountDto";
-import type { BookDto } from "./types/BookDto";
-import { getCurrentUser, getMyLibrary } from "./api";
-
+import {useEffect, useState} from "react";
+import {AccountDto} from "./types/AccountDto";
+import {getCurrentUser, getMyLibrary} from "./api";
+import {BookDto} from "./types/BookDto";
+import {useNavigate} from "react-router-dom";
 import "./Styling/Profile.css";
+
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function Profile() {
                 setBooks(lib);
             } catch (e: any) {
                 console.error(e);
-                navigate("/");
+                navigate("/login");
             } finally {
                 setLoading(false);
             }
@@ -34,31 +34,28 @@ export default function Profile() {
 
     if (loading) {
         return (
-            <div className="profileBackground">
-                <div className="profileCard">
-                    <h1>Loading profile...</h1>
-                </div>
+            <div className="wrap">
+                <h1>Loading profile...</h1>
             </div>
         );
     }
 
-
-
     return (
-        <div className="profileBackground">
-            <div className="profileCard">
+        <div className="profile-page">
+            <div className="wrap">
+
                 <h1>Hello, {account?.name || "Reader"}!</h1>
 
-                <div className="profileStats">
+                <div className="bb-card">
                     <p><strong>Books in Library:</strong> {books.length}</p>
                     <p><strong>Total Pages:</strong> {totalPages.toLocaleString()}</p>
-                    <p><strong>AI Uses Remaining:</strong> {account?.aiLimit}</p>
+                    <p><strong>AI Uses Remaining:</strong> {account?.aiLimit ?? 0}</p>
                 </div>
 
-                <button className="profileButton" onClick={() => navigate("/library")}>
+                <button className="bb-btn" onClick={() => navigate("/library")}>
                     Go to My Library
                 </button>
+
             </div>
         </div>
-    );
-}
+    );}
