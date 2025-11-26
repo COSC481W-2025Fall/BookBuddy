@@ -18,6 +18,9 @@ public class Account {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private int aiLimit;
+
     public Account() {}
 
     public Account(String name, String password) {
@@ -48,6 +51,13 @@ public class Account {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getAiLimit() {
+        return aiLimit;
+    }
+    public void setAiLimit(int aiLimit) {
+        this.aiLimit = aiLimit;
     }
 }
 
