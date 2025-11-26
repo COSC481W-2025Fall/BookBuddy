@@ -44,13 +44,12 @@ const CSVReader: React.FC = () => {
 
       const csvSplitRegExp = /,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
 
-      // HEADER
       const headerCells = lines[0].split(csvSplitRegExp);
       let titleColIndex = headerCells.findIndex(
         (h) => h.replace(/"/g, "").trim().toLowerCase() === "title"
       );
 
-      // fallback → first column
+      // if no explicit title column → fallback to column 0
       if (titleColIndex === -1) {
         setColumnData(lines.map((line) => line.split(csvSplitRegExp)[0] ?? ""));
         return;
@@ -66,42 +65,41 @@ const CSVReader: React.FC = () => {
     if (columnData.length === 0) return;
 
     async function processBooks() {
-      let titles = [...columnData].slice(1).slice(0, 25); // skip header + limit 25
+      let titles = [...columnData].slice(1).slice(0, 25); // skip header + limit
       if (titles.length === 0) return;
 
       setIsLoading(true);
 
       for (const rawTitle of titles) {
-        const titleClean = rawTitle?.replaceAll("/", "").replaceAll("#", "").trim() ?? "";
+        const safeTitle = rawTitle ?? ""; // 🔥 prevents undefined TS2532
+        const titleClean = safeTitle.replaceAll("/", "").replaceAll("#", "").trim();
 
         if (!titleClean) continue;
 
         const found = await searchBookViaTitle(titleClean, BASE);
 
-        // 🔥 MUST check this or TS2532 triggers
         if (!found) {
-          const msg = {
+          const msg: BookMessage = {
             title: titleClean,
             message: "No result found",
             success: false,
           };
           setCurrentMessage(msg);
-          setBookMessages((prev) => [...prev, msg]);
-          await delay(50);
+          setBookMessages(prev => [...prev, msg]);
+          await delay(75);
           continue;
         }
 
-        // BOOK IS CONFIRMED SAFE HERE — NO UNDEFINED ACCESS
         const result = await addCSVBooks(found, BASE);
 
         const msg: BookMessage = {
-          title: found.bookname ?? titleClean, // ensures never undefined
-          message: result.ok ? "Added successfully" : result.message || "Failed",
+          title: found.bookname ?? titleClean, // safe fallback
+          message: result.ok ? "Added successfully" : result.message ?? "Failed",
           success: result.ok,
         };
 
         setCurrentMessage(msg);
-        setBookMessages((prev) => [...prev, msg]);
+        setBookMessages(prev => [...prev, msg]);
         await delay(1000);
       }
 
@@ -118,14 +116,14 @@ const CSVReader: React.FC = () => {
       <label htmlFor="fileUpload" className="cursor-pointer w-full block">
         <div className="flex justify-center">
           <img
-            className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover"
+            className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover bg-slate-100"
             src={tempAddBook}
             alt="Upload Goodreads Library"
           />
         </div>
 
         <p className="mt-3 text-base font-semibold text-slate-900">
-          Add your Goodreads™ Library!
+          Add your Goodreads Library
         </p>
 
         <div className="mt-6 flex items-center justify-center">
@@ -135,7 +133,6 @@ const CSVReader: React.FC = () => {
           >
             {fileName}
           </label>
-
           <input id="fileUpload" type="file" accept=".csv" onChange={handleFileUpload} className="hidden" />
         </div>
       </label>
@@ -146,8 +143,10 @@ const CSVReader: React.FC = () => {
           <div className="fixed inset-0 bg-black/80 flex flex-col items-center justify-center text-white text-xl z-[9999]">
             <div className="book">
               <div className="book__pg-shadow"></div>
-              <div className="book__pg"></div><div className="book__pg book__pg--2"></div>
-              <div className="book__pg book__pg--3"></div><div className="book__pg book__pg--4"></div>
+              <div className="book__pg"></div>
+              <div className="book__pg book__pg--2"></div>
+              <div className="book__pg book__pg--3"></div>
+              <div className="book__pg book__pg--4"></div>
               <div className="book__pg book__pg--5"></div>
             </div>
 
