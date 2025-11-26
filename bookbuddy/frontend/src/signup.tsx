@@ -101,7 +101,16 @@ import "./Styling/AboutUS.css";
 
         return (
             // Main container with relative positioning and high Z-index to establish a stacking context
-            <div className="flex w-full min-h-screen relative z-10">
+            <div className="flex w-full min-h-screen relative z-1">
+
+                <div className="wave-container absolute bottom-180 left-370 transform -translate-x-1/2 -translate-y-1/2 z-2.">
+                    <h1 className="wave-text">
+                        <span className={"welcome"}>Welcome</span><span className={"To"}>To</span><span>BookBuddy </span>
+                    </h1>
+                </div>
+
+
+
                 {/* --- TEXT CONTAINER: Now without a background color --- */}
                 <div
                     className="wave-container absolute top-1/2 left-50 transform -translate-x-1/2 -translate-y-1/2 z-2.">
@@ -188,6 +197,12 @@ import "./Styling/AboutUS.css";
                             were a part of beta testing, giving us input on how we can make this website the best it can
                             be. </p>
                     </div>
+                    <div className="wave-container ">
+                        <img
+                            src={logo}
+                            alt="BookBuddy"
+                            className="Cover_logo z-5 h-20 w-auto sm:h-65 sm:w-auto bg-white rounded-4xl "/>
+                    </div>
                 </div>)}
 
 
@@ -197,7 +212,9 @@ import "./Styling/AboutUS.css";
                 <div
                     className="flex-grow flex items-center justify-center gradient-background-books relative h-screen p-8 overflow-hidden z-[-2]">
 
-                    <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-1"></div>
+
+
+                    <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-5"></div>
                     {/* ------------------------- */}
 
                     <button className="p-2 z-[100] relative button-bubble left-25 top-2" type="button"
@@ -243,6 +260,8 @@ import "./Styling/AboutUS.css";
                             onClick={() => setShowinfo(true)}>
                         ?
                     </button>
+
+
 
 
                     <div className="book-scene ">
@@ -379,6 +398,7 @@ import "./Styling/AboutUS.css";
 
 
                             <div className="w-full h-full max-w-md m-2 p-2  z-5 ">
+
                                 {/* Header / Branding */}
                                 <div
                                     className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">

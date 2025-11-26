@@ -116,15 +116,23 @@ html, body {
 
 body {
 
-    font-family: 'Times New Roman', sans-serif;
+    font-family: Quicksand
 }
 
+.To {
+    margin-left:75px;
+
+}
+.welcome {
+    margin-left:10px;
+}
 .wave-text span {
     margin-top: 100%;
     margin-bottom: -100%;
     display: flex;
     font-size: 3rem;
-    animation: wave 7s ease-in-out infinite;
+
+    animation: wave 6s ease-in-out infinite;
 }
 
 .wave-text span:nth-child(1) {
@@ -544,6 +552,12 @@ book-cover-eighteen .page {
     transform: scale(1.05) translateY(-2px);
 }
 
+.Cover_logo {
+    margin-left: 1300px;
+    margin-top: 550px;
+
+
+}
 
 
 
