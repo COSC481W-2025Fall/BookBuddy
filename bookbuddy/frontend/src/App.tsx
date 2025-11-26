@@ -15,7 +15,9 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
     const accountId = localStorage.getItem("accountId");
 
     // If not logged in, redirect to login
-    if (!accountId) return <Navigate to="/" replace />;
+    if (!accountId) {
+        return <Navigate to="/login" replace />;
+    }
 
     return children;
 
@@ -27,7 +29,7 @@ export default function App() {
         <Routes>
             {/* Public routes */}
             <Route path="/" element={<Signup />} />e
-<!--             <Route path="/login" element={<Login />} /> -->
+            <Route path="/login" element={<Login />} />
             {/*<Route path="/signup" element={<Signup />} />*/}
 
             {/* Protected routes inside Layout */}
@@ -75,7 +77,7 @@ export default function App() {
             </Route>
 
             {/* Catch-all redirect */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
     );
 }

@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { AccountDto } from "./types/AccountDto";
 import type { BookDto } from "./types/BookDto";
-import { getCurrentUser, getMyLibrary } from "./api";
-
-import "./Styling/Profile.css";
+import {getAccountById, getCurrentUser, getMyLibrary} from "./api";
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -13,6 +11,7 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    // Calculate total pages
     const totalPages = books.reduce((sum, b) => sum + (b.pagecount || 0), 0);
 
     useEffect(() => {
@@ -25,7 +24,7 @@ export default function Profile() {
                 setBooks(lib);
             } catch (e: any) {
                 console.error(e);
-                navigate("/");
+                navigate("/login");
             } finally {
                 setLoading(false);
             }
@@ -34,31 +33,32 @@ export default function Profile() {
 
     if (loading) {
         return (
-            <div className="profileBackground">
-                <div className="profileCard">
-                    <h1>Loading profile...</h1>
-                </div>
+            <div className="wrap">
+                <h1>Loading profile...</h1>
             </div>
         );
     }
 
-
+    if (error) {
+        return (
+            <div className="wrap">
+                <h1>Profile</h1>
+                <p style={{ color: "red" }}>{error}</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="profileBackground">
-            <div className="profileCard">
-                <h1>Hello, {account?.name || "Reader"}!</h1>
-
-                <div className="profileStats">
-                    <p><strong>Books in Library:</strong> {books.length}</p>
-                    <p><strong>Total Pages:</strong> {totalPages.toLocaleString()}</p>
-                    <p><strong>AI Uses Remaining:</strong> {account?.aiLimit}</p>
-                </div>
-
-                <button className="profileButton" onClick={() => navigate("/library")}>
-                    Go to My Library
-                </button>
+        <div className="wrap">
+            <h1>Hello, {account?.name || "Reader"}!</h1>
+            <div className="bb-card" style={{ padding: "20px", maxWidth: "600px" }}>
+                <p><strong>Books in Library:</strong> {books.length}</p>
+                <p><strong>Total Pages:</strong> {totalPages.toLocaleString()}</p>
             </div>
+
+            <button className="bb-btn" onClick={() => navigate("/library")} style={{ marginTop: "20px" }}>
+                Go to My Library
+            </button>
         </div>
     );
 }
