@@ -20,6 +20,7 @@ export default function Sidebar() {
     ];
 
     // Render the sidebar with navigation links
+
     return (
         <>
             {/* // Button to toggle sidebar visibility */}
