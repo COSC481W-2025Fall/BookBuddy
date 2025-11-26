@@ -26,10 +26,7 @@ const CSVReader: React.FC = () => {
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) {
-      setFileName("No File Chosen!");
-      return;
-    }
+    if (!file) return setFileName("No File Chosen!");
 
     setFileName(file.name);
 
@@ -47,23 +44,19 @@ const CSVReader: React.FC = () => {
 
       const csvSplitRegExp = /,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
 
-      // HEADER row
+      // HEADER
       const headerCells = lines[0].split(csvSplitRegExp);
       let titleColIndex = headerCells.findIndex(
         (h) => h.replace(/"/g, "").trim().toLowerCase() === "title"
       );
 
-      // If no title column found, fallback → first column
+      // fallback → first column
       if (titleColIndex === -1) {
         setColumnData(lines.map((line) => line.split(csvSplitRegExp)[0] ?? ""));
         return;
       }
 
-      const titleColumn = lines.map((line) => {
-        return line.split(csvSplitRegExp)[titleColIndex] ?? "";
-      });
-
-      setColumnData(titleColumn);
+      setColumnData(lines.map((line) => line.split(csvSplitRegExp)[titleColIndex] ?? ""));
     };
 
     reader.readAsText(file);
@@ -73,17 +66,19 @@ const CSVReader: React.FC = () => {
     if (columnData.length === 0) return;
 
     async function processBooks() {
-      let titles = [...columnData].slice(1).slice(0, 25); // skip header, limit 25
+      let titles = [...columnData].slice(1).slice(0, 25); // skip header + limit 25
       if (titles.length === 0) return;
 
       setIsLoading(true);
 
       for (const rawTitle of titles) {
-        const titleClean = rawTitle.replaceAll("/", "").replaceAll("#", "").trim();
+        const titleClean = rawTitle?.replaceAll("/", "").replaceAll("#", "").trim() ?? "";
+
         if (!titleClean) continue;
 
         const found = await searchBookViaTitle(titleClean, BASE);
 
+        // 🔥 MUST check this or TS2532 triggers
         if (!found) {
           const msg = {
             title: titleClean,
@@ -96,10 +91,11 @@ const CSVReader: React.FC = () => {
           continue;
         }
 
+        // BOOK IS CONFIRMED SAFE HERE — NO UNDEFINED ACCESS
         const result = await addCSVBooks(found, BASE);
 
         const msg: BookMessage = {
-          title: found.bookname ?? titleClean,
+          title: found.bookname ?? titleClean, // ensures never undefined
           message: result.ok ? "Added successfully" : result.message || "Failed",
           success: result.ok,
         };
@@ -109,7 +105,7 @@ const CSVReader: React.FC = () => {
         await delay(1000);
       }
 
-      await delay(3000);
+      await delay(2000);
       setIsLoading(false);
       window.location.reload();
     }
@@ -122,7 +118,7 @@ const CSVReader: React.FC = () => {
       <label htmlFor="fileUpload" className="cursor-pointer w-full block">
         <div className="flex justify-center">
           <img
-            className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover bg-slate-100"
+            className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover"
             src={tempAddBook}
             alt="Upload Goodreads Library"
           />
@@ -147,51 +143,20 @@ const CSVReader: React.FC = () => {
       {isLoading &&
         typeof document !== "undefined" &&
         createPortal(
-          <div
-            style={{
-              position: "fixed",
-              inset: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.8)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 9999,
-              color: "white",
-              fontSize: "20px",
-              textAlign: "center",
-            }}
-          >
+          <div className="fixed inset-0 bg-black/80 flex flex-col items-center justify-center text-white text-xl z-[9999]">
             <div className="book">
               <div className="book__pg-shadow"></div>
-              <div className="book__pg"></div>
-              <div className="book__pg book__pg--2"></div>
-              <div className="book__pg book__pg--3"></div>
-              <div className="book__pg book__pg--4"></div>
+              <div className="book__pg"></div><div className="book__pg book__pg--2"></div>
+              <div className="book__pg book__pg--3"></div><div className="book__pg book__pg--4"></div>
               <div className="book__pg book__pg--5"></div>
             </div>
 
-            <div
-              style={{
-                position: "fixed",
-                marginBottom: "175px",
-                fontSize: "25px",
-                color: "#B6D15C",
-              }}
-            >
-              Users are limited to 25 books for now!
-            </div>
-
-            <div
-              style={{
-                position: "fixed",
-                marginTop: "175px",
-                fontSize: "25px",
-              }}
-            >
+            <p className="mt-10 text-[#B6D15C] text-2xl">Importing up to 25 books…</p>
+            <p className="mt-4 text-lg">
               {currentMessage
                 ? `${currentMessage.title}: ${currentMessage.message}`
                 : "Starting import..."}
-            </div>
+            </p>
           </div>,
           document.body
         )}
