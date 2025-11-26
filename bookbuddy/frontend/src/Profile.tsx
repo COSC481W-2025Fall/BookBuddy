@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import type { AccountDto } from "./types/AccountDto";
-import type { BookDto } from "./types/BookDto";
-import {getAccountById, getCurrentUser, getMyLibrary} from "./api";
+import {useEffect, useState} from "react";
+import {AccountDto} from "./types/AccountDto";
+import {getCurrentUser, getMyLibrary} from "./api";
+import {BookDto} from "./types/BookDto";
+import {useNavigate} from "react-router-dom";
+import "./Styling/Profile.css";
+
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -11,7 +13,6 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Calculate total pages
     const totalPages = books.reduce((sum, b) => sum + (b.pagecount || 0), 0);
 
     useEffect(() => {
@@ -39,26 +40,22 @@ export default function Profile() {
         );
     }
 
-    if (error) {
-        return (
-            <div className="wrap">
-                <h1>Profile</h1>
-                <p style={{ color: "red" }}>{error}</p>
-            </div>
-        );
-    }
-
     return (
-        <div className="wrap">
-            <h1>Hello, {account?.name || "Reader"}!</h1>
-            <div className="bb-card" style={{ padding: "20px", maxWidth: "600px" }}>
-                <p><strong>Books in Library:</strong> {books.length}</p>
-                <p><strong>Total Pages:</strong> {totalPages.toLocaleString()}</p>
-            </div>
+        <div className="profile-page">
+            <div className="wrap">
 
-            <button className="bb-btn" onClick={() => navigate("/library")} style={{ marginTop: "20px" }}>
-                Go to My Library
-            </button>
+                <h1>Hello, {account?.name || "Reader"}!</h1>
+
+                <div className="bb-card">
+                    <p><strong>Books in Library:</strong> {books.length}</p>
+                    <p><strong>Total Pages:</strong> {totalPages.toLocaleString()}</p>
+                    <p><strong>AI Uses Remaining:</strong> {account?.aiLimit ?? 0}</p>
+                </div>
+
+                <button className="bb-btn" onClick={() => navigate("/library")}>
+                    Go to My Library
+                </button>
+
+            </div>
         </div>
-    );
-}
+    );}
