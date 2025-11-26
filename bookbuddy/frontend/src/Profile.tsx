@@ -23,7 +23,7 @@ export default function Profile() {
                 setAccount(userData);
                 setBooks(libraryData);
             } catch (err) {
-                setError("Failed to load profile data");
+                setError("Failed to load profile");
             } finally {
                 setLoading(false);
             }
@@ -31,22 +31,22 @@ export default function Profile() {
         loadData();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    if (loading) return <div className="profile-page"><div className="profile-card">Loading...</div></div>;
+    if (error) return <div className="profile-page"><div className="profile-card">{error}</div></div>;
 
     return (
         <div className="profile-page">
-            <div className="wrap">
+            <div className="profile-card">
 
-                <h1>Hello, {account?.name || "Reader"}!</h1>
+                <h1 className="profile-title">Hello, {account?.name || "Reader"}!</h1>
 
-                <div className="bb-card">
+                <div className="profile-stats">
                     <p><strong>Books in Library:</strong> {books.length}</p>
                     <p><strong>Total Pages:</strong> {totalPages.toLocaleString()}</p>
                     <p><strong>AI Uses Remaining:</strong> {account?.aiLimit ?? 0}</p>
                 </div>
 
-                <button className="bb-btn" onClick={() => navigate("/library")}>
+                <button className="profile-btn" onClick={() => navigate("/library")}>
                     Go to My Library
                 </button>
 
