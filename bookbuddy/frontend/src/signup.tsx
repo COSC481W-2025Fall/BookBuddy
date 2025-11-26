@@ -101,7 +101,7 @@ import "./Styling/AboutUS.css";
 
         return (
             // Main container with relative positioning and high Z-index to establish a stacking context
-            <div className="flex w-full min-h-screen relative z-1">
+            <div className="signup-page flex w-full min-h-screen relative z-1">
 
                 <div className="wave-container absolute bottom-180 left-370 transform -translate-x-1/2 -translate-y-1/2 z-2.">
                     <h1 className="wave-text">
