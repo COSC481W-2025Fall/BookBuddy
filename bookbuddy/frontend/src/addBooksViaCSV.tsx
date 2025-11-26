@@ -127,36 +127,42 @@ export default function CSVReader() {
 
     return (
         <div>
-        <label htmlFor="fileUpload" style={{ cursor: "pointer" }}>
-        <div className="bb-card__media">
+            <div>
+                <label htmlFor="fileUpload" className="cursor-pointer w-full block">
 
-              <img
-                src={tempAddBook}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
+                    <div className="flex justify-center">
+                        <img
+                            className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover bg-slate-100"
+                            src={tempAddBook}
+                            alt="Upload Goodreads Library"
+                            />
+                        </div>
 
-        </div>
-        <div className="bb-card__body" >
-            <h2 className="bb-card__title">
-                Add your Goodreads™ Library!
-            </h2>
-            <br />
+                        <p className="mt-3 text-base font-semibold text-slate-900">
+                            Add your Goodreads™ Library!
+                        </p>
 
-            <label htmlFor="fileUpload" className="bb-btn">{fileName}</label>
-            <input
-              style={{ display: "none" }}
-              id="fileUpload"
-              type="file"
-              accept=".csv"
-              onChange = {handleFileUpload}
-            />
-        </div>
-        </label>
+                        <div className="mt-6 flex items-center justify-center ">
+                        <label
+                            htmlFor="fileUpload"
+                            className="w-4/5 justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
+                            >
+                            {fileName}
+                        </label>
+
+                        <input
+                            id="fileUpload"
+                            type="file"
+                            accept=".csv"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                        />
+                    </div>
+
+                </label>
+
+            </div>
+
 
             {isLoading && (
             <div style={{

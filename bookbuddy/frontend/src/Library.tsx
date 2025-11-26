@@ -166,33 +166,30 @@ export default function Library() {
           </div>
 
           {sortedBooks.length === 0 ? (
-            <div className="mt-16 grid items-center gap-10 md:grid-cols-2">
-              <div className="flex justify-center">
-                <img
-                  src={tempSearchBook}
-                  alt="No books yet"
-                  className="max-w-xs w-full rounded-2xl shadow-sm"
-                />
-              </div>
-              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center">
-                <p className="text-sm text-slate-600">
+            <div className="mt-8 grid items-center gap-5 md:grid-cols-2">
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center hover:-translate-y-1 hover:shadow-lg transition">
+                <div className="flex justify-center">
+                  <img
+                    src={tempSearchBook}
+                    alt="No books yet"
+                    className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer"
+                    onClick={() => navigate("/search")}
+                  />
+                </div>
+                <p className="mt-3 text-base font-semibold text-slate-900 cursor-pointer" onClick={() => navigate("/search")}>
                   You haven&apos;t added any books yet.
                 </p>
-                <div className="mt-6 flex flex-col items-center gap-4">
+                <div className="mt-6 items-center gap-4">
                   <button
-                    className="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500"
+                    className="w-4/5 justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
                     onClick={() => navigate("/search")}
                   >
                     Search for books
                   </button>
-
-                  <div className="w-full max-w-md rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-left">
-                    <p className="text-sm font-medium text-slate-800 mb-2">
-                      Or import from a CSV file
-                    </p>
-                    <CSVReader />
                   </div>
-                </div>
+              </div>
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center hover:-translate-y-1 hover:shadow-lg transition cursor-pointer">
+                <CSVReader />
               </div>
             </div>
           ) : (
@@ -273,25 +270,8 @@ export default function Library() {
               ))}
 
               {/* Extra card for CSV import when you already have books */}
-              <li className="flex flex-col overflow-hidden rounded-2xl border border-dashed border-slate-200 bg-white p-4 shadow-sm">
-                <div className="relative aspect-[2/3] rounded-xl bg-slate-50 flex items-center justify-center mb-4">
-                  <img
-                    src={tempAddBook}
-                    alt="Add more books"
-                    className="max-h-full max-w-full object-contain p-4"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col gap-3">
-                  <h2 className="text-base font-semibold text-slate-900">
-                    Import more books
-                  </h2>
-                  <p className="text-sm text-slate-600">
-                    Use a CSV file to quickly add multiple books to your library.
-                  </p>
-                  <div className="mt-auto">
-                    <CSVReader />
-                  </div>
-                </div>
+              <li className="rounded-2xl border border-dashed border-slate-200 bg-white text-center hover:-translate-y-1 hover:shadow-lg transition cursor-pointer">
+                <CSVReader />
               </li>
             </ul>
           )}
