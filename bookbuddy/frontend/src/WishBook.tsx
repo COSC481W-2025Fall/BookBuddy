@@ -146,7 +146,7 @@ export default function WishBook() {
             {error}
           </div>
           <button
-            className="mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500"
+            className="mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
             onClick={() => navigate("/search")}
           >
             Go to Search
@@ -174,7 +174,7 @@ export default function WishBook() {
               alert(err?.message ?? "Failed to remove from wishlist");
             }
           }}
-          className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100"
+          className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100  cursor-pointer"
           title="Remove from Wishlist"
         >
           <TrashIcon className="h-5 w-5" />
@@ -219,7 +219,7 @@ export default function WishBook() {
           {b.isbn && (
             <button
               type="button"
-              className="flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus-visible:ring-2 focus-visible:ring-emerald-500"
+              className="flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus-visible:ring-2 focus-visible:ring-emerald-500 cursor-pointer"
               onClick={async () => {
                 try {
                   await addToLibraryFromWishBook(b);
@@ -239,7 +239,7 @@ export default function WishBook() {
             <button
               type="button"
               onClick={() => setDescriptionBook(b)}
-              className="flex flex-1 items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+              className="flex flex-1 items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 cursor-pointer"
             >
               Description
             </button>
@@ -248,7 +248,7 @@ export default function WishBook() {
               href={amazonSearchUrl(b.bookname)}
               target="_blank"
               rel="noreferrer"
-              className="flex flex-1 items-center justify-center rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-400 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+              className="flex flex-1 items-center justify-center rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-400 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 cursor-pointer"
             >
               Amazon
             </a>
@@ -264,7 +264,7 @@ export default function WishBook() {
     <>
       <div className="min-h-[60vh] bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-10">
-          <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-none flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between min-w-[1120px]">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
                 My Wishlist
@@ -350,7 +350,7 @@ export default function WishBook() {
             {/* Close button */}
             <button
               type="button"
-              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
+              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200  cursor-pointer"
               onClick={() => setDescriptionBook(null)}
             >
               Close
