@@ -105,7 +105,8 @@
 
     /* Appearance */
     background-color: #ffffff;
-    border-radius: 12px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 
     /* Size & Content */

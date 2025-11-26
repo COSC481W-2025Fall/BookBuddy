@@ -10,12 +10,11 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const logIn = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -55,7 +54,7 @@ const Login: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={logIn} className="space-y-4">
+          <form onSubmit={onSubmit} className="space-y-4">
             <div>
               <label htmlFor="name" className="label">
                 Username

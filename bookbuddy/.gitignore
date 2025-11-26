@@ -64,5 +64,3 @@ Thumbs.db
 /frontend/dist/
 /frontend/.vite/
 /frontend/tsconfig.tsbuildinfo
-
-frontend/coverage
