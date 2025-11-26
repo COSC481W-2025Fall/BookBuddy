@@ -209,7 +209,7 @@ const SearchPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => closeToast(toast.id)}
-                className="ml-2 text-xs opacity-70 hover:opacity-100 whitespace-nowrap"
+                className="ml-2 text-xs opacity-70 hover:opacity-100 whitespace-nowrap cursor-pointer"
               >
                 Close
               </button>
@@ -220,9 +220,9 @@ const SearchPage: React.FC = () => {
 
       {/* Main content layer */}
       <div className="relative min-h-screen">
-        <div className="max-w-3xl mx-auto px-4 py-10">
+        <div className="max-w-2xl mx-auto px-4 py-10">
           {/* Search panel */}
-          <div className="w-full space-y-6 p-6 shadow-md rounded-xl border border-gray-200 bg-white min-h-[220px]">
+          <div className=" space-y-6 p-6 shadow-md rounded-xl border border-gray-200 bg-white min-h-[220px]">
             <div className="space-y-3">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900">
                 Find your book
@@ -252,7 +252,7 @@ const SearchPage: React.FC = () => {
 
               <button
                 type="submit"
-                className="btn btn-primary w-full sm:w-auto bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-semibold px-6 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px]"
+                className="btn btn-primary w-full sm:w-auto bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-semibold px-6 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
               >
                 Search
               </button>
@@ -269,7 +269,7 @@ const SearchPage: React.FC = () => {
           <div className="mt-10 border-t pt-8 min-h-[260px]">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight text-gray-900">
+                <h2 className="text-3xl font-semibold tracking-tight text-gray-900">
                   Search results
                 </h2>
                 {bookResults.length > 0 && (
@@ -283,9 +283,8 @@ const SearchPage: React.FC = () => {
             </div>
 
             {bookResults.length === 0 ? (
-              <p className="text-sm text-gray-600">
-                No results to display yet. Try searching for a title above to see
-                matching books.
+              <p className="text-2xl text-gray-600">
+              <span className="font-medium">No results to display yet. Try searching for a title above to see matching books.</span>
               </p>
             ) : (
               <ul className="space-y-4 pb-10">
@@ -385,7 +384,7 @@ const SearchPage: React.FC = () => {
                     <div className="mt-4 flex flex-wrap gap-3">
                       <button
                         type="button"
-                        className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px]"
+                        className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
                         onClick={addBookToLibrary(book)}
                       >
                         Add to my library
@@ -393,7 +392,7 @@ const SearchPage: React.FC = () => {
 
                       <button
                         type="button"
-                        className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px]"
+                        className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
                         onClick={addBookToWishlist(book as WishBookDto)}
                       >
                         Add to wishlist
@@ -408,7 +407,7 @@ const SearchPage: React.FC = () => {
                           ).replace(/%20/g, "+")}&i=stripbooks`;
                           window.open(amazonSearchUrl, "_blank");
                         }}
-                        className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px]"
+                        className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
                       >
                         Search on Amazon
                       </button>

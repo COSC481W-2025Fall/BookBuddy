@@ -280,7 +280,7 @@ export default function WishBook() {
                   Sort by
                 </span>
                 <select
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm"
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm cursor-pointer"
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value as SortKey)}
                 >
@@ -292,7 +292,7 @@ export default function WishBook() {
 
               <button
                 type="button"
-                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 cursor-pointer"
                 onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
               >
                 {sortDir === "asc" ? "A→Z" : "Z→A"}
@@ -301,17 +301,22 @@ export default function WishBook() {
           </div>
 
           {sortedWishBooks.length === 0 ? (
+              <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-1">
+
+
+
             <div className="mt-16 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
               <p className="text-sm text-slate-600">
                 You haven't added any books to your wishlist yet.
               </p>
               <button
-                className="mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500"
+                className=" mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
                 onClick={() => navigate("/search")}
               >
                 Search for books
               </button>
             </div>
+             </ul>
           ) : (
             // Books present: bookshelf grid with shelf under each row
             <ul className="mt-8 space-y-10">

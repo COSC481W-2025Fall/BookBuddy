@@ -239,7 +239,7 @@ export default function Library() {
                   Sort by
                 </span>
                 <select
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:ring-2 focus:ring-indigo-500"
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value as SortKey)}
                 >
@@ -251,7 +251,7 @@ export default function Library() {
 
               <button
                 type="button"
-                className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-2 focus:ring-indigo-500"
+                className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                 onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
               >
                 {sortDir === "asc" ? "A→Z" : "Z→A"}
@@ -290,19 +290,24 @@ export default function Library() {
               </div>
             </div>
           ) : (
-            // Books present: bookshelf grid with shelf under each row
-            <ul className="mt-8 space-y-10">
-              {rows.map((row, rowIndex) => (
-                <li key={`row-${rowIndex}`} className="relative list-none">
-                  <ul className="grid grid-cols-1 gap-6 pb-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {row}
-                  </ul>
+            <>
+              {/* Books present: bookshelf grid with shelf under each row */}
+              <ul className="mt-8 space-y-10">
+                {rows.map((row, rowIndex) => (
+                  <li
+                    key={`row-${rowIndex}`}
+                    className="relative list-none"
+                  >
+                    <ul className="grid grid-cols-1 gap-6 pb-6 sm:grid-cols-2 lg:grid-cols-4">
+                      {row}
+                    </ul>
 
-                  {/* Shelf bar under this row */}
-                  <div className="pointer-events-none absolute inset-x-4 bottom-0 h-3 rounded-t-2xl bg-gradient-to-b from-amber-200 via-amber-300 to-amber-500 shadow-[0_10px_20px_rgba(15,23,42,0.45)]" />
-                </li>
-              ))}
-            </ul>
+                    {/* Shelf bar under this row */}
+                    <div className="pointer-events-none absolute inset-x-4 bottom-0 h-3 rounded-t-2xl bg-gradient-to-b from-amber-200 via-amber-300 to-amber-500 shadow-[0_10px_20px_rgba(15,23,42,0.45)]" />
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </div>
       </div>
@@ -322,7 +327,7 @@ export default function Library() {
             {/* Close button */}
             <button
               type="button"
-              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
+              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
               onClick={() => setDescriptionBook(null)}
             >
               Close
