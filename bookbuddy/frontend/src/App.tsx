@@ -13,11 +13,13 @@ import Profile from "./Profile";
 export default function App() {
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+                    {/* Public routes */}
+                    <Route path="/" element={<Signup />} />e
+                    <Route path="/login" element={<Login />} />
+                    {/*<Route path="/signup" element={<Signup />} />*/}
 
-            <Route element={<Layout />}>
+                    {/* Protected routes inside Layout */}
+                    <Route element={<Layout />}>
                 <Route path="/search" element={<Search />} />
                 <Route path="/library" element={<Library />} />
                 <Route path="/WishList" element={<WishList />} />
