@@ -173,7 +173,7 @@ body {
 .book-scene {
     width: 50vw;
     height: 30vh;
-    animation: book-pan 100s linear infinite alternate; /* 90s duration (adjust for speed) */
+    animation: book-pan 10s linear infinite alternate; /* 90s duration (adjust for speed) */
 }
 
 /* ======================================= */
@@ -389,7 +389,7 @@ vertical of 300
 }
 
 .book-cover-fourteen .page {
-    background-image: url('https://m.media-amazon.com/images/I/91LQnObFHfL._SY466_.jpg') !important;
+    background-image: url('https://m.media-amazon.com/images/I/81kfMGiLweL._SY522_.jpg') !important;
 }
 /* --- Book -1 (Higher, Staggered Right) --- */
 /* To visually balance the Book 2 left-shift, we go right and higher. */
@@ -425,8 +425,8 @@ vertical of 300
     background-image: url('https://m.media-amazon.com/images/I/41rrZplMctL._SY445_SX342_ControlCacheEqualizer_.jpg') !important;
 }
 
-book-cover-eighteen .page {
-    background-image: url('') !important;
+.book-cover-eighteen .page {
+    background-image: url('https://m.media-amazon.com/images/I/41gcNhuGStL._SX342_SY445_ControlCacheEqualizer_.jpg') !important;
 }
 /* --- Book -4 --- */
 .book-minus-four-pos {
@@ -437,6 +437,7 @@ book-cover-eighteen .page {
 
 .book-cover-nineteen .page {
     background-image: url('https://m.media-amazon.com/images/I/7127ZROAw5L._SY466_.jpg') !important;
+
 }
 
 .book-minus-five-pos {
@@ -447,6 +448,7 @@ book-cover-eighteen .page {
 
 .book-cover-twenty .page {
     background-image: url('https://m.media-amazon.com/images/I/713e4Yk6brL._SY466_.jpg') !important;
+
 }
 
 .book-minus-six-pos {
@@ -502,7 +504,7 @@ book-cover-eighteen .page {
 }
 
 .book-cover-twenty-six .page {
-    background-image: url('') !important;
+    background-image: url('https://m.media-amazon.com/images/I/41tEO52oK7L._SY445_SX342_ControlCacheEqualizer_.jpg') !important;
 }
 
 .book-plus-5-pos {

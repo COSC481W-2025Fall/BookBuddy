@@ -324,7 +324,7 @@ import "./Styling/AboutUS.css";
                             <div className="page"></div>
                         </div>
 
-                        <div className="book-3d book-cover-fourteten book-minus-three-pos">
+                        <div className="book-3d book-cover-fourteen book-minus-three-pos">
                             <div className="page"></div>
                         </div>
 
