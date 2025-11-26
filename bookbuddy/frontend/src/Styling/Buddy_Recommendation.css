@@ -1,193 +1,193 @@
- /*Form CSS*/
- .pageBackground {
-     width: 100vw;
-     height: 100vh;
-     background-image: url("buddyresultbackground.jpg");
-     background-repeat: repeat;
-     background-position: top left;
-     background-size: auto;
-     margin: 0;
-     padding: 0;
-     top: 0;
-     left: 0;
-     position: absolute;
-     overflow-y: scroll;
- }
+/*Form CSS*/
+.pageBackground {
+    width: 100vw;
+    height: 100vh;
+    background-image: url("buddyresultbackground.jpg");
+    background-repeat: repeat;
+    background-position: top left;
+    background-size: auto;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+    position: absolute;
+    overflow-y: scroll;
+}
 
- .questions-container {
-     max-width: 800px;
-     margin: 80px auto;
-     padding: 30px;
-     border: 1px solid #ccc;
-     border-radius: 10px;
-     box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-     background: whitesmoke;
-     text-align: center;
- }
- /*#ECF5FF*/
- .questionBlock {
-     margin-bottom: 24px;
- }
+.questions-container {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    background: whitesmoke;
+    text-align: center;
+}
+/*#ECF5FF*/
+.questionBlock {
+    margin-bottom: 24px;
+}
 
- .questionLabel {
-     display: block;
-     margin-bottom: 10px;
-     font-weight: 500;
-     color: #333;
-     font-size: 1.1rem;
- }
+.questionLabel {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #333;
+    font-size: 1.1rem;
+}
 
- .aBox {
-     width: 100%;
-     padding: 12px;
-     max-width: 700px;
-     margin-top: 4px;
-     border: 1px solid #ccc;
-     border-radius: 18px;
-     background: white;
-     outline: #0056b3;
- }
+.aBox {
+    width: 100%;
+    padding: 12px;
+    max-width: 700px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 18px;
+    background: white;
+    outline: #0056b3;
+}
 
- .aBox:hover {
-     transform: translateY(-3px);
-     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
- }
+.aBox:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
 
- .aBox:focus {
-     border-color: #007bff;
-     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
-     transform: translateY(-3px);
- }
+.aBox:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+    transform: translateY(-3px);
+}
 
- .charCounter {
-     margin-top: 4px;
-     font-size: 12px;
-     color: black;
- }
+.charCounter {
+    margin-top: 4px;
+    font-size: 12px;
+    color: black;
+}
 
- .submitButton {
-     padding: 10px;
-     width: 100%;
-     max-width: 300px;
-     background: #F1DADE;
-     border: none;
-     color: #000;
-     border-radius: 15px;
-     font-size: 16px;
-     cursor: pointer;
-     outline: 1px solid #ccc;
-     margin-bottom: 15px;
- }
+.submitButton {
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    background: #F1DADE;
+    border: none;
+    color: #000;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    outline: 1px solid #ccc;
+    margin-bottom: 15px;
+}
 
- .submitButton:hover {
-     background: #E2B4BD;
- }
+.submitButton:hover {
+    background: #E2B4BD;
+}
 
- .filterQuestionBlock {
-     margin-bottom: 24px;
- }
+.filterQuestionBlock {
+    margin-bottom: 24px;
+}
 
- .filterQuestionLabel {
-     display: block;
-     margin-bottom: 12px;
-     font-weight: 700;
-     color: #333;
-     font-size: 1.1rem;
- }
+.filterQuestionLabel {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: #333;
+    font-size: 1.1rem;
+}
 
- /*Results CSS*/
- /*This box is invisible, I just don't want to change the programming in the main file*/
- .resultBox {
-     position: relative;
-     max-width: 90%;
-     max-height: 100%;
-     min-width: 200px;
-     min-height: 200px;
-     margin: 2rem auto;
-     background-position: center;
-     padding: 20px;
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
-     overflow-y: auto;
-     overflow-x: hidden;
-     word-wrap: break-word;
-     text-align: center;
-     z-index: 10;
-     color: #000;
-     font-size: 20px;
- }
+/*Results CSS*/
+/*This box is invisible, I just don't want to change the programming in the main file*/
+.resultBox {
+    position: relative;
+    max-width: 90%;
+    max-height: 100%;
+    min-width: 200px;
+    min-height: 200px;
+    margin: 2rem auto;
+    background-position: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    text-align: center;
+    z-index: 10;
+    color: #000;
+    font-size: 20px;
+}
 
- .eStyle {
-     /*display: block;*/
-     /*margin-bottom: 10px;*/
-     /*font-weight: 500;*/
-     /*color: palevioletred;*/
-     /*font-size: 1.1rem;*/
-     background: #fee2e2;
-     color: #7f1d1d;
-     margin-top: 4px;
-     padding: var(--bb-space-2) var(--bb-space-3);
-     border-radius: .75rem;
-     margin-bottom: var(--bb-space-3);
- }
+.eStyle {
+    /*display: block;*/
+    /*margin-bottom: 10px;*/
+    /*font-weight: 500;*/
+    /*color: palevioletred;*/
+    /*font-size: 1.1rem;*/
+    background: #fee2e2;
+    color: #7f1d1d;
+    margin-top: 4px;
+    padding: var(--bb-space-2) var(--bb-space-3);
+    border-radius: .75rem;
+    margin-bottom: var(--bb-space-3);
+}
 
- .resultContainer {
-     display: flex;
-     flex-direction: row;
-     gap: 2rem;
-     align-items: flex-start;
-     padding: 2rem;
-     background: whitesmoke;
-     border: 5px solid black;
-     border-radius: 12px;
-     max-width: 900px;
-     margin: 2rem auto;
-     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
- }
+.resultContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: flex-start;
+    padding: 2rem;
+    background: whitesmoke;
+    border: 5px solid black;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: 2rem auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
 
- .resultLeft {
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     gap: 1rem;
-     min-width: 200px;
-     flex-shrink: 0;
- }
+.resultLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    min-width: 200px;
+    flex-shrink: 0;
+}
 
- .resultRight {
-     flex: 1;
-     min-width: 0;
- }
+.resultRight {
+    flex: 1;
+    min-width: 0;
+}
 
- .refreshButton {
-     width: 40px;
-     height: 40px;
-     border-radius: 50%;
-     border: 1px solid #ccc;
-     background-image: url("getNewQuestion.png");
-     background-color: #77C3EC; /*#ECF5FF*/
-     background-repeat: no-repeat;
-     background-position: center;
-     background-size: 24px 24px;
-     margin-top: 9px;
-     margin-left: 9px;
-     align-items: center;
-     cursor: pointer;
-     transition: all 0.2s ease;
-     position: absolute;
- }
+.refreshButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background-image: url("getNewQuestion.png");
+    background-color: #77C3EC; /*#ECF5FF*/
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px 24px;
+    margin-top: 9px;
+    margin-left: 9px;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: absolute;
+}
 
- .refreshButton:hover {
-     background-color: #5a96dc;
-     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-     transform: translateY(-3px);
- }
+.refreshButton:hover {
+    background-color: #5a96dc;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
 
- .answerBlock {
-     position: relative;
-     display: inline-block;
-     width: 100%;
-     text-align: left;
- }
+.answerBlock {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
