@@ -1,3 +1,5 @@
+import type { BookDto } from "./types/BookDto";
+
 export async function addCSVBooks(selected_book: BookDto, BASE: string) {
     const newBook: BookDto = {
         bookname: selected_book.bookname ?? "Unknown",

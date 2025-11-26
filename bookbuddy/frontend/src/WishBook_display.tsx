@@ -37,7 +37,7 @@ export default function WishBook_display({ result }: { result: WishBookDto[] }) 
                 // ensures formating is propper. making the object into a json string
                 body: JSON.stringify(newWishBook),
             }).then(res => {
-                if (!res.ok) throw new Error("Add failed: " + res.status);
+                if (!res.ok) throw new Error("Book already in wishlist or failed to add");
                 return res.json();
             });
             setStatus("DONE…");

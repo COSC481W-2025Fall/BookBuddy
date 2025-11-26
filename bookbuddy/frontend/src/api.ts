@@ -122,6 +122,42 @@ export async function addBook(body: BookDto): Promise<BookDto> {
     return res.json();
 }
 
+// ===========================
+// Remove book from user's library
+// ===========================
+export async function removeFromLibrary(isbn: string): Promise<void> {
+    const res = await fetch(`${BASE}/books/remove/${encodeURIComponent(isbn)}`, {
+        method: "DELETE",
+        credentials: "include",
+    });
+
+    if (res.status === 401 || res.status === 403) {
+        throw new Error("AUTH");
+    }
+
+    if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`Failed to remove book: ${res.status}${text ? " - " + text : ""}`);
+    }
+}
+//Remove book from wishlist
+export async function removeFromWishlist(isbn: string): Promise<void> {
+    const res = await fetch(`${BASE}/wishbooks/remove/${encodeURIComponent(isbn)}`, {
+        method: "DELETE",
+        credentials: "include",
+    });
+
+    if (res.status === 401 || res.status === 403) {
+        throw new Error("AUTH");
+    }
+
+    if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`Failed to remove wishlist book: ${res.status}${text ? " - " + text : ""}`);
+    }
+}
+
+
 // export async function SendQeustions(body: string[] | any[]): Promise<void> {
 //     try {
 //         console.log({BASE})
