@@ -26,7 +26,19 @@ function compareStr(a?: string | null, b?: string | null, dir: SortDir = "asc") 
 }
 
 const amazonSearchUrl = (title?: string | null) =>
-  `https://www.amazon.com/s?k=${encodeURIComponent(title ?? "").replace(/%20/g, "+")}&i=stripbooks`;
+  `https://www.amazon.com/s?k=${encodeURIComponent(title ?? "").replace(
+    /%20/g,
+    "+"
+  )}&i=stripbooks`;
+
+// Helper to chunk an array into rows
+function chunkArray<T>(items: T[], size: number): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    result.push(items.slice(i, i + size));
+  }
+  return result;
+}
 
 export default function WishBook() {
   const navigate = useNavigate();
@@ -114,7 +126,9 @@ export default function WishBook() {
     return (
       <div className="min-h-[60vh] bg-slate-50">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-16">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">My Wishlist</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+            My Wishlist
+          </h1>
           <p className="mt-4 text-sm text-slate-500">Loading your wishlist…</p>
         </div>
       </div>
@@ -125,7 +139,9 @@ export default function WishBook() {
     return (
       <div className="min-h-[60vh] bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-10">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">My Wishlist</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+            My Wishlist
+          </h1>
           <div className="mt-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
@@ -140,13 +156,119 @@ export default function WishBook() {
     );
   }
 
+  // Build card items so we can chunk them into rows
+  const cardItems = sortedWishBooks.map((b, i) => (
+    <li
+      key={(b.isbn ?? "no-isbn") + "-" + i}
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+    >
+      {/* Trash icon on hover */}
+      {b.isbn && (
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              await removeFromWishlist(b.isbn!);
+              setWishBooks((prev) => prev.filter((w) => w.isbn !== b.isbn));
+            } catch (err: any) {
+              alert(err?.message ?? "Failed to remove from wishlist");
+            }
+          }}
+          className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100"
+          title="Remove from Wishlist"
+        >
+          <TrashIcon className="h-5 w-5" />
+        </button>
+      )}
+
+      <div className="relative aspect-[2/3] w-full bg-slate-100">
+        <img
+          src={coverUrl(b.coverid)}
+          alt={`${b.bookname ?? "WishBook"} cover`}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
+          }}
+          className="h-full w-full object-cover"
+        />
+      </div>
+
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <h2 className="text-base font-semibold text-slate-900">
+          {b.bookname || "Untitled"}
+        </h2>
+
+        {b.author && <div className="text-sm text-slate-600">{b.author}</div>}
+
+        {(b.isbn || b.genre) && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {b.isbn && (
+              <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                ISBN: {b.isbn}
+              </span>
+            )}
+            {b.genre && (
+              <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">
+                {b.genre}
+              </span>
+            )}
+          </div>
+        )}
+
+        <div className="mt-auto flex flex-col gap-2 pt-2">
+          {/* Add to Library */}
+          {b.isbn && (
+            <button
+              type="button"
+              className="flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus-visible:ring-2 focus-visible:ring-emerald-500"
+              onClick={async () => {
+                try {
+                  await addToLibraryFromWishBook(b);
+                  await removeFromWishlist(b.isbn!);
+                  setWishBooks((prev) => prev.filter((w) => w.isbn !== b.isbn));
+                } catch (err: any) {
+                  alert(err?.message ?? "Failed to move book to library");
+                }
+              }}
+            >
+              Add to Library
+            </button>
+          )}
+
+          {/* Description (modal) + Amazon */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+            <button
+              type="button"
+              onClick={() => setDescriptionBook(b)}
+              className="flex flex-1 items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+            >
+              Description
+            </button>
+
+            <a
+              href={amazonSearchUrl(b.bookname)}
+              target="_blank"
+              rel="noreferrer"
+              className="flex flex-1 items-center justify-center rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-400 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+            >
+              Amazon
+            </a>
+          </div>
+        </div>
+      </div>
+    </li>
+  ));
+
+  const rows = chunkArray(cardItems, 4); // 4 per row for lg:grid-cols-4 layout
+
   return (
     <>
       <div className="min-h-[60vh] bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-900">My Wishlist</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+                My Wishlist
+              </h1>
               <p className="mt-1 text-sm text-slate-500">
                 Keep track of the books you'd love to read next.
               </p>
@@ -154,7 +276,9 @@ export default function WishBook() {
 
             <div className="flex flex-wrap items-center gap-3">
               <label className="flex items-center gap-2 text-sm text-slate-600">
-                <span className="text-xs font-medium uppercase text-slate-500">Sort by</span>
+                <span className="text-xs font-medium uppercase text-slate-500">
+                  Sort by
+                </span>
                 <select
                   className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm"
                   value={sortKey}
@@ -189,105 +313,16 @@ export default function WishBook() {
               </button>
             </div>
           ) : (
-            <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {sortedWishBooks.map((b, i) => (
-                <li
-                  key={(b.isbn ?? "no-isbn") + "-" + i}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-                >
-                  {/* Trash icon on hover */}
-                  {b.isbn && (
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        try {
-                          await removeFromWishlist(b.isbn!);
-                          setWishBooks((prev) => prev.filter((w) => w.isbn !== b.isbn));
-                        } catch (err: any) {
-                          alert(err?.message ?? "Failed to remove from wishlist");
-                        }
-                      }}
-                      className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100"
-                      title="Remove from Wishlist"
-                    >
-                      <TrashIcon className="h-5 w-5" />
-                    </button>
-                  )}
+            // Books present: bookshelf grid with shelf under each row
+            <ul className="mt-8 space-y-10">
+              {rows.map((row, rowIndex) => (
+                <li key={`row-${rowIndex}`} className="relative list-none">
+                  <ul className="grid grid-cols-1 gap-6 pb-6 sm:grid-cols-2 lg:grid-cols-4">
+                    {row}
+                  </ul>
 
-                  <div className="relative aspect-[2/3] w-full bg-slate-100">
-                    <img
-                      src={coverUrl(b.coverid)}
-                      alt={`${b.bookname ?? "WishBook"} cover`}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
-                      }}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-
-                  <div className="flex flex-1 flex-col gap-2 p-4">
-                    <h2 className="text-base font-semibold text-slate-900">
-                      {b.bookname || "Untitled"}
-                    </h2>
-
-                    {b.author && <div className="text-sm text-slate-600">{b.author}</div>}
-
-                    {(b.isbn || b.genre) && (
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {b.isbn && (
-                          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-                            ISBN: {b.isbn}
-                          </span>
-                        )}
-                        {b.genre && (
-                          <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">
-                            {b.genre}
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    <div className="mt-auto pt-2 flex flex-col gap-2">
-                      {/* Add to Library */}
-                      {b.isbn && (
-                        <button
-                          type="button"
-                          className="flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus-visible:ring-2 focus-visible:ring-emerald-500"
-                          onClick={async () => {
-                            try {
-                              await addToLibraryFromWishBook(b);
-                              await removeFromWishlist(b.isbn!);
-                              setWishBooks((prev) => prev.filter((w) => w.isbn !== b.isbn));
-                            } catch (err: any) {
-                              alert(err?.message ?? "Failed to move book to library");
-                            }
-                          }}
-                        >
-                          Add to Library
-                        </button>
-                      )}
-
-                      {/* Description (now opens modal) + Amazon */}
-                      <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setDescriptionBook(b)}
-                          className="flex flex-1 items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
-                        >
-                          Description
-                        </button>
-
-                        <a
-                          href={amazonSearchUrl(b.bookname)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex flex-1 items-center justify-center rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-400 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
-                        >
-                          Amazon
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+                  {/* Shelf bar under this row */}
+                  <div className="pointer-events-none absolute inset-x-4 bottom-0 h-3 rounded-t-2xl bg-gradient-to-b from-amber-200 via-amber-300 to-amber-500 shadow-[0_10px_20px_rgba(15,23,42,0.45)]" />
                 </li>
               ))}
             </ul>

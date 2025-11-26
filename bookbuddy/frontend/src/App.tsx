@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
 import Login from "./login";
 import Signup from "./signup";
@@ -9,24 +9,31 @@ import WishList from "./WishBook";
 import Buddy from "./Buddy_Recommendation";
 import Profile from "./Profile";
 
-// Main application component with routing
 export default function App() {
-    return (
-        <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+  const location = useLocation();
 
-            <Route element={<Layout />}>
-                <Route path="/search" element={<Search />} />
-                <Route path="/library" element={<Library />} />
-                <Route path="/WishList" element={<WishList />} />
-                <Route path="/Buddy_Recommendation" element ={<Buddy />} />
-                <Route path="/Profile" element={<Profile />} />
+  return (
+    // key={location.pathname} forces this wrapper to remount on every route change,
+    // so the CSS animation runs each time.
+    <div key={location.pathname} className="page-fade">
+      <Routes location={location}>
+        {/* public routes */}
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
-            </Route>
-            <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* routes that use the sidebar layout */}
+        <Route element={<Layout />}>
+          <Route path="/search" element={<Search />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/WishList" element={<WishList />} />
+          <Route path="/Buddy_Recommendation" element={<Buddy />} />
+          <Route path="/Profile" element={<Profile />} />
+        </Route>
 
-        </Routes>
-    );
+        {/* catch-all */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </div>
+  );
 }

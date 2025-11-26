@@ -32,6 +32,15 @@ const amazonSearchUrl = (title?: string | null) =>
     "+"
   )}&i=stripbooks`;
 
+// Helper to chunk an array into rows
+function chunkArray<T>(items: T[], size: number): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    result.push(items.slice(i, i + size));
+  }
+  return result;
+}
+
 export default function Library() {
   const navigate = useNavigate();
   const [books, setBooks] = useState<BookDto[]>([]);
@@ -125,6 +134,91 @@ export default function Library() {
     );
   }
 
+  // Build all card items (books + CSV card) so we can chunk them into rows
+  const cardItems = [
+    ...sortedBooks.map((b, i) => (
+      <li
+        key={(b.isbn ?? "no-isbn") + "-" + i}
+        className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+      >
+        {/* Trash icon on hover */}
+        {b.isbn && (
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await removeFromLibrary(b.isbn!);
+                setBooks((prev) => prev.filter((book) => book.isbn !== b.isbn));
+              } catch (err: any) {
+                alert(err?.message ?? "Failed to remove book");
+              }
+            }}
+            className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100"
+            title="Remove from Library"
+          >
+            <TrashIcon className="h-5 w-5" />
+          </button>
+        )}
+
+        <div className="relative aspect-[2/3] bg-slate-100">
+          <img
+            src={coverUrl((b as any).coverid)}
+            alt={`${b.bookname ?? "Book"} cover`}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
+            }}
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="flex flex-1 flex-col gap-2 p-4">
+          <h2 className="text-base font-semibold text-slate-900">
+            {b.bookname || "Untitled"}
+          </h2>
+          {b.author && (
+            <div className="text-sm text-slate-600">{b.author}</div>
+          )}
+
+          {(b.isbn || (b as any).genre) && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {b.isbn && (
+                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                  ISBN: {b.isbn}
+                </span>
+              )}
+              {(b as any).genre && (
+                <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">
+                  {(b as any).genre}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="mt-auto flex flex-col gap-2">
+            {/* Description button opens modal */}
+            <button
+              type="button"
+              onClick={() => setDescriptionBook(b)}
+              className="flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+            >
+              Description
+            </button>
+          </div>
+        </div>
+      </li>
+    )),
+
+    // Extra card for CSV import when you already have books
+    <li
+      key="csv-card"
+      className="rounded-2xl border border-dashed border-slate-200 bg-white text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center p-4"
+    >
+      <CSVReader />
+    </li>,
+  ];
+
+  const rows = chunkArray(cardItems, 4); // 4 per row for the lg:grid-cols-4 layout
+
   return (
     <>
       <div className="min-h-[60vh] bg-slate-50">
@@ -167,112 +261,47 @@ export default function Library() {
 
           {sortedBooks.length === 0 ? (
             <div className="mt-8 grid items-center gap-5 md:grid-cols-2">
-              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center hover:-translate-y-1 hover:shadow-lg transition">
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:-translate-y-1 hover:shadow-lg">
                 <div className="flex justify-center">
                   <img
                     src={tempSearchBook}
                     alt="No books yet"
-                    className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer"
+                    className="w-full max-w-xs cursor-pointer rounded-2xl shadow-sm"
                     onClick={() => navigate("/search")}
                   />
                 </div>
-                <p className="mt-3 text-base font-semibold text-slate-900 cursor-pointer" onClick={() => navigate("/search")}>
+                <p
+                  className="mt-3 cursor-pointer text-base font-semibold text-slate-900"
+                  onClick={() => navigate("/search")}
+                >
                   You haven&apos;t added any books yet.
                 </p>
                 <div className="mt-6 items-center gap-4">
                   <button
-                    className="w-4/5 justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
+                    className="w-4/5 cursor-pointer justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500"
                     onClick={() => navigate("/search")}
                   >
                     Search for books
                   </button>
-                  </div>
+                </div>
               </div>
-              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center hover:-translate-y-1 hover:shadow-lg transition cursor-pointer">
+              <div className="cursor-pointer rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:-translate-y-1 hover:shadow-lg">
                 <CSVReader />
               </div>
             </div>
           ) : (
-            <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {sortedBooks.map((b, i) => (
-                <li
-                  key={(b.isbn ?? "no-isbn") + "-" + i}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm hover:-translate-y-1 hover:shadow-lg transition"
-                >
-                  {/* Trash icon on hover */}
-                  {b.isbn && (
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        try {
-                          await removeFromLibrary(b.isbn!);
-                          setBooks((prev) =>
-                            prev.filter((book) => book.isbn !== b.isbn)
-                          );
-                        } catch (err: any) {
-                          alert(err?.message ?? "Failed to remove book");
-                        }
-                      }}
-                      className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100"
-                      title="Remove from Library"
-                    >
-                      <TrashIcon className="h-5 w-5" />
-                    </button>
-                  )}
+            // Books present: bookshelf grid with shelf under each row
+            <ul className="mt-8 space-y-10">
+              {rows.map((row, rowIndex) => (
+                <li key={`row-${rowIndex}`} className="relative list-none">
+                  <ul className="grid grid-cols-1 gap-6 pb-6 sm:grid-cols-2 lg:grid-cols-4">
+                    {row}
+                  </ul>
 
-                  <div className="relative aspect-[2/3] bg-slate-100">
-                    <img
-                      src={coverUrl((b as any).coverid)}
-                      alt={`${b.bookname ?? "Book"} cover`}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                          "/hobbit-placeholder.jpg";
-                      }}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-
-                  <div className="flex flex-1 flex-col gap-2 p-4">
-                    <h2 className="text-base font-semibold text-slate-900">
-                      {b.bookname || "Untitled"}
-                    </h2>
-                    {b.author && (
-                      <div className="text-sm text-slate-600">{b.author}</div>
-                    )}
-
-                    {(b.isbn || (b as any).genre) && (
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {b.isbn && (
-                          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-                            ISBN: {b.isbn}
-                          </span>
-                        )}
-                        {(b as any).genre && (
-                          <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">
-                            {(b as any).genre}
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    <div className="mt-auto flex flex-col gap-2">
-                      {/* Description button opens modal */}
-                      <button
-                        type="button"
-                        onClick={() => setDescriptionBook(b)}
-                        className="flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
-                      >
-                        Description
-                      </button>
-                    </div>
-                  </div>
+                  {/* Shelf bar under this row */}
+                  <div className="pointer-events-none absolute inset-x-4 bottom-0 h-3 rounded-t-2xl bg-gradient-to-b from-amber-200 via-amber-300 to-amber-500 shadow-[0_10px_20px_rgba(15,23,42,0.45)]" />
                 </li>
               ))}
-
-              {/* Extra card for CSV import when you already have books */}
-              <li className="rounded-2xl border border-dashed border-slate-200 bg-white text-center hover:-translate-y-1 hover:shadow-lg transition cursor-pointer">
-                <CSVReader />
-              </li>
             </ul>
           )}
         </div>
