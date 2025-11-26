@@ -220,9 +220,9 @@ const SearchPage: React.FC = () => {
 
       {/* Main content layer */}
       <div className="relative min-h-screen">
-        <div className="max-w-3xl mx-auto px-4 py-10">
+        <div className="max-w-2xl mx-auto px-4 py-10">
           {/* Search panel */}
-          <div className="w-full space-y-6 p-6 shadow-md rounded-xl border border-gray-200 bg-white min-h-[220px]">
+          <div className=" space-y-6 p-6 shadow-md rounded-xl border border-gray-200 bg-white min-h-[220px]">
             <div className="space-y-3">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900">
                 Find your book
@@ -269,7 +269,7 @@ const SearchPage: React.FC = () => {
           <div className="mt-10 border-t pt-8 min-h-[260px]">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight text-gray-900">
+                <h2 className="text-3xl font-semibold tracking-tight text-gray-900">
                   Search results
                 </h2>
                 {bookResults.length > 0 && (
@@ -283,9 +283,8 @@ const SearchPage: React.FC = () => {
             </div>
 
             {bookResults.length === 0 ? (
-              <p className="text-sm text-gray-600">
-                No results to display yet. Try searching for a title above to see
-                matching books.
+              <p className="text-2xl text-gray-600">
+              <span className="font-medium">No results to display yet. Try searching for a title above to see matching books.</span>
               </p>
             ) : (
               <ul className="space-y-4 pb-10">
