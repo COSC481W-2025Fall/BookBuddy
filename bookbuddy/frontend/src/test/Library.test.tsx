@@ -33,9 +33,9 @@ describe('Library Component', () => {
     (api.getMyLibrary as any).mockResolvedValue([]);
     render(<MemoryRouter><Library /></MemoryRouter>);
 
-    await waitFor(() => screen.getByText("You haven't added any books yet."));
-    expect(screen.getByText("You haven't added any books yet.")).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Search for books/i })).toBeInTheDocument();
+    await waitFor(() => screen.getByText("You haven't added any books!"));
+    expect(screen.getByText("You haven't added any books!")).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Add Some!/i })).toBeInTheDocument();
   });
 
   //Test for seeing if the books are rendered from the API
