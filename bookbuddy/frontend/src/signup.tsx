@@ -214,7 +214,7 @@ import "./Styling/AboutUS.css";
 
 
 
-                    <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-5"></div>
+                    <div className="signup-page absolute inset-0 bg-[rgba(255,255,255,0.8)] z-5"></div>
                     {/* ------------------------- */}
 
                     <button className="p-2 z-[100] relative button-bubble left-25 top-2" type="button"
