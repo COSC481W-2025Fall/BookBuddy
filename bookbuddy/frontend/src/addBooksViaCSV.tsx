@@ -219,10 +219,17 @@ const CSVReader: React.FC = () => {
                 marginTop: "175px",
                 fontSize: "25px",
               }}
-            >
-              {currentMessage
-                ? `${currentMessage.title}:   ${currentMessage.message}`
-                : "Starting import..."}
+                className={`${
+                  currentMessage?.success
+                    ? "text-green-300"
+                  : !currentMessage?.success
+                    ? "text-red-300"
+                  : "text-gray-400"
+                }`}
+                >
+                {currentMessage
+                  ? `${currentMessage.title}: ${currentMessage.message}`
+                  : "Starting import..."}
             </div>
           </div>,
           document.body
