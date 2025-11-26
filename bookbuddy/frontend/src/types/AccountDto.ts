@@ -1,1 +1,1 @@
-export type AccountDto = { accountId?: number; name: string, password: string}
+export type AccountDto = { accountId?: number; name: string, password: string, aiLimit:number}
