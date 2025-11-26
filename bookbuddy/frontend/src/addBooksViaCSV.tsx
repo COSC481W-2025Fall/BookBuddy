@@ -49,37 +49,44 @@ const CSVReader: React.FC = () => {
         (h) => h.replace(/"/g, "").trim().toLowerCase() === "title"
       );
 
-      // if no explicit title column → fallback to column 0
+      // If no column named "title", fallback to first column
       if (titleColIndex === -1) {
-        setColumnData(lines.map((line) => line.split(csvSplitRegExp)[0] ?? ""));
+        setColumnData(lines.map((l) => l.split(csvSplitRegExp)[0] ?? ""));
         return;
       }
 
-      setColumnData(lines.map((line) => line.split(csvSplitRegExp)[titleColIndex] ?? ""));
+      const titles = lines.map((l) => l.split(csvSplitRegExp)[titleColIndex] ?? "");
+      setColumnData(titles);
     };
 
     reader.readAsText(file);
   };
 
+  // 🔥 FINAL FIX — no undefined values can ever reach iteration
   useEffect(() => {
     if (columnData.length === 0) return;
 
     async function processBooks() {
-      let titles = [...columnData].slice(1).slice(0, 25); // skip header + limit
+      // Convert to safe strings BEFORE loop — this eliminates TS2532 permanently
+      let titles = columnData
+        .slice(1)        // skip header row
+        .slice(0, 25)    // limit to 25 imports
+        .map(t => t ?? "")   // ensures no undefined
+        .map(t => t.trim())  // remove whitespace
+        .filter(t => t);     // ignore empty values
+
       if (titles.length === 0) return;
 
       setIsLoading(true);
 
-      for (const rawTitle of titles) {
-        const safeTitle = rawTitle ?? ""; // 🔥 prevents undefined TS2532
-        const titleClean = safeTitle.replaceAll("/", "").replaceAll("#", "").trim();
-
+      for (const title of titles) {
+        const titleClean = title.replaceAll("/", "").replaceAll("#", "").trim();
         if (!titleClean) continue;
 
         const found = await searchBookViaTitle(titleClean, BASE);
 
         if (!found) {
-          const msg: BookMessage = {
+          const msg = {
             title: titleClean,
             message: "No result found",
             success: false,
@@ -93,7 +100,7 @@ const CSVReader: React.FC = () => {
         const result = await addCSVBooks(found, BASE);
 
         const msg: BookMessage = {
-          title: found.bookname ?? titleClean, // safe fallback
+          title: found.bookname ?? titleClean,
           message: result.ok ? "Added successfully" : result.message ?? "Failed",
           success: result.ok,
         };
@@ -123,7 +130,7 @@ const CSVReader: React.FC = () => {
         </div>
 
         <p className="mt-3 text-base font-semibold text-slate-900">
-          Add your Goodreads Library
+          Add your Goodreads™ Library!
         </p>
 
         <div className="mt-6 flex items-center justify-center">
@@ -133,6 +140,7 @@ const CSVReader: React.FC = () => {
           >
             {fileName}
           </label>
+
           <input id="fileUpload" type="file" accept=".csv" onChange={handleFileUpload} className="hidden" />
         </div>
       </label>
@@ -150,7 +158,10 @@ const CSVReader: React.FC = () => {
               <div className="book__pg book__pg--5"></div>
             </div>
 
-            <p className="mt-10 text-[#B6D15C] text-2xl">Importing up to 25 books…</p>
+            <p className="mt-10 text-[#B6D15C] text-2xl">
+              Importing up to 25 books…
+            </p>
+
             <p className="mt-4 text-lg">
               {currentMessage
                 ? `${currentMessage.title}: ${currentMessage.message}`
@@ -164,3 +175,4 @@ const CSVReader: React.FC = () => {
 };
 
 export default CSVReader;
+
