@@ -19,13 +19,10 @@ async function delay(ms: number) {
 
 const CSVReader: React.FC = () => {
   const [columnData, setColumnData] = useState<string[]>([]);
-  const [books, setBooks] = useState<any[]>([]); // kept in case you use later
   const [bookMessages, setBookMessages] = useState<BookMessage[]>([]);
   const [fileName, setFileName] = useState("No File Chosen!");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentMessage, setCurrentMessage] = useState<BookMessage | null>(
-    null
-  );
+  const [currentMessage, setCurrentMessage] = useState<BookMessage | null>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -50,30 +47,20 @@ const CSVReader: React.FC = () => {
 
       const csvSplitRegExp = /,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
 
-      // Assume first row is header
+      // HEADER row
       const headerCells = lines[0].split(csvSplitRegExp);
-      let titleColIndex = -1;
+      let titleColIndex = headerCells.findIndex(
+        (h) => h.replace(/"/g, "").trim().toLowerCase() === "title"
+      );
 
-      for (let i = 0; i < headerCells.length; i++) {
-        if (headerCells[i].replace(/"/g, "").trim().toLowerCase() === "title") {
-          titleColIndex = i;
-          break;
-        }
-      }
-
-      // If we couldn't find the "title" column, bail
+      // If no title column found, fallback → first column
       if (titleColIndex === -1) {
-        // Fallback: try first column as titles
-        const firstColumn = lines.map(
-          (line) => line.split(csvSplitRegExp)[0] ?? ""
-        );
-        setColumnData(firstColumn);
+        setColumnData(lines.map((line) => line.split(csvSplitRegExp)[0] ?? ""));
         return;
       }
 
-      const titleColumn: string[] = lines.map((line) => {
-        const cells = line.split(csvSplitRegExp);
-        return cells[titleColIndex] ?? "";
+      const titleColumn = lines.map((line) => {
+        return line.split(csvSplitRegExp)[titleColIndex] ?? "";
       });
 
       setColumnData(titleColumn);
@@ -86,43 +73,33 @@ const CSVReader: React.FC = () => {
     if (columnData.length === 0) return;
 
     async function processBooks() {
-      // Copy so we don't mutate state directly
-      let titles = [...columnData];
-
-      // Skip header row
-      titles = titles.slice(1);
-
-      // Limit to 25 books (plus header originally)
-      titles = titles.slice(0, 25);
-
+      let titles = [...columnData].slice(1).slice(0, 25); // skip header, limit 25
       if (titles.length === 0) return;
 
       setIsLoading(true);
 
-      for (const title of titles) {
-        const titleClean = title.replaceAll("/", "").replaceAll("#", "").trim();
-
+      for (const rawTitle of titles) {
+        const titleClean = rawTitle.replaceAll("/", "").replaceAll("#", "").trim();
         if (!titleClean) continue;
 
-        // 1. Search the book
         const found = await searchBookViaTitle(titleClean, BASE);
+
         if (!found) {
-          const msg: BookMessage = {
+          const msg = {
             title: titleClean,
             message: "No result found",
             success: false,
           };
           setCurrentMessage(msg);
           setBookMessages((prev) => [...prev, msg]);
-          await delay(25);
+          await delay(50);
           continue;
         }
 
-        // 2. Add book to backend
         const result = await addCSVBooks(found, BASE);
 
         const msg: BookMessage = {
-          title: found.bookname,
+          title: found.bookname ?? titleClean,
           message: result.ok ? "Added successfully" : result.message || "Failed",
           success: result.ok,
         };
@@ -142,38 +119,30 @@ const CSVReader: React.FC = () => {
 
   return (
     <div>
-      <div>
-        <label htmlFor="fileUpload" className="cursor-pointer w-full block">
-          <div className="flex justify-center">
-            <img
-              className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover bg-slate-100"
-              src={tempAddBook}
-              alt="Upload Goodreads Library"
-            />
-          </div>
+      <label htmlFor="fileUpload" className="cursor-pointer w-full block">
+        <div className="flex justify-center">
+          <img
+            className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover bg-slate-100"
+            src={tempAddBook}
+            alt="Upload Goodreads Library"
+          />
+        </div>
 
-          <p className="mt-3 text-base font-semibold text-slate-900">
-            Add your Goodreads™ Library!
-          </p>
+        <p className="mt-3 text-base font-semibold text-slate-900">
+          Add your Goodreads™ Library!
+        </p>
 
-          <div className="mt-6 flex items-center justify-center ">
-            <label
-              htmlFor="fileUpload"
-              className="w-4/5 justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
-            >
-              {fileName}
-            </label>
+        <div className="mt-6 flex items-center justify-center">
+          <label
+            htmlFor="fileUpload"
+            className="w-4/5 justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
+          >
+            {fileName}
+          </label>
 
-            <input
-              id="fileUpload"
-              type="file"
-              accept=".csv"
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-          </div>
-        </label>
-      </div>
+          <input id="fileUpload" type="file" accept=".csv" onChange={handleFileUpload} className="hidden" />
+        </div>
+      </label>
 
       {isLoading &&
         typeof document !== "undefined" &&
@@ -209,8 +178,7 @@ const CSVReader: React.FC = () => {
                 color: "#B6D15C",
               }}
             >
-              For now, users are limited to 25 Books from their imported
-              library!
+              Users are limited to 25 books for now!
             </div>
 
             <div
@@ -221,7 +189,7 @@ const CSVReader: React.FC = () => {
               }}
             >
               {currentMessage
-                ? `${currentMessage.title}:   ${currentMessage.message}`
+                ? `${currentMessage.title}: ${currentMessage.message}`
                 : "Starting import..."}
             </div>
           </div>,
