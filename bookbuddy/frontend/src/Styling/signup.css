@@ -4,10 +4,12 @@ html, body {
  /* Prevents vertical scroll from massive background content */
     overflow-x: hidden; /* Prevents horizontal scroll from massive background content */
 }
-.signup-page {
-    overflow: hidden;   /* restricts only the signup page instead of the entire site */
-}
 
+/* Signup page is the only page with animation background */
+.signup-page {
+    overflow: hidden;
+    position: relative;
+}
 
 /* ======================================= */
 /* Mobile Phone Breakpoint (e.g., iPhone/Android) */
@@ -177,7 +179,7 @@ body {
 .book-scene {
     width: 50vw;
     height: 30vh;
-    animation: book-pan 100s linear infinite alternate; /* 90s duration (adjust for speed) */
+    animation: book-pan 10s linear infinite alternate; /* 90s duration (adjust for speed) */
 }
 
 /* ======================================= */
