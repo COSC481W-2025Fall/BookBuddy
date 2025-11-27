@@ -3,6 +3,8 @@ html, body {
     padding: 0;
  /* Prevents vertical scroll from massive background content */
     overflow-x: hidden; /* Prevents horizontal scroll from massive background content */
+    overflow-y: auto;     /* <-- FIX */
+    height: auto;
 }
 
 /* Signup page is the only page with animation background */
