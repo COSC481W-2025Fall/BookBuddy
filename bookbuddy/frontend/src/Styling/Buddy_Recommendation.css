@@ -1,17 +1,14 @@
 /*Form CSS*/
 .pageBackground {
     width: 100vw;
-    height: 100vh;
-    background-image: url("buddyresultbackground.jpg");
-    background-repeat: repeat;
-    background-position: top left;
-    background-size: auto;
-    margin: 0;
-    padding: 0;
-    top: 0;
-    left: 0;
-    position: absolute;
-    overflow-y: scroll;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        top: 0;
+        left: 0;
+        position: relative;
+        background: transparent; /* ← NO BACKGROUND IMAGE */
+        overflow-y: visible;
 }
 
 .questions-container {

@@ -1,15 +1,9 @@
 /* === Page Background === */
 .profile-page {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-
-    background-image: url("./buddyresultbackground.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
+    width: 100%;
+    min-height: 100vh;
+    position: relative;       /* ← not full-screen overlay */
+    background: transparent;  /* ← NO BACKGROUND IMAGE */
     display: flex;
     justify-content: center;
     align-items: center;
