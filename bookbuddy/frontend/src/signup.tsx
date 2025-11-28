@@ -217,22 +217,10 @@ import "./Styling/AboutUS.css";
                     <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-5"></div>
                     {/* ------------------------- */}
 
-                    <button className="p-2 z-[100] relative button-bubble left-25 top-2" type="button"
-                            onClick={async () => {
-                                if (!cycleStart) {
-                                    setSeeLogin(true); // Action 1
-                                    setSeeSignup(false);
-                                    toggleSidebar();
-                                    setCycleStart(true);
-                                } else {
-                                    toggleSidebar();
-                                    await sleep(700);
-                                    setSeeLogin(true); // Action 1
-                                    setSeeSignup(false);
-                                    toggleSidebar();
-                                }
-                            }}
-                            disabled={seeLogin}>
+                    <button
+                        className="p-2 z-[100] relative button-bubble left-25 top-2"
+                        onClick={() => navigate("/login")}
+                    >
                         Login
                     </button>
 
