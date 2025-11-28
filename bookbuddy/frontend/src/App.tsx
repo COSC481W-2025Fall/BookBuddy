@@ -19,7 +19,7 @@ export default function App() {
       <Routes location={location}>
         {/* Public routes */}
         <Route path="/" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Navigate to="/login" replace />} />
         <Route path="/signup" element={<Signup />} />
 
         {/* Routes inside Layout */}
