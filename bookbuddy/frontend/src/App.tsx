@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
           <Route path="/library" element={<Library />} />
-          <Route path="/WishList" element={<WishList />} />
+          <Route path="/WishBook" element={<WishList />} />
           <Route path="/Buddy_Recommendation" element={<Buddy />} />
         </Route>
 
