@@ -19,8 +19,8 @@ export default function App() {
       <Routes location={location}>
         {/* Public routes */}
         <Route path="/" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        {/*<Route path="/login" element={<Login />} />*/}
+        {/*<Route path="/signup" element={<Signup />} />*/}
 
         {/* Routes inside Layout */}
         <Route element={<Layout />}>
@@ -32,7 +32,7 @@ export default function App() {
         </Route>
 
         {/* Catch-all redirect */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
