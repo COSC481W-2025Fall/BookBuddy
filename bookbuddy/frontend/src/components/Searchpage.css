@@ -25,6 +25,15 @@ user-select: none;
 touch-action: manipulation;
 }
 
+
+
+body {
+    background-image: url("./Styling/buddyresultbackground.jpg");
+    background-repeat: repeat;
+    background-position: top left;
+    background-size: auto;
+}
+
 .button-56:after {
     background-color: #111;
     border-radius: 8px;
@@ -58,4 +67,18 @@ touch-action: manipulation;
     .button-56 {
         padding: 0 40px;
     }
+}
+
+/* Fade-in animation for search results */
+.result-fade-in {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: resultFadeIn 0.90s ease-out forwards;
+}
+
+@keyframes resultFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

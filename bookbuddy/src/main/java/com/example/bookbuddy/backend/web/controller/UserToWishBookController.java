@@ -8,6 +8,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -93,6 +97,25 @@ public class UserToWishBookController {
 
             return ResponseEntity.ok(wishbooks);
         }
+
+    @Transactional
+    @DeleteMapping("/remove/{isbn}")
+    public ResponseEntity<?> removeWishBook(@PathVariable String isbn, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+        }
+
+        Account account = accountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        WishBook wishbook = wishbookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new IllegalArgumentException("WishBook not found"));
+
+        userToWishBookRepository.deleteByAccountAndWishBook(account, wishbook);
+
+        return ResponseEntity.ok("Book removed from wishlist");
+    }
 
 
 }

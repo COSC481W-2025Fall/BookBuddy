@@ -37,4 +37,24 @@
            focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500;
   }
 
+  
 }
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utility class for page fade-in */
+.page-fade {
+  opacity: 0;
+  animation: page-fade-in 0.55s ease-out forwards;
+}
+
+

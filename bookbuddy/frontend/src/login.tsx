@@ -1,38 +1,45 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";  // ✅ add Link import
 import { addLogin } from "./api";
 import type { LoginDto } from "./types/LoginDto";
 import logo from "./logo/bookbuddy-logo-mywristhurts.png";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState<LoginDto>({ name: "", password: "" });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
+
+    if (!username || !password) {
+      setMessage("Please enter a valid username and password");
+      return;
+    }
+
+    const body: LoginDto = {
+      name: username.trim(),
+      password: password,
+    };
+
     try {
-      await addLogin({ name: form.name.trim(), password: form.password });
-      localStorage.setItem("accountId", form.name.trim());
-      navigate("/search");
-    } catch (err: any) {
-      setError(err?.message ?? "Login failed. Please check your credentials.");
-    } finally {
-      setLoading(false);
+      const ok = await addLogin(body);
+
+      if (ok) {
+        navigate("/search"); // ✅ login successful
+      } else {
+        setMessage("Invalid username or password");
+      }
+    } catch (error) {
+      setMessage("Server error. Please try again later.");
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Header / Branding */}
+        {/* Header */}
         <div className="flex flex-col items-center text-center space-y-2 mb-6">
           <img
             src={logo}
@@ -47,65 +54,58 @@ const Login: React.FC = () => {
           </p>
         </div>
 
-        <div className="card">
-          {error && (
+        {/* Form Card */}
+        <div className="card bg-white rounded-2xl shadow-md p-6">
+          {message && (
             <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700 border border-red-200">
-              {error}
+              {message}
             </div>
           )}
 
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="label">
+              <label htmlFor="username" className="label block mb-1 text-sm font-medium text-gray-700">
                 Username
               </label>
               <input
-                id="name"
-                name="name"
+                id="username"
+                name="username"
                 type="text"
-                autoComplete="username"
-                placeholder="e.g. jdoe"
-                className="input"
-                value={form.name}
-                onChange={onChange}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
+                placeholder="e.g. jdoe"
+                className="input w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
 
-
             <div>
-              <label htmlFor="password" className="label">
+              <label htmlFor="password" className="label block mb-1 text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
-                placeholder="••••••••"
-                className="input"
-                value={form.password}
-                onChange={onChange}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
+                placeholder="••••••••"
+                className="input w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
 
             <button
               type="submit"
-              className="btn-primary w-full"
-              disabled={loading}
-
+              className="btn-primary w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition disabled:opacity-70"
             >
-              {loading ? "Signing in..." : "Sign in"}
+              Login
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Don’t have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-indigo-600 hover:underline"
-            >
+            <Link to="/signup" className="text-indigo-600 hover:underline">
               Create one
             </Link>
           </p>
