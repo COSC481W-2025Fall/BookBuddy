@@ -31,22 +31,38 @@ export default function Profile() {
         loadData();
     }, []);
 
-    if (loading) return <div className="profile-page"><div className="profile-card">Loading...</div></div>;
-    if (error) return <div className="profile-page"><div className="profile-card">{error}</div></div>;
+    if (loading) {
+        return (
+            <div className="profile-page">
+                <div className="wrap">Loading...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="profile-page">
+                <div className="wrap">{error}</div>
+            </div>
+        );
+    }
 
     return (
         <div className="profile-page">
-            <div className="profile-card">
+            <div className="wrap">
 
-                <h1 className="profile-title">Hello, {account?.name || "Reader"}!</h1>
+                <h1>Hello, {account?.name || "Reader"}!</h1>
 
-                <div className="profile-stats">
+                <div className="bb-card">
                     <p><strong>Books in Library:</strong> {books.length}</p>
                     <p><strong>Total Pages:</strong> {totalPages.toLocaleString()}</p>
                     <p><strong>AI Uses Remaining:</strong> {account?.aiLimit ?? 0}</p>
                 </div>
 
-                <button className="profile-btn" onClick={() => navigate("/library")}>
+                <button
+                    className="bb-btn"
+                    onClick={() => navigate("/library")}
+                >
                     Go to My Library
                 </button>
 
