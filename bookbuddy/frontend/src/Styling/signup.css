@@ -100,6 +100,8 @@ body {
     width: 300vw;
     height: 300vh;
     animation: book-pan 10s linear infinite alternate; /* 90s duration (adjust for speed) */
+    position: relative;
+    z-index: 0;
 }
 
 /* ======================================= */
