@@ -97,8 +97,8 @@ body {
 /* ======================================= */
 /* This is the massive box that holds all the books and applies the infinite animation. */
 .book-scene {
-    width: 50vw;
-    height: 30vh;
+    width: 300vw;
+    height: 300vh;
     animation: book-pan 10s linear infinite alternate; /* 90s duration (adjust for speed) */
 }
 
