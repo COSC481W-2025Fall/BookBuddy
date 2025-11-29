@@ -171,7 +171,7 @@ const Signup: React.FC = () => {
             )}
 
             {/* ---- BACKGROUND & BUTTONS ---- */}
-            <div className="flex-grow flex items-center justify-center gradient-background-books relative h-screen p-8 overflow-hidden z-[-2]">
+            <div className="flex-grow flex items-center justify-center gradient-background-books relative h-screen p-8 overflow-hidden">
 
                 <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-[-1]"></div>
 
