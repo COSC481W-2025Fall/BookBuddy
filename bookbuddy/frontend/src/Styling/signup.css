@@ -1,7 +1,6 @@
 body {
     /* Only prevents horizontal scrolling */
     overflow-x: hidden;
-    overflow-y: hidden;
 }
 
 /* ======================================= */
