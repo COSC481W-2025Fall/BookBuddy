@@ -1,8 +1,7 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Prevents vertical scroll from massive background content */
-    overflow-x: hidden; /* Prevents horizontal scroll from massive background content */
+body {
+    /* Only prevents horizontal scrolling */
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 /* ======================================= */
