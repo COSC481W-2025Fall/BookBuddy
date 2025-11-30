@@ -122,7 +122,7 @@ const Signup: React.FC = () => {
         // Main container with relative positioning and high Z-index to establish a stacking context
         <div className="flex w-full min-h-screen relative z-1">
 
-            <div className="wave-container absolute bottom-180 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-2.">
+            <div className="wave-container absolute bottom-180 left-3/4 transform -translate-x-1/2 -translate-y-3/4 z-2.">
                 <h1 className="wave-text">
                     <span className={"welcome"}>Welcome</span><span className={"To"}>To</span><span>BookBuddy </span>
                 </h1>
