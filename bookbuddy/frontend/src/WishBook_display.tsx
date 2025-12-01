@@ -85,7 +85,3 @@ export default function WishBook_display({ result }: { result: WishBookDto[] }) 
         </div>
     );
 }
-
-
-
-

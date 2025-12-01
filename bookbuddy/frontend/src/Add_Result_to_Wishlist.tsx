@@ -157,7 +157,7 @@ export default function WishlistButton({ nameOfBook }: { nameOfBook: string }) {
 
             <div style={{ display: 'flex',
                 flexDirection: 'column',
-            alignItems: 'center', }}>
+                alignItems: 'center', }}>
                 {status && <p style={{ fontWeight: 'bold' }}>{status}</p>}
 
 

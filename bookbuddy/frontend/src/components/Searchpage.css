@@ -1,28 +1,28 @@
 
 
 /* CSS */  .button-56 {
-align-items: center;
-margin-top: 15px;
-background-color: #ab7df1;
-border: 2px solid #111;
-border-radius: 8px;
-box-sizing: border-box;
-color: #111;
-cursor: pointer;
-display: flex;
-font-family: Inter,sans-serif;
-font-size: 16px;
-height: 48px;
-justify-content: center;
-line-height: 24px;
-max-width: 100%;
-padding: 0 25px;
-position: relative;
-text-align: center;
-text-decoration: none;
-user-select: none;
--webkit-user-select: none;
-touch-action: manipulation;
+    align-items: center;
+    margin-top: 15px;
+    background-color: #ab7df1;
+    border: 2px solid #111;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #111;
+    cursor: pointer;
+    display: flex;
+    font-family: Inter,sans-serif;
+    font-size: 16px;
+    height: 48px;
+    justify-content: center;
+    line-height: 24px;
+    max-width: 100%;
+    padding: 0 25px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
 }
 
 
@@ -71,14 +71,14 @@ body {
 
 /* Fade-in animation for search results */
 .result-fade-in {
-  opacity: 0;
-  transform: translateY(8px);
-  animation: resultFadeIn 0.90s ease-out forwards;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: resultFadeIn 0.90s ease-out forwards;
 }
 
 @keyframes resultFadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

@@ -8,34 +8,35 @@ export default function Sidebar() {
     // State to manage sidebar visibility if wanted
     const [open, setOpen] = useState<boolean>(false);
 
-    //Defines the navigation links, can be added to later
+    // Defines the navigation links, can be added to later
     const links: { to: string; label: string }[] = [
         { to: "/search", label: "Search" },
         { to: "/library", label: "Library" },
-        { to: "/WishBook", label: "WishList" },
-        { to:"/Buddy_Recommendation", label: "Ask a buddy"},
+        { to: "/WishList", label: "WishList" },
+        { to: "/Buddy_Recommendation", label: "Ask a buddy" },
         { to: "/profile", label: "Profile" },
-        { to: "/", label: "Sign Out" }
-
+        { to: "/", label: "Sign Out" },
     ];
 
     // Render the sidebar with navigation links
-
     return (
         <>
-            {/* // Button to toggle sidebar visibility */}
+            {/* Button to toggle sidebar visibility */}
             <button
                 className="bb-sidebar_toggle"
                 aria-label="Toggle navigation"
                 onClick={() => setOpen((s) => !s)}
-            > <div className={"bookmark icon"}></div>
-
+            >
+                <div className={"bookmark icon"}></div>
             </button>
 
-            {/* // The sidebar navigation */}
-            <nav className={`bb-sidebar ${open ? "open" : ""}`} aria-label="Main Navigation">
+            {/* The sidebar navigation */}
+            <nav
+                className={`bb-sidebar ${open ? "open" : ""}`}
+                aria-label="Main Navigation"
+            >
                 <div className="bb-sidebar_brand">BookBuddy</div>
-                {/* // Navigation links */}
+                {/* Navigation links */}
                 <ul className="bb-sidebar_links" role="menu">
                     {links.map((l) => (
                         <li key={l.to} role="none">

@@ -1,60 +1,58 @@
 @import "tailwindcss";
 
 @theme {
-  --shadow-soft: 0 10px 25px rgba(0,0,0,0.08);
+    --shadow-soft: 0 10px 25px rgba(0,0,0,0.08);
 }
 
 @layer base {
-  body { @apply bg-gray-50 text-gray-900; }
+    body { @apply bg-gray-50 text-gray-900; }
 }
 
 @layer components {
-  .btn {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
-  }
+    .btn {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
+    }
 
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2
-           bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-600;
-  }
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2
+        bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-600;
+    }
 
-  .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2
-           bg-transparent hover:bg-gray-100;
-  }
+    .btn-ghost {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2
+        bg-transparent hover:bg-gray-100;
+    }
 
-  .card {
-    @apply rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5;
-  }
+    .card {
+        @apply rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5;
+    }
 
-  .label {
-  @apply mb-2 block text-sm font-medium text-gray-700 text-center;
-  }
+    .label {
+        @apply mb-2 block text-sm font-medium text-gray-700 text-center;
+    }
 
-  .input {
-    @apply block w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 shadow-sm
-           placeholder:text-gray-400
-           focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500;
-  }
+    .input {
+        @apply block w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 shadow-sm
+        placeholder:text-gray-400
+        focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500;
+    }
 
-  
+
 }
 
 @keyframes page-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Utility class for page fade-in */
 .page-fade {
-  opacity: 0;
-  animation: page-fade-in 0.55s ease-out forwards;
+    opacity: 0;
+    animation: page-fade-in 0.55s ease-out forwards;
 }
-
-

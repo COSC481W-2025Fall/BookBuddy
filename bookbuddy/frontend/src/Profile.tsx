@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { AccountDto } from "./types/AccountDto";
-import { getCurrentUser, getMyLibrary } from "./api";
-import { BookDto } from "./types/BookDto";
-import { useNavigate } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {AccountDto} from "./types/AccountDto";
+import {getCurrentUser, getMyLibrary} from "./api";
+import {BookDto} from "./types/BookDto";
+import {useNavigate} from "react-router-dom";
 import "./Styling/Profile.css";
+
 
 export default function Profile() {
     const navigate = useNavigate();
-
     const [account, setAccount] = useState<AccountDto | null>(null);
     const [books, setBooks] = useState<BookDto[]>([]);
     const [loading, setLoading] = useState(true);
@@ -16,33 +16,26 @@ export default function Profile() {
     const totalPages = books.reduce((sum, b) => sum + (b.pagecount || 0), 0);
 
     useEffect(() => {
-        async function loadData() {
+        (async () => {
             try {
-                const userData = await getCurrentUser();
-                const libraryData = await getMyLibrary();
-                setAccount(userData);
-                setBooks(libraryData);
-            } catch (err) {
-                setError("Failed to load profile");
+                const acct = await getCurrentUser();
+                setAccount(acct);
+
+                const lib = await getMyLibrary();
+                setBooks(lib);
+            } catch (e: any) {
+                console.error(e);
+                navigate("/login");
             } finally {
                 setLoading(false);
             }
-        }
-        loadData();
-    }, []);
+        })();
+    }, [navigate]);
 
     if (loading) {
         return (
-            <div className="profile-page">
-                <div className="wrap">Loading...</div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="profile-page">
-                <div className="wrap">{error}</div>
+            <div className="wrap">
+                <h1>Loading profile...</h1>
             </div>
         );
     }
@@ -59,14 +52,10 @@ export default function Profile() {
                     <p><strong>AI Uses Remaining:</strong> {account?.aiLimit ?? 0}</p>
                 </div>
 
-                <button
-                    className="bb-btn"
-                    onClick={() => navigate("/library")}
-                >
+                <button className="bb-btn" onClick={() => navigate("/library")}>
                     Go to My Library
                 </button>
 
             </div>
         </div>
-    );
-}
+    );}
