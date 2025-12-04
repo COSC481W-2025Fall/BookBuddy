@@ -46,7 +46,8 @@ const CSVReader: React.FC = () => {
         .map((line) => line.trim())
         .filter((line) => line !== "");
 
-      if (lines.length === 0) return;
+      if (lines.length === 0 || lines[0] === undefined) return;
+
 
       const csvSplitRegExp = /,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
 
@@ -54,8 +55,10 @@ const CSVReader: React.FC = () => {
       const headerCells = lines[0].split(csvSplitRegExp);
       let titleColIndex = -1;
 
+
+
       for (let i = 0; i < headerCells.length; i++) {
-        if (headerCells[i].replace(/"/g, "").trim().toLowerCase() === "title") {
+        if (headerCells[i]?.replace(/"/g, "").trim().toLowerCase() === "title") {
           titleColIndex = i;
           break;
         }
@@ -63,11 +66,7 @@ const CSVReader: React.FC = () => {
 
       // If we couldn't find the "title" column, bail
       if (titleColIndex === -1) {
-        // Fallback: try first column as titles
-        const firstColumn = lines.map(
-          (line) => line.split(csvSplitRegExp)[0] ?? ""
-        );
-        setColumnData(firstColumn);
+        alert("No title column found!");
         return;
       }
 
@@ -100,7 +99,7 @@ const CSVReader: React.FC = () => {
       setIsLoading(true);
 
       for (const title of titles) {
-        const titleClean = title.replaceAll("/", "").replaceAll("#", "").trim();
+        const titleClean = title.replaceAll("/", "").replaceAll("#", "").replaceAll("\"", "").trim();
 
         if (!titleClean) continue;
 
