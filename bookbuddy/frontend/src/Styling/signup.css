@@ -121,7 +121,7 @@ body {
 position: fixed;
 
 /* 2. Anchor it to the top edge */
-top: 0vh;
+top: -35vh;
 
 /* 3. Anchor it to the right edge */
 right: 0vh;
