@@ -63,11 +63,7 @@ const CSVReader: React.FC = () => {
 
       // If we couldn't find the "title" column, bail
       if (titleColIndex === -1) {
-        // Fallback: try first column as titles
-        const firstColumn = lines.map(
-          (line) => line.split(csvSplitRegExp)[0] ?? ""
-        );
-        setColumnData(firstColumn);
+        alert("No title column found!");
         return;
       }
 
