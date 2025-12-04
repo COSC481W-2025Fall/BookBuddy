@@ -46,7 +46,8 @@ const CSVReader: React.FC = () => {
         .map((line) => line.trim())
         .filter((line) => line !== "");
 
-      if (lines.length === 0) return;
+      if (lines.length === 0 || lines[0] === undefined) return;
+
 
       const csvSplitRegExp = /,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
 
@@ -54,8 +55,10 @@ const CSVReader: React.FC = () => {
       const headerCells = lines[0].split(csvSplitRegExp);
       let titleColIndex = -1;
 
+
+
       for (let i = 0; i < headerCells.length; i++) {
-        if (headerCells[i].replace(/"/g, "").trim().toLowerCase() === "title") {
+        if (headerCells[i]?.replace(/"/g, "").trim().toLowerCase() === "title") {
           titleColIndex = i;
           break;
         }
