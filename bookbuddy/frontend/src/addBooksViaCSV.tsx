@@ -100,7 +100,7 @@ const CSVReader: React.FC = () => {
       setIsLoading(true);
 
       for (const title of titles) {
-        const titleClean = title.replaceAll("/", "").replaceAll("#", "").trim();
+        const titleClean = title.replaceAll("/", "").replaceAll("#", "").replaceAll("\"", "").trim();
 
         if (!titleClean) continue;
 
