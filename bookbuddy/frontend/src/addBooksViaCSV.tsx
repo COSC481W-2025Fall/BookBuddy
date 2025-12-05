@@ -91,8 +91,8 @@ const CSVReader: React.FC = () => {
             // Skip header row
             titles = titles.slice(1);
 
-            // Limit to 25 books
-            // titles = titles.slice(0, 25); //caps the csv at 25 books, but not anymore
+            // Limit to 25 books (no longer needed because no more API key)
+            //titles = titles.slice(0, 25);
 
             if (titles.length === 0) return;
 
