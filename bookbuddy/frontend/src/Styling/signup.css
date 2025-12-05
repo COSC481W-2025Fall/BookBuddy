@@ -1,6 +1,8 @@
 body {
     /* Only prevents horizontal scrolling */
     overflow-x: hidden;
+    font-family: Quicksand
+
 }
 
 /* ======================================= */
@@ -60,7 +62,9 @@ body {
         transform: translateX(-50%);
     }
 }
-
+.scroll-lock {
+    overflow-y: hidden;
+}
 
 
 /* Moves the scene up and right to create the illusion of the camera panning down and left. */
@@ -111,17 +115,14 @@ body {
     );
 }
 
-body {
 
-    font-family: Quicksand
-}
 
 .Welcome-message {
     /* 1. Set the positioning context */
     position: fixed;
 
     /* 2. Anchor it to the top edge */
-    top: 0vh;
+    top: -25vh;
 
     /* 3. Anchor it to the right edge */
     right: 0vh;
@@ -132,6 +133,7 @@ body {
     /* Optional: Ensure it stays on top of other content */
     z-index: 0;
 }
+
 
 .All-thebooks {
     /* 1. Set the positioning context */
@@ -592,6 +594,13 @@ vertical of 300
     position: fixed;
     bottom:10vh;
     right:1vw;
+}
+
+@media (max-width: 480px) {
+    .Cover_logo {
+
+        display: none;
+    }
 }
 
 

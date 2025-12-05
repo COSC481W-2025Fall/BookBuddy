@@ -1,3 +1,6 @@
+/* ======================================= */
+/* Mobile Phone Breakpoint (e.g., iPhone/Android) */
+/* ======================================= */
 
 /* Existing button-bubble base styles (keep these, or adjust as needed) */
 .button-bubble {
@@ -33,6 +36,13 @@
     transform: none;
     box-shadow: none;
 }
+@media (max-width: 480px) {
+    .button-bubble {
+       margin-left: -3vw;
+        display: block;
+    }
+}
+
 
 
 .question-circle {
