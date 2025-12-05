@@ -106,9 +106,8 @@ body {
 .gradient-background-books {
     background: radial-gradient(
             circle at center,
-            #F5F3F0 0%, /* Start: Brightest off-white in the center */
-            #EAE7E1 50%, /* Middle: Soft taupe */
-            #000000 80% /* End: Same taupe on the edges */
+            #ffffff 20%, /* Start: Brightest off-white in the center */ #ababab 45%, /* Middle: Soft taupe */
+            #1f1f1f 80% /* End: Same taupe on the edges */
     );
 }
 
@@ -116,6 +115,42 @@ body {
 
     font-family: Quicksand
 }
+
+.Welcome-message {
+    /* 1. Set the positioning context */
+    position: fixed;
+
+    /* 2. Anchor it to the top edge */
+    top: 0vh;
+
+    /* 3. Anchor it to the right edge */
+    right: 0vh;
+
+    /* Optional: Add padding and background for visibility */
+    padding: 10px;
+
+    /* Optional: Ensure it stays on top of other content */
+    z-index: 0;
+}
+
+.All-thebooks {
+    /* 1. Set the positioning context */
+    position: absolute;
+
+    /* 2. Anchor it to the top edge */
+    bottom: 35vh;
+
+    /* 3. Anchor it to the right edge */
+    left: 5vh;
+
+    /* Optional: Add padding and background for visibility */
+    padding: 10px;
+
+    /* Optional: Ensure it stays on top of other content */
+    z-index: 0;
+    font-size: 5rem;
+}
+
 
 .To {
     margin-left:75px;
@@ -129,9 +164,10 @@ body {
     margin-bottom: -100%;
     display: flex;
     font-size: 3rem;
-
     animation: wave 6s ease-in-out infinite;
+
 }
+
 
 .wave-text span:nth-child(1) {
     animation-delay: 0s;
@@ -553,11 +589,12 @@ vertical of 300
 }
 
 .Cover_logo {
-    margin-left: 1300px;
-    margin-top: 550px;
-
-
+    position: fixed;
+    bottom:10vh;
+    right:1vw;
 }
+
+
 
 
 
