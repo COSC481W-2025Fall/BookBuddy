@@ -133,6 +133,25 @@ body {
     /* Optional: Ensure it stays on top of other content */
     z-index: 0;
 }
+@media (max-width: 480px) {
+    .Welcome-message {
+        position: absolute;
+
+        /* 2. Anchor it to the top edge */
+        top: 20vh;
+
+        /* 3. Anchor it to the right edge */
+        left: 0vh;
+
+        /* Optional: Add padding and background for visibility */
+        padding: 10px;
+
+        /* Optional: Ensure it stays on top of other content */
+        z-index: 0;
+        font-size: 5rem;
+
+    }
+}
 
 
 .All-thebooks {
@@ -152,7 +171,25 @@ body {
     z-index: 0;
     font-size: 5rem;
 }
+@media (max-width: 480px) {
+    .All-thebooks {
+        position: absolute;
 
+        /* 2. Anchor it to the top edge */
+        top: -20vh;
+
+        /* 3. Anchor it to the right edge */
+        left: 15vh;
+
+        /* Optional: Add padding and background for visibility */
+        padding: 10px;
+
+        /* Optional: Ensure it stays on top of other content */
+        z-index: 0;
+        font-size: 5rem;
+
+    }
+}
 
 .To {
     margin-left:75px;
