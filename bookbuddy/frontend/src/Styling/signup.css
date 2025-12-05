@@ -14,8 +14,8 @@ body {
 
     /* Reduce the Base Size of the Book */
     .book-3d .page {
-        width: 200px;
-        height: 300px;
+        width: 100vw;
+        height: 100vh;
         /* Re-calculate the overall 3D transformation scaling factor */
         transform: rotate(-45deg) skewX(10deg) scale(0.35); /* Apply smaller scale */
         box-shadow: -25px 25px 25px rgba(0, 0, 0, 0.4);
@@ -62,9 +62,7 @@ body {
         transform: translateX(-50%);
     }
 }
-.scroll-lock {
-    overflow-y: hidden;
-}
+
 
 
 /* Moves the scene up and right to create the illusion of the camera panning down and left. */
@@ -586,18 +584,14 @@ vertical of 300
     transform: translate(-50%, -50%) rotate(5deg) scale(0.8);
 }
 
-.book-cover-twenty-seven .page {
-    background-image: url('') !important;
-}
+
 .book-plus-6-pos {
     top: -820px; /* One level higher than Book 1's -250px */
     left: -1600px; /* Further right */
     transform: translate(-50%, -50%) rotate(5deg) scale(0.8);
 }
 
-.book-cover-twenty-eight .page {
-    background-image: url('') !important;
-}
+
 
 .book-plus-7-pos {
     top: -820px; /* One level higher than Book 1's -250px */
@@ -605,9 +599,7 @@ vertical of 300
     transform: translate(-50%, -50%) rotate(5deg) scale(0.8);
 }
 
-.book-cover-twenty-nine .page {
-    background-image: url('') !important;
-}
+
 .book-plus-8-pos {
     top: -820px; /* One level higher than Book 1's -250px */
     left: -2350px; /* Further right */
@@ -635,10 +627,10 @@ vertical of 300
 
 @media (max-width: 480px) {
     .Cover_logo {
-
         display: none;
     }
 }
+
 
 
 
