@@ -119,19 +119,16 @@ const Signup: React.FC = () => {
     //////////////////////////// SIGNUP CODE ////////////////////////////
 
     return (
+
         // Main container with relative positioning and high Z-index to establish a stacking context
         <div className="flex w-full min-h-screen relative z-1">
 
             <div className="wave-container Welcome-message ">
                 <h1 className="wave-text">
                     <span className="o-outline">Your Personal</span> <span className="o-outline">Literary Archive</span>
-
                 </h1>
             </div>
 
-
-
-            {/* --- TEXT CONTAINER: Now without a background color --- */}
             <div
                 className="wave-container All-thebooks  ">
                 <h1 className="wave-text">
@@ -139,8 +136,53 @@ const Signup: React.FC = () => {
                 </h1>
             </div>
 
+            <button className="p-2 z-100 relative button-bubble left-25 top-2" type="button"
+                    onClick={async () => {
+                        if (!cycleStart) {
+                            setSeeLogin(true); // Action 1
+                            setSeeSignup(false);
+                            toggleSidebar();
+                            setCycleStart(true);
+                        } else {
+                            toggleSidebar();
+                            await sleep(700);
+                            setSeeLogin(true); // Action 1
+                            setSeeSignup(false);
+                            toggleSidebar();
+                        }
+                    }}
+                    disabled={seeLogin}>
+                Login
+            </button>
+
+            <button className="p-2 z-[100] relative button-bubble left-5 top-2" onClick={async () => {
+                if (!cycleStart) {
+                    setSeeLogin(false); // Action 1
+                    setSeeSignup(true);
+                    toggleSidebar();
+                    setCycleStart(true);
+                } else {
+                    toggleSidebar();
+                    await sleep(700);
+                    setSeeLogin(false); // Action 1
+                    setSeeSignup(true);
+                    toggleSidebar();
+                }
+            }}
+                    disabled={seeSignup}>
+                Signup
+                {/*signup {isOpen ? 'Close Sidebar' : 'Open Sidebar'}*/}
+            </button>
+
+            {/*show info button */}
+            <button className="p-2 z-[100] absolute question-circle top-3 right-2"
+                    onClick={() => setShowinfo(!showinfo)}>
+                ?
+            </button>
+
             {showinfo && (
-                <div className="popup-overlay backdrop z-50 ">
+                <div className="popup-overlay backdrop z-50 " onClick={() => setShowinfo(false)}>
+
 
                     <div className="popup z-50 " >
                         <span className="close" onClick={() => setShowinfo(false)}>&times;</span>
@@ -225,64 +267,12 @@ const Signup: React.FC = () => {
                     </div>
                 </div>)}
 
-
             {/* ---------------------------- */}
-
 
             <div
                 className="flex-grow flex items-center justify-center gradient-background-books relative h-screen p-8 overflow-hidden z-[-2]">
-
-
-
                 <div className="absolute inset-0 bg-[rgba(255,255,255,0.6)] z-5"></div>
                 {/* ------------------------- */}
-
-                <button className="p-2 z-[100] relative button-bubble left-25 top-2" type="button"
-                        onClick={async () => {
-                            if (!cycleStart) {
-                                setSeeLogin(true); // Action 1
-                                setSeeSignup(false);
-                                toggleSidebar();
-                                setCycleStart(true);
-                            } else {
-                                toggleSidebar();
-                                await sleep(700);
-                                setSeeLogin(true); // Action 1
-                                setSeeSignup(false);
-                                toggleSidebar();
-                            }
-                        }}
-                        disabled={seeLogin}>
-                    Login
-                </button>
-
-                <button className="p-2 z-[100] relative button-bubble left-5 top-2" onClick={async () => {
-                    if (!cycleStart) {
-                        setSeeLogin(false); // Action 1
-                        setSeeSignup(true);
-                        toggleSidebar();
-                        setCycleStart(true);
-                    } else {
-                        toggleSidebar();
-                        await sleep(700);
-                        setSeeLogin(false); // Action 1
-                        setSeeSignup(true);
-                        toggleSidebar();
-                    }
-                }}
-                        disabled={seeSignup}>
-                    Signup
-                    {/*signup {isOpen ? 'Close Sidebar' : 'Open Sidebar'}*/}
-                </button>
-
-                {/*show info button */}
-                <button className="p-2 z-[100] absolute question-circle top-3 left-45"
-                        onClick={() => setShowinfo(true)}>
-                    ?
-                </button>
-
-
-
 
                 <div className="book-scene ">
 
@@ -402,22 +392,14 @@ const Signup: React.FC = () => {
 
             <>
                 <div
-                    className={`
-                          w-vh
-                          bg-white 
-                          shadow-xl 
-                          fixed 
-                          top-0 
-                          h-full 
-                          transition-all 
-                          duration-700 
-                          ease-in-out
-                          ${isOpen ? 'right-0' : 'right-[-456px]'}  <-- **Crucial Change: Hide it fully**`}>
+                    className={` w-vh bg-white  shadow-xl   fixed  top-0  h-full  transition-all  duration-700    
+                                ease-in-out 
+                          ${isOpen ? 'right-0' : 'right-[-100vw]'} `}>
 
                     {seeSignup && (
 
 
-                        <div className="w-full min-h-screen max-w-md m-2 p-2  z-5 ">
+                        <div className=" max-w-md  m-2 p-2  z-5 ">
 
                             {/* Header / Branding */}
                             <div
@@ -510,7 +492,7 @@ const Signup: React.FC = () => {
 
                     {seeLogin && (
 
-                        <div className="w-full min-h-screen max-w-md m-2 p-2 z-5 signin-box">
+                        <div className="max-w-md m-2 p-2 z-5 signin-box">
                             {/* Header / Branding */}
                             <div
                                 className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
