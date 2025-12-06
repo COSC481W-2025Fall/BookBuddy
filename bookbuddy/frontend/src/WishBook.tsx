@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createPortal } from "react-dom";
 import type { WishBookDto } from "./types/WishBookDto";
 import type { BookDto } from "./types/BookDto";
 import { getMyWishBook, removeFromWishlist } from "./api";
@@ -38,6 +39,86 @@ function chunkArray<T>(items: T[], size: number): T[][] {
     result.push(items.slice(i, i + size));
   }
   return result;
+}
+
+type DescriptionModalProps = {
+  book: WishBookDto;
+  onClose: () => void;
+  coverUrl: (coverid?: string | null) => string;
+  amazonSearchUrl: (title?: string | null) => string;
+};
+
+function DescriptionModal({
+  book,
+  onClose,
+  coverUrl,
+  amazonSearchUrl,
+}: DescriptionModalProps) {
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 p-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="relative max-h-[80vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          type="button"
+          className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
+          onClick={onClose}
+        >
+          Close
+        </button>
+
+        <div className="flex gap-4 border-b border-slate-100 p-4">
+          <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
+            <img
+              src={coverUrl(book.coverid)}
+              alt={`${book.bookname ?? "Book"} cover`}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-1">
+            <h2 className="text-lg font-semibold text-slate-900">
+              {book.bookname || "Untitled"}
+            </h2>
+            {book.author && (
+              <p className="text-sm text-slate-600">{book.author}</p>
+            )}
+            {book.genre && (
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                {book.genre}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
+          {book.description
+            ? book.description
+            : "No description available for this book."}
+        </div>
+
+        <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
+          <a
+            href={amazonSearchUrl(book.bookname)}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
+          >
+            View on Amazon
+          </a>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
 }
 
 export default function WishBook() {
@@ -301,22 +382,19 @@ export default function WishBook() {
           </div>
 
           {sortedWishBooks.length === 0 ? (
-              <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-1">
-
-
-
-            <div className="mt-16 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
-              <p className="text-sm text-slate-600">
-                You haven't added any books to your wishlist yet.
-              </p>
-              <button
-                className=" mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
-                onClick={() => navigate("/search")}
-              >
-                Search for books
-              </button>
-            </div>
-             </ul>
+            <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-1">
+              <div className="mt-16 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
+                <p className="text-sm text-slate-600">
+                  You haven't added any books to your wishlist yet.
+                </p>
+                <button
+                  className=" mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
+                  onClick={() => navigate("/search")}
+                >
+                  Search for books
+                </button>
+              </div>
+            </ul>
           ) : (
             // Books present: bookshelf grid with shelf under each row
             <ul className="mt-8 space-y-10">
@@ -335,68 +413,14 @@ export default function WishBook() {
         </div>
       </div>
 
-      {/* Description Modal */}
+      {/* Description Modal via portal */}
       {descriptionBook && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4"
-          onClick={() => setDescriptionBook(null)}
-        >
-          <div
-            className="relative max-h-[80vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-          >
-            {/* Close button */}
-            <button
-              type="button"
-              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200  cursor-pointer"
-              onClick={() => setDescriptionBook(null)}
-            >
-              Close
-            </button>
-
-            <div className="flex gap-4 border-b border-slate-100 p-4">
-              <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
-                <img
-                  src={coverUrl(descriptionBook.coverid)}
-                  alt={`${descriptionBook.bookname ?? "Book"} cover`}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="flex flex-col justify-center gap-1">
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {descriptionBook.bookname || "Untitled"}
-                </h2>
-                {descriptionBook.author && (
-                  <p className="text-sm text-slate-600">{descriptionBook.author}</p>
-                )}
-                {descriptionBook.genre && (
-                  <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                    {descriptionBook.genre}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
-              {descriptionBook.description
-                ? descriptionBook.description
-                : "No description available for this book."}
-            </div>
-
-            <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
-              <a
-                href={amazonSearchUrl(descriptionBook.bookname)}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
-              >
-                View on Amazon
-              </a>
-            </div>
-          </div>
-        </div>
+        <DescriptionModal
+          book={descriptionBook}
+          onClose={() => setDescriptionBook(null)}
+          coverUrl={coverUrl}
+          amazonSearchUrl={amazonSearchUrl}
+        />
       )}
     </>
   );

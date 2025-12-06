@@ -14,7 +14,7 @@ describe('WishBook Library Rendering', () => {
 
         //sees if it exists
         expect(container).toBeInTheDocument();
-        expect(screen.getAllByText('Loading your wishbooks…'));
+        expect(screen.getAllByText('Loading your wishlist…'));
     });
 });
 
