@@ -108,6 +108,19 @@ const Signup: React.FC = () => {
             setTimeout(() => {
                 setSuccess(null);
             }, 2000);
+
+            if (!cycleStart) {
+                setSeeLogin(true); // Action 1
+                setSeeSignup(false);
+                toggleSidebar();
+                setCycleStart(true);
+            } else {
+                toggleSidebar();
+                await sleep(700);
+                setSeeLogin(true); // Action 1
+                setSeeSignup(false);
+                toggleSidebar();
+            }
         } catch (err: any) {
             setError(err?.message ?? "Sign up failed. Please try again.");
         } finally {
