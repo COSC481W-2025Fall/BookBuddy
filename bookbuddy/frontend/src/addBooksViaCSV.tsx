@@ -91,8 +91,8 @@ const CSVReader: React.FC = () => {
       // Skip header row
       titles = titles.slice(1);
 
-      // Limit to 25 books (plus header originally)
-      titles = titles.slice(0, 25);
+      // Limit to 25 books (no longer needed because no more API key)
+      //titles = titles.slice(0, 25);
 
       if (titles.length === 0) return;
 
@@ -208,8 +208,7 @@ const CSVReader: React.FC = () => {
                 color: "#B6D15C",
               }}
             >
-              For now, users are limited to 25 Books from their imported
-              library!
+                Larger files will lead to longer wait times!
             </div>
 
             <div

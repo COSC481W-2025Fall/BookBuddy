@@ -189,6 +189,42 @@ body {
     }
 }
 
+.Welcome-message {
+/* 1. Set the positioning context */
+position: fixed;
+
+/* 2. Anchor it to the top edge */
+top: -20vh;
+
+/* 3. Anchor it to the right edge */
+right: 0vh;
+
+/* Optional: Add padding and background for visibility */
+padding: 10px;
+
+/* Optional: Ensure it stays on top of other content */
+z-index: 0;
+}
+
+.All-thebooks {
+    /* 1. Set the positioning context */
+    position: absolute;
+
+    /* 2. Anchor it to the top edge */
+    bottom: 35vh;
+
+    /* 3. Anchor it to the right edge */
+    left: 5vh;
+
+    /* Optional: Add padding and background for visibility */
+    padding: 10px;
+
+    /* Optional: Ensure it stays on top of other content */
+    z-index: 0;
+    font-size: 5rem;
+}
+
+
 .To {
     margin-left:75px;
 
