@@ -4,7 +4,7 @@ import type { WishBookDto } from "./types/WishBookDto";
 import type { BookDto } from "./types/BookDto";
 import { getMyWishBook, removeFromWishlist } from "./api";
 import noCoverFound from "./logo/noCoverFound.png";
-import { TrashIcon } from "@heroicons/react/24/solid";
+// import { TrashIcon } from "@heroicons/react/24/solid";
 
 type SortKey = "name" | "author" | "genre";
 type SortDir = "asc" | "desc";
@@ -177,7 +177,7 @@ export default function WishBook() {
           className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-red-600 opacity-0 shadow transition hover:bg-white hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100  cursor-pointer"
           title="Remove from Wishlist"
         >
-          <TrashIcon className="h-5 w-5" />
+          {/*<TrashIcon className="h-5 w-5" />*/}
         </button>
       )}
 

@@ -3,10 +3,12 @@
 .pageBackground {
     width: 100vw;
     height: 100vh;
+
     background-image: url("buddyresultbackground.jpg");
     background-repeat: repeat;
     background-position: top left;
     background-size: auto;
+
     margin: 0;
     padding: 0;
     top: 0;
@@ -153,13 +155,14 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    min-width: 200px;
+    max-width: 400px;
     flex-shrink: 0;
 }
 
 .resultRight {
     flex: 1;
-    min-width: 0;
+    max-width: 400px;
+    min-width: 400px;
 }
 
 .refreshButton {
