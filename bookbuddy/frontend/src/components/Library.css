@@ -162,3 +162,29 @@
     padding: var(--bb-space-3);
   }
 }
+
+/* Tweak padding for general layout on smaller screens */
+@media (max-width: 720px) {
+    .wrap {
+        padding: var(--bb-space-3); /* Reduced from 1.5rem to 1rem */
+    }
+}
+
+/* Stack header elements and controls for very small screens */
+@media (max-width: 600px) {
+    .bb-lib__header {
+        flex-direction: column; /* Stacks the title/status above the controls */
+        align-items: flex-start;
+        gap: var(--bb-space-2); /* Reduced gap */
+    }
+
+    .bb-lib__controls {
+        flex-direction: column; /* Stacks the filter/sort elements */
+        align-items: stretch; /* Makes them fill the width */
+        width: 100%;
+    }
+
+    .bb-field {
+        width: 100%; /* Ensures fields take up full width when stacked */
+    }
+}
