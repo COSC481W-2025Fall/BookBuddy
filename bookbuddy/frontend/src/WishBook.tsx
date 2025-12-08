@@ -25,11 +25,16 @@ function compareStr(a?: string | null, b?: string | null, dir: SortDir = "asc") 
   return dir === "asc" ? res : -res;
 }
 
-const amazonSearchUrl = (title?: string | null) =>
-  `https://www.amazon.com/s?k=${encodeURIComponent(title ?? "").replace(
+const amazonSearchUrl = (
+  title?: string | null,
+  author?: string | null
+) => {
+  const searchQuery = `${title ?? ""} ${author ?? ""}`.trim();
+  return `https://www.amazon.com/s?k=${encodeURIComponent(searchQuery).replace(
     /%20/g,
     "+"
   )}&i=stripbooks`;
+};
 
 // Helper to chunk an array into rows
 function chunkArray<T>(items: T[], size: number): T[][] {
@@ -51,7 +56,9 @@ export default function WishBook() {
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
   // Which book's description is currently open in a modal
-  const [descriptionBook, setDescriptionBook] = useState<WishBookDto | null>(null);
+  const [descriptionBook, setDescriptionBook] = useState<WishBookDto | null>(
+    null
+  );
 
   async function addToLibraryFromWishBook(w: WishBookDto): Promise<void> {
     const newBook: BookDto = {
@@ -186,7 +193,8 @@ export default function WishBook() {
           src={coverUrl(b.coverid)}
           alt={`${b.bookname ?? "WishBook"} cover`}
           onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
+            (e.currentTarget as HTMLImageElement).src =
+              "/hobbit-placeholder.jpg";
           }}
           className="h-full w-full object-cover"
         />
@@ -245,7 +253,7 @@ export default function WishBook() {
             </button>
 
             <a
-              href={amazonSearchUrl(b.bookname)}
+              href={amazonSearchUrl(b.bookname, b.author)}
               target="_blank"
               rel="noreferrer"
               className="flex flex-1 items-center justify-center rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-400 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 cursor-pointer"
@@ -293,7 +301,9 @@ export default function WishBook() {
               <button
                 type="button"
                 className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 cursor-pointer"
-                onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+                onClick={() =>
+                  setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+                }
               >
                 {sortDir === "asc" ? "A→Z" : "Z→A"}
               </button>
@@ -301,22 +311,19 @@ export default function WishBook() {
           </div>
 
           {sortedWishBooks.length === 0 ? (
-              <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-1">
-
-
-
-            <div className="mt-16 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
-              <p className="text-sm text-slate-600">
-                You haven't added any books to your wishlist yet.
-              </p>
-              <button
-                className=" mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
-                onClick={() => navigate("/search")}
-              >
-                Search for books
-              </button>
-            </div>
-             </ul>
+            <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-1">
+              <div className="mt-16 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
+                <p className="text-sm text-slate-600">
+                  You haven't added any books to your wishlist yet.
+                </p>
+                <button
+                  className=" mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
+                  onClick={() => navigate("/search")}
+                >
+                  Search for books
+                </button>
+              </div>
+            </ul>
           ) : (
             // Books present: bookshelf grid with shelf under each row
             <ul className="mt-8 space-y-10">
@@ -369,7 +376,9 @@ export default function WishBook() {
                   {descriptionBook.bookname || "Untitled"}
                 </h2>
                 {descriptionBook.author && (
-                  <p className="text-sm text-slate-600">{descriptionBook.author}</p>
+                  <p className="text-sm text-slate-600">
+                    {descriptionBook.author}
+                  </p>
                 )}
                 {descriptionBook.genre && (
                   <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
@@ -387,7 +396,10 @@ export default function WishBook() {
 
             <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
               <a
-                href={amazonSearchUrl(descriptionBook.bookname)}
+                href={amazonSearchUrl(
+                  descriptionBook.bookname,
+                  descriptionBook.author
+                )}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"

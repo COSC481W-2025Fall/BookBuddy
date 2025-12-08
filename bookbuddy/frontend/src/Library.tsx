@@ -30,11 +30,13 @@ function compareStr(
   return dir === "asc" ? res : -res;
 }
 
-const amazonSearchUrl = (title?: string | null) =>
-  `https://www.amazon.com/s?k=${encodeURIComponent(title ?? "").replace(
+const amazonSearchUrl = (title?: string | null, author?: string | null) => {
+  const searchQuery = `${title ?? ""} ${author ?? ""}`.trim();
+  return `https://www.amazon.com/s?k=${encodeURIComponent(searchQuery).replace(
     /%20/g,
     "+"
   )}&i=stripbooks`;
+};
 
 // Helper to chunk an array into rows
 function chunkArray<T>(items: T[], size: number): T[][] {
@@ -279,7 +281,7 @@ export default function Library() {
                   <img
                     src={tempSearchBook}
                     alt="No books yet"
-                    className="w-full max-w-xs cursor-pointer rounded-2xl shadow-sm"
+                    className="w/full max-w-xs cursor-pointer rounded-2xl shadow-sm"
                     onClick={() => navigate("/search")}
                   />
                 </div>
@@ -376,7 +378,10 @@ export default function Library() {
 
             <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
               <a
-                href={amazonSearchUrl(descriptionBook.bookname)}
+                href={amazonSearchUrl(
+                  descriptionBook.bookname,
+                  descriptionBook.author
+                )}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
