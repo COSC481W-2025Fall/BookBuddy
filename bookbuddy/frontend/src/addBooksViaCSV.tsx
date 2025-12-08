@@ -19,6 +19,7 @@ async function delay(ms: number) {
 
 const CSVReader: React.FC = () => {
     const [columnData, setColumnData] = useState<string[]>([]);
+    const [authorData, setAuthorData] = useState<string[]>([]);
     const [books, setBooks] = useState<any[]>([]); // kept in case you use later
     const [bookMessages, setBookMessages] = useState<BookMessage[]>([]);
     const [fileName, setFileName] = useState("No File Chosen!");
@@ -54,12 +55,19 @@ const CSVReader: React.FC = () => {
             // Assume first row is header
             const headerCells = lines[0].split(csvSplitRegExp);
             let titleColIndex = -1;
-
+            let authorColIndex = -1;
 
 
             for (let i = 0; i < headerCells.length; i++) {
                 if (headerCells[i]?.replace(/"/g, "").trim().toLowerCase() === "title") {
                     titleColIndex = i;
+                    break;
+                }
+            }
+
+            for (let i = 0; i < headerCells.length; i++) {
+                if (headerCells[i]?.replace(/"/g, "").trim().toLowerCase() === "author") {
+                    authorColIndex = i;
                     break;
                 }
             }
@@ -75,7 +83,13 @@ const CSVReader: React.FC = () => {
                 return cells[titleColIndex] ?? "";
             });
 
+            const authorColumn: string[] = lines.map((line) => {
+                const cells = line.split(csvSplitRegExp);
+                return cells[authorColIndex] ?? "";
+            });
+
             setColumnData(titleColumn);
+            setAuthorData(authorColumn);
         };
 
         reader.readAsText(file);
@@ -87,21 +101,29 @@ const CSVReader: React.FC = () => {
         async function processBooks() {
             // Copy so we don't mutate state directly
             let titles = [...columnData];
+            let authors = [...authorData];
 
             // Skip header row
             titles = titles.slice(1);
+            authors = authors.slice(1);
 
             // Limit to 25 books (plus header originally)
-            titles = titles.slice(0, 25);
+            //titles = titles.slice(0, 25);
+            //authors = authors.slice(0, 25);
 
             if (titles.length === 0) return;
 
             setIsLoading(true);
 
-            for (const title of titles) {
-                const titleClean = title.replaceAll("/", "").replaceAll("#", "").replaceAll("\"", "").trim();
+            for (let i = 0; i < titles.length; i++) {
+                let titleClean = titles[i]?.replaceAll("/", "").replaceAll("#", "").replaceAll("\"", "").trim();
+                const authorClean = authors[i]?.replaceAll("/", "").replaceAll("#", "").replaceAll("\"", "").trim();
 
                 if (!titleClean) continue;
+
+                if(authorClean) {
+                    titleClean += " " + authorClean;
+                }
 
                 // 1. Search the book
                 const found = await searchBookViaTitle(titleClean, BASE);
