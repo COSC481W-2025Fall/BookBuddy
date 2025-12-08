@@ -16,7 +16,7 @@
 
 .questions-container {
     max-width: 800px;
-    margin: 80px auto;
+    margin: 80px auto; /* Desktop margin */
     padding: 30px;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -135,7 +135,7 @@
 
 .resultContainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Desktop layout */
     gap: 2rem;
     align-items: flex-start;
     padding: 2rem;
@@ -152,7 +152,7 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    min-width: 200px;
+    min-width: 200px; /* Reduced width can cause issues on small screens */
     flex-shrink: 0;
 }
 
@@ -190,4 +190,53 @@
     display: inline-block;
     width: 100%;
     text-align: left;
+}
+
+/* --- Mobile Support Enhancements (max-width: 768px) --- */
+@media (max-width: 480px) {
+    /* Adjust form container for smaller screens */
+    .questions-container {
+        margin: 50px 10px; /* Smaller top/bottom margin, horizontal margin for breathing room */
+        padding: 20px; /* Reduced padding */
+    }
+
+    /* Ensure background is scaled appropriately if it's too large */
+    .pageBackground {
+        background-size: cover; /* Ensures background covers the screen, better for mobile */
+    }
+
+    /* Stack the content in the results container vertically for mobile */
+    .resultContainer {
+        flex-direction: column; /* Switches from row to column */
+        padding: 1rem; /* Reduced padding */
+        gap: 1.5rem; /* Reduced gap */
+        max-width: 100%; /* Allows it to take up full width on mobile */
+        margin: 1rem auto; /* Reduced margin */
+    }
+
+    /* Ensure the left block scales appropriately */
+    .resultLeft {
+        min-width: 100%; /* Allows it to take up the full width when stacked */
+        /* Optionally, if resultLeft holds an image, you might want to adjust its size here */
+    }
+
+    /* Center text inputs and buttons to feel more natural on a centered mobile layout */
+    .aBox, .submitButton {
+        max-width: 100%; /* Ensure full width usage for better tap targets */
+        box-sizing: border-box; /* Include padding/border in element's total width/height */
+    }
+
+    /* Adjust the refresh button's position for mobile, perhaps place it within a static flow */
+    .refreshButton {
+        position: static; /* Remove absolute positioning */
+        margin: 0 auto 10px auto; /* Center it and add bottom margin for separation */
+    }
+
+    /* Adjust font sizes for readability if needed (optional) */
+    .questionLabel, .filterQuestionLabel {
+        font-size: 1rem;
+    }
+    .resultBox {
+        font-size: 18px; /* Slightly smaller font for better mobile fit */
+    }
 }
