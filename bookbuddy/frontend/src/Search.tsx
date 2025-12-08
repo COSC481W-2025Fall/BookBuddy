@@ -374,15 +374,21 @@ const SearchPage: React.FC = () => {
                         type="button"
                         onClick={() => {
                           const bookTitle = book.bookname ?? "";
+                          const bookAuthor = book.author ?? "";
+
+                          const searchQuery = `${bookTitle} ${bookAuthor}`.trim();
+
                           const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(
-                            bookTitle,
+                            searchQuery
                           ).replace(/%20/g, "+")}&i=stripbooks`;
+
                           window.open(amazonSearchUrl, "_blank");
                         }}
                         className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
                       >
                         Search on Amazon
                       </button>
+
                     </div>
                   </li>
                 ))}
