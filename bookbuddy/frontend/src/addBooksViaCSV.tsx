@@ -32,10 +32,8 @@ export default function CSVReader() {
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const text = e.target?.result as string;
-            if (!text) return;
+      if (lines.length === 0 || lines[0] === undefined) return;
+
 
             const lines = text
                 .split(/\r?\n/)
@@ -46,8 +44,28 @@ export default function CSVReader() {
                 .map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[1])
                 .filter((v): v is string => v !== undefined);
 
-            setColumnData(firstColumn);
-        };
+
+
+      for (let i = 0; i < headerCells.length; i++) {
+        if (headerCells[i]?.replace(/"/g, "").trim().toLowerCase() === "title") {
+          titleColIndex = i;
+          break;
+        }
+      }
+
+      // If we couldn't find the "title" column, bail
+      if (titleColIndex === -1) {
+        alert("No title column found!");
+        return;
+      }
+
+      const titleColumn: string[] = lines.map((line) => {
+        const cells = line.split(csvSplitRegExp);
+        return cells[titleColIndex] ?? "";
+      });
+
+      setColumnData(titleColumn);
+    };
 
         reader.readAsText(file);
     };
@@ -64,16 +82,16 @@ export default function CSVReader() {
         async function processBooks() {
             if (columnData.length === 0) return;
 
-            // Limit rows & skip header
-            const limited = columnData.slice(1, Math.min(columnData.length, 25));
+      // Limit to 25 books (no longer needed because no more API key)
+      //titles = titles.slice(0, 25);
 
             setIsLoading(true);
 
             for (const title of limited) {
                 const titleClean = title.replaceAll("#", "");
 
-                // 1. Search Google Books
-                const found = await searchBookViaTitle(titleClean, BASE);
+      for (const title of titles) {
+        const titleClean = title.replaceAll("/", "").replaceAll("#", "").replaceAll("\"", "").trim();
 
                 let message: BookMessage;
 
@@ -142,43 +160,77 @@ export default function CSVReader() {
                 </div>
             </label>
 
-            {isLoading && (
-                <div
-                    style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: "rgba(0, 0, 0, 0.8)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        zIndex: 0,
-                        color: "white",
-                        fontSize: "20px",
-                        textAlign: "center",
-                    }}
-                >
-                    <div className="book">
-                        <div className="book__pg-shadow"></div>
-                        <div className="book__pg"></div>
-                        <div className="book__pg book__pg--2"></div>
-                        <div className="book__pg book__pg--3"></div>
-                        <div className="book__pg book__pg--4"></div>
-                        <div className="book__pg book__pg--5"></div>
-                    </div>
+            <input
+              id="fileUpload"
+              type="file"
+              accept=".csv"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+          </div>
+        </label>
+      </div>
 
-                    <div
-                        id="userUpdate"
-                        style={{
-                            position: "fixed",
-                            marginTop: "170px",
-                            fontSize: "25px",
-                        }}
-                    ></div>
-                </div>
-            )}
-        </div>
-    );
-}
+      {isLoading &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 9999,
+              color: "white",
+              fontSize: "20px",
+              textAlign: "center",
+            }}
+          >
+            <div className="book">
+              <div className="book__pg-shadow"></div>
+              <div className="book__pg"></div>
+              <div className="book__pg book__pg--2"></div>
+              <div className="book__pg book__pg--3"></div>
+              <div className="book__pg book__pg--4"></div>
+              <div className="book__pg book__pg--5"></div>
+            </div>
+
+            <div
+              style={{
+                position: "fixed",
+                marginBottom: "175px",
+                fontSize: "25px",
+                color: "#B6D15C",
+              }}
+            >
+                Larger files will lead to longer wait times!
+            </div>
+
+            <div
+              style={{
+                position: "fixed",
+                marginTop: "175px",
+                fontSize: "25px",
+              }}
+                className={`${
+                  currentMessage?.success
+                    ? "text-green-300"
+                  : !currentMessage?.success
+                    ? "text-red-300"
+                  : "text-gray-400"
+                }`}
+                >
+                {currentMessage
+                  ? `${currentMessage.title}: ${currentMessage.message}`
+                  : "Starting import..."}
+            </div>
+          </div>,
+          document.body
+        )}
+    </div>
+  );
+};
+
+export default CSVReader;

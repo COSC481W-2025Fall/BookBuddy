@@ -19,13 +19,14 @@ public class Account {
     private String password;
 
     @Column(nullable = false)
-    private int aiLimit;
+    private int aiLimit = 7;
 
     public Account() {}
 
     public Account(String name, String password) {
         this.name = name;
         this.password = password;
+        this.aiLimit =7;
     }
 
     // Getters and setters
