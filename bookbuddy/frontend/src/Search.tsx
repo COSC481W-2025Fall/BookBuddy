@@ -3,7 +3,9 @@ import type { BookDto } from "./types/BookDto";
 import type { WishBookDto } from "./types/WishBookDto";
 import "./components/Searchpage.css";
 import noCoverFound from "./logo/noCoverFound.png";
-import ToastHost from "./ToastHost"; // 👈 NEW import
+import ToastHost from "./ToastHost";
+import "./components/Book_loading.css";
+
 
 const BASE = ""; // keep empty, proxy or relative path handles backend
 
@@ -20,6 +22,9 @@ const SearchPage: React.FC = () => {
   const [title, setTitle] = useState("");
   const [searchStatus, setSearchStatus] = useState<string>("");
   const [bookResults, setBookResults] = useState<BookDto[]>([]);
+
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const [toasts, setToasts] = useState<Toast[]>([]);
   const nextToastId = useRef(1);
@@ -55,17 +60,25 @@ const SearchPage: React.FC = () => {
   const doSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title.trim()) {
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
       setSearchStatus("⚠️ Please enter a book title to search.");
       setBookResults([]);
       return;
     }
 
-    setSearchStatus("🔎 Searching…");
+    // User has initiated at least one search
+    setHasSearched(true);
+
+    // Clear previous results and show loader
+    setBookResults([]);
+    setSearchStatus("");
+    setIsSearching(true);
 
     try {
       const searchRes = await fetch(
-        `${BASE}/googlebooks/search/${encodeURIComponent(title.trim())}`,
+        `${BASE}/googlebooks/search/${encodeURIComponent(trimmedTitle)}`,
       );
 
       if (!searchRes.ok) {
@@ -89,6 +102,8 @@ const SearchPage: React.FC = () => {
         "❌ Something went wrong while searching. Please try again.",
       );
       setBookResults([]);
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -191,7 +206,7 @@ const SearchPage: React.FC = () => {
       <div className="relative min-h-screen">
         <div className="max-w-2xl mx-auto px-4 py-10">
           {/* Search panel */}
-          <div className=" space-y-6 p-6 shadow-md rounded-xl border border-gray-200 bg-white min-h-[220px]">
+          <div className="space-y-6 p-6 shadow-md rounded-xl border border-gray-200 bg-white min-h-[220px]">
             <div className="space-y-3">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900">
                 Find your book
@@ -222,12 +237,14 @@ const SearchPage: React.FC = () => {
               <button
                 type="submit"
                 className="btn btn-primary w-full sm:w-auto bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-semibold px-6 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
+                disabled={isSearching}
               >
-                Search
+                {isSearching ? "Searching…" : "Search"}
               </button>
             </form>
 
-            {searchStatus && (
+            {/* Only show status text when we're NOT actively searching */}
+            {searchStatus && !isSearching && (
               <div className="text-sm font-medium bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-gray-800">
                 {searchStatus}
               </div>
@@ -241,7 +258,7 @@ const SearchPage: React.FC = () => {
                 <h2 className="text-3xl font-semibold tracking-tight text-gray-900">
                   Search results
                 </h2>
-                {bookResults.length > 0 && (
+                {bookResults.length > 0 && !isSearching && (
                   <p className="text-xs text-gray-500">
                     Showing{" "}
                     <span className="font-medium">{bookResults.length}</span>{" "}
@@ -251,147 +268,179 @@ const SearchPage: React.FC = () => {
               </div>
             </div>
 
-            {bookResults.length === 0 ? (
+            {/* Different states: loading, initial, empty-after-search, results */}
+            {isSearching ? (
+              // Loading state (book animation)
+              <div
+                className="w-256 max-w-2xl mx-auto flex items-center justify-center py-16"
+                aria-live="polite"
+              >
+                <div className="book" aria-hidden="true">
+                  <div className="book__pg-shadow" />
+                  <div className="book__pg" />
+                  <div className="book__pg book__pg--2" />
+                  <div className="book__pg book__pg--3" />
+                  <div className="book__pg book__pg--4" />
+                  <div className="book__pg book__pg--5" />
+                </div>
+                <span className="sr-only">Loading results…</span>
+              </div>
+            ) : bookResults.length === 0 && !hasSearched ? (
+
+              // Initial state before any search
               <p className="text-2xl text-gray-600">
                 <span className="font-medium">
                   No results to display yet. Try searching for a title above to
                   see matching books.
                 </span>
               </p>
+            ) : bookResults.length === 0 && hasSearched ? (
+              // No results after a search; main message is in searchStatus
+              <p className="text-lg text-gray-600">
+                No books to show for this search.
+              </p>
             ) : (
+              // Results list
               <ul className="space-y-4 pb-10">
-                {bookResults.map((book, index) => (
-                  <li
-                    key={book.isbn ?? book.bookname ?? index}
-                    className="card rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-[1px] hover:shadow-md sm:p-5 result-fade-in"
-                    style={{ animationDelay: `${index * 80}ms` }}
-                  >
-                    <div className="flex flex-col gap-4 sm:flex-row">
-                      <div className="flex justify-center sm:w-32 sm:flex-shrink-0 sm:justify-start">
-                        {book.coverid ? (
-                          <a
-                            href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
-                              book.coverid,
-                            )}&source=gbs_api`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                {bookResults.map((book, index) => {
+                  const key =
+                    (book.isbn && `isbn-${book.isbn}`) ||
+                    (book.coverid && `cover-${book.coverid}`) ||
+                    (book.bookname && `title-${book.bookname}`) ||
+                    `idx-${index}`;
+
+                  return (
+                    <li
+                      key={key}
+                      className="card rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-[1px] hover:shadow-md sm:p-5 result-fade-in"
+                      style={{ animationDelay: `${index * 80}ms` }}
+                    >
+                      <div className="flex flex-col gap-4 sm:flex-row">
+                        <div className="flex justify-center sm:w-32 sm:flex-shrink-0 sm:justify-start">
+                          {book.coverid ? (
+                            <a
+                              href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
+                                book.coverid,
+                              )}&source=gbs_api`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src={renderBookImage(book)}
+                                alt={book.bookname || "Book cover"}
+                                className="h-40 w-28 rounded-xl object-cover shadow"
+                              />
+                            </a>
+                          ) : (
                             <img
                               src={renderBookImage(book)}
                               alt={book.bookname || "Book cover"}
                               className="h-40 w-28 rounded-xl object-cover shadow"
                             />
-                          </a>
-                        ) : (
-                          <img
-                            src={renderBookImage(book)}
-                            alt={book.bookname || "Book cover"}
-                            className="h-40 w-28 rounded-xl object-cover shadow"
-                          />
-                        )}
-                      </div>
-
-                      <div className="flex-1 space-y-3">
-                        <div className="space-y-1">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {book.coverid ? (
-                              <a
-                                href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
-                                  book.coverid,
-                                )}&source=gbs_api`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:underline decoration-pink-300 underline-offset-4"
-                              >
-                                {book.bookname || "Untitled book"}
-                              </a>
-                            ) : (
-                              book.bookname || "Untitled book"
-                            )}
-                          </h3>
-
-                          <p className="text-sm text-gray-600">
-                            {book.author || "Unknown author"}
-                          </p>
+                          )}
                         </div>
 
-                        <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs sm:text-sm text-gray-700">
-                          <div>
-                            <dt className="font-medium text-gray-500 uppercase tracking-wide">
-                              Genre
-                            </dt>
-                            <dd>{book.genre || "Unknown"}</dd>
+                        <div className="flex-1 space-y-3">
+                          <div className="space-y-1">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {book.coverid ? (
+                                <a
+                                  href={`https://play.google.com/store/books/details?id=${encodeURIComponent(
+                                    book.coverid,
+                                  )}&source=gbs_api`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="hover:underline decoration-pink-300 underline-offset-4"
+                                >
+                                  {book.bookname || "Untitled book"}
+                                </a>
+                              ) : (
+                                book.bookname || "Untitled book"
+                              )}
+                            </h3>
+
+                            <p className="text-sm text-gray-600">
+                              {book.author || "Unknown author"}
+                            </p>
                           </div>
 
-                          <div>
-                            <dt className="font-medium text-gray-500 uppercase tracking-wide">
-                              Pages
-                            </dt>
-                            <dd>{book.pagecount ?? "Unknown"}</dd>
-                          </div>
+                          <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs sm:text-sm text-gray-700">
+                            <div>
+                              <dt className="font-medium text-gray-500 uppercase tracking-wide">
+                                Genre
+                              </dt>
+                              <dd>{book.genre || "Unknown"}</dd>
+                            </div>
 
-                          <div>
-                            <dt className="font-medium text-gray-500 uppercase tracking-wide">
-                              Publication
-                            </dt>
-                            <dd>{book.publication || "Unknown"}</dd>
-                          </div>
+                            <div>
+                              <dt className="font-medium text-gray-500 uppercase tracking-wide">
+                                Pages
+                              </dt>
+                              <dd>{book.pagecount ?? "Unknown"}</dd>
+                            </div>
 
-                          <div>
-                            <dt className="font-medium text-gray-500 uppercase tracking-wide">
-                              ISBN
-                            </dt>
-                            <dd>{book.isbn || "N/A"}</dd>
-                          </div>
-                        </dl>
+                            <div>
+                              <dt className="font-medium text-gray-500 uppercase tracking-wide">
+                                Publication
+                              </dt>
+                              <dd>{book.publication || "Unknown"}</dd>
+                            </div>
 
-                        {book.description && (
-                          <p className="text-sm text-gray-700 line-clamp-3">
-                            {book.description}
-                          </p>
-                        )}
+                            <div>
+                              <dt className="font-medium text-gray-500 uppercase tracking-wide">
+                                ISBN
+                              </dt>
+                              <dd>{book.isbn || "N/A"}</dd>
+                            </div>
+                          </dl>
+
+                          {book.description && (
+                            <p className="text-sm text-gray-700 line-clamp-3">
+                              {book.description}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="mt-4 flex flex-wrap gap-3">
-                      <button
-                        type="button"
-                        className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
-                        onClick={addBookToLibrary(book)}
-                      >
-                        Add to my library
-                      </button>
+                      <div className="mt-4 flex flex-wrap gap-3">
+                        <button
+                          type="button"
+                          className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
+                          onClick={addBookToLibrary(book)}
+                        >
+                          Add to my library
+                        </button>
 
-                      <button
-                        type="button"
-                        className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
-                        onClick={addBookToWishlist(book as WishBookDto)}
-                      >
-                        Add to wishlist
-                      </button>
+                        <button
+                          type="button"
+                          className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
+                          onClick={addBookToWishlist(book as WishBookDto)}
+                        >
+                          Add to wishlist
+                        </button>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const bookTitle = book.bookname ?? "";
-                          const bookAuthor = book.author ?? "";
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const bookTitle = book.bookname ?? "";
+                            const bookAuthor = book.author ?? "";
 
-                          const searchQuery = `${bookTitle} ${bookAuthor}`.trim();
+                            const searchQuery = `${bookTitle} ${bookAuthor}`.trim();
 
-                          const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(
-                            searchQuery
-                          ).replace(/%20/g, "+")}&i=stripbooks`;
+                            const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(
+                              searchQuery,
+                            ).replace(/%20/g, "+")}&i=stripbooks`;
 
-                          window.open(amazonSearchUrl, "_blank");
-                        }}
-                        className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
-                      >
-                        Search on Amazon
-                      </button>
-
-                    </div>
-                  </li>
-                ))}
+                            window.open(amazonSearchUrl, "_blank");
+                          }}
+                          className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
+                        >
+                          Search on Amazon
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
