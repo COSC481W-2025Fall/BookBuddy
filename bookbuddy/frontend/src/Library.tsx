@@ -58,6 +58,14 @@ export default function Library() {
 
   // Which book is currently shown in the description modal
   const [descriptionBook, setDescriptionBook] = useState<BookDto | null>(null);
+  useEffect(() => {
+  if (descriptionBook) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
+}, [descriptionBook]);
+
 
   const coverUrl = (coverid?: string) =>
     coverid

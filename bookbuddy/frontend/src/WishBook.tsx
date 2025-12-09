@@ -60,6 +60,14 @@ export default function WishBook() {
   const [descriptionBook, setDescriptionBook] = useState<WishBookDto | null>(
     null
   );
+  useEffect(() => {
+  if (descriptionBook) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
+}, [descriptionBook]);
+
 
   async function addToLibraryFromWishBook(w: WishBookDto): Promise<void> {
     const newBook: BookDto = {
