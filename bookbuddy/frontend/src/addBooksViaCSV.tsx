@@ -1,175 +1,182 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { searchBookViaTitle } from "./searchBookViaTitle";
 import { addCSVBooks } from "./addCSVBooks";
 import "./components/Book_loading.css";
 import tempAddBook from "./logo/tempAddBook.png";
 
-export default function CSVReader() {
-    const [columnData, setColumnData] = useState<string[]>([]);
-    const [fileName, setFileName] = useState("No File Chosen!");
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+interface BookMessage {
+  title: string;
+  message: string;
+  success: boolean;
+}
 
-    interface BookMessage {
-        title: string;
-        message: string;
-        success: boolean;
+const csvSplitRegExp = /,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
+
+const CSVReader: React.FC = () => {
+  const [columnData, setColumnData] = useState<string[]>([]);
+  const [fileName, setFileName] = useState("No File Chosen!");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentMessage, setCurrentMessage] = useState<BookMessage | null>(null);
+
+  const BASE = "";
+
+  // helper for throttling
+  function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      setFileName("No File Chosen!");
+      return;
     }
 
-    // google rate limit helper
-    function delay(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
+    setFileName(file.name);
 
-    const BASE = "";
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result;
+      if (typeof text !== "string") return;
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
+      const lines = text
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter((l) => l !== "");
 
-        if (file) {
-            setFileName(file.name);
-        } else {
-            setFileName("No File Chosen!");
-            return;
-        }
+      if (lines.length === 0) return;
 
-      if (lines.length === 0 || lines[0] === undefined) return;
-
-
-            const lines = text
-                .split(/\r?\n/)
-                .filter((line) => line.trim() !== "");
-
-            // Extract second column & remove undefined
-            const firstColumn = lines
-                .map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)[1])
-                .filter((v): v is string => v !== undefined);
-
-
+      // Find "title" column from header
+      const headerCells = lines[0].split(csvSplitRegExp);
+      let titleColIndex = -1;
 
       for (let i = 0; i < headerCells.length; i++) {
-        if (headerCells[i]?.replace(/"/g, "").trim().toLowerCase() === "title") {
+        if (
+          headerCells[i]
+            ?.replace(/"/g, "")
+            .trim()
+            .toLowerCase() === "title"
+        ) {
           titleColIndex = i;
           break;
         }
       }
 
-      // If we couldn't find the "title" column, bail
       if (titleColIndex === -1) {
-        alert("No title column found!");
+        alert('No "title" column found in CSV header!');
         return;
       }
 
-      const titleColumn: string[] = lines.map((line) => {
+      // Extract title column (skip header)
+      const titles: string[] = lines.slice(1).map((line) => {
         const cells = line.split(csvSplitRegExp);
         return cells[titleColIndex] ?? "";
       });
 
-      setColumnData(titleColumn);
+      setColumnData(titles);
     };
 
-        reader.readAsText(file);
-    };
+    reader.readAsText(file);
+  };
 
-    useEffect(() => {
-        async function updateUser(message: BookMessage) {
-            const textBox = document.getElementById("userUpdate");
-            if (!textBox) return;
+  useEffect(() => {
+    async function processBooks() {
+      if (columnData.length === 0) return;
 
-            textBox.style.color = message.success ? "green" : "violet";
-            textBox.innerHTML = `${message.title}:   ${message.message}`;
+      setIsLoading(true);
+
+      // If you want to limit number of titles, uncomment:
+      // const titles = columnData.slice(0, 25);
+      const titles = columnData;
+
+      for (const rawTitle of titles) {
+        const titleClean = rawTitle
+          .replace(/\//g, "")
+          .replace(/#/g, "")
+          .replace(/"/g, "")
+          .trim();
+
+        if (!titleClean) continue;
+
+        let message: BookMessage;
+
+        try {
+          // 1. Search book
+          const found = await searchBookViaTitle(titleClean, BASE); // adjust args if needed
+
+          if (!found) {
+            message = {
+              title: titleClean,
+              message: "No result found",
+              success: false,
+            };
+            setCurrentMessage(message);
+            await delay(250);
+            continue;
+          }
+
+          // 2. Add to backend
+          const result = await addCSVBooks(found, BASE); // adjust args if needed
+
+          message = {
+            title: found.bookname ?? titleClean,
+            message: result.ok
+              ? "Added successfully"
+              : result.message || "Failed",
+            success: result.ok,
+          };
+        } catch (err) {
+          message = {
+            title: titleClean,
+            message: "Error while processing",
+            success: false,
+          };
         }
 
-        async function processBooks() {
-            if (columnData.length === 0) return;
+        setCurrentMessage(message);
+        await delay(1000);
+      }
 
-      // Limit to 25 books (no longer needed because no more API key)
-      //titles = titles.slice(0, 25);
+      setIsLoading(false);
+      // If you really want full reload:
+      // window.location.reload();
+    }
 
-            setIsLoading(true);
+    processBooks();
+  }, [columnData]);
 
-            for (const title of limited) {
-                const titleClean = title.replaceAll("#", "");
+  return (
+    <>
+      <label htmlFor="fileUpload" style={{ cursor: "pointer", display: "block" }}>
+        <div className="bb-card__media">
+          <img
+            src={tempAddBook}
+            alt="Add Goodreads Library"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </div>
 
-      for (const title of titles) {
-        const titleClean = title.replaceAll("/", "").replaceAll("#", "").replaceAll("\"", "").trim();
+        <div className="bb-card__body">
+          <h2 className="bb-card__title">Add your Goodreads™ Library!</h2>
+          <br />
+          <span className="bb-btn">{fileName}</span>
+        </div>
+      </label>
 
-                let message: BookMessage;
-
-                if (!found) {
-                    message = {
-                        title: titleClean,
-                        message: "No result found",
-                        success: false,
-                    };
-                    await updateUser(message);
-                    await delay(25);
-                    continue;
-                }
-
-                // 2. Add to backend
-                const result = await addCSVBooks(found, BASE);
-
-                message = {
-                    title: found.bookname,
-                    message: result.ok ? "Added successfully" : result.message || "Failed",
-                    success: result.ok,
-                };
-
-                await updateUser(message);
-                await delay(1000);
-            }
-
-            await delay(3000);
-            setIsLoading(false);
-            window.location.reload();
-        }
-
-        processBooks();
-    }, [columnData]);
-
-    return (
-        <div>
-            <label htmlFor="fileUpload" style={{ cursor: "pointer" }}>
-                <div className="bb-card__media">
-                    <img
-                        src={tempAddBook}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            display: "block",
-                        }}
-                    />
-                </div>
-
-                <div className="bb-card__body">
-                    <h2 className="bb-card__title">Add your Goodreads™ Library!</h2>
-                    <br />
-
-                    <label htmlFor="fileUpload" className="bb-btn">
-                        {fileName}
-                    </label>
-
-                    <input
-                        style={{ display: "none" }}
-                        id="fileUpload"
-                        type="file"
-                        accept=".csv"
-                        onChange={handleFileUpload}
-                    />
-                </div>
-            </label>
-
-            <input
-              id="fileUpload"
-              type="file"
-              accept=".csv"
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-          </div>
-        </label>
-      </div>
+      <input
+        style={{ display: "none" }}
+        id="fileUpload"
+        type="file"
+        accept=".csv"
+        onChange={handleFileUpload}
+      />
 
       {isLoading &&
         typeof document !== "undefined" &&
@@ -205,7 +212,7 @@ export default function CSVReader() {
                 color: "#B6D15C",
               }}
             >
-                Larger files will lead to longer wait times!
+              Larger files will lead to longer wait times!
             </div>
 
             <div
@@ -214,22 +221,22 @@ export default function CSVReader() {
                 marginTop: "175px",
                 fontSize: "25px",
               }}
-                className={`${
-                  currentMessage?.success
-                    ? "text-green-300"
-                  : !currentMessage?.success
-                    ? "text-red-300"
+              className={
+                currentMessage?.success
+                  ? "text-green-300"
+                  : currentMessage
+                  ? "text-red-300"
                   : "text-gray-400"
-                }`}
-                >
-                {currentMessage
-                  ? `${currentMessage.title}: ${currentMessage.message}`
-                  : "Starting import..."}
+              }
+            >
+              {currentMessage
+                ? `${currentMessage.title}: ${currentMessage.message}`
+                : "Starting import..."}
             </div>
           </div>,
           document.body
         )}
-    </div>
+    </>
   );
 };
 
