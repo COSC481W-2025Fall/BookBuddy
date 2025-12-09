@@ -8,28 +8,32 @@ import Library from "./Library";
 import WishList from "./WishBook";
 import Buddy from "./Buddy_Recommendation";
 import Profile from "./Profile";
-
+// Protect pages from being accessed without login
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const accountId = localStorage.getItem("accountId");
+  // If not logged in, redirect to signup ("/")
+  if (!accountId) return <Navigate to="/" replace />;
+  return children;
+}
 export default function App() {
   const location = useLocation();
-
   return (
+    // key={location.pathname} forces this wrapper to remount on every route change,
+    // so the CSS animation runs each time.
     <div key={location.pathname} className="page-fade">
       <Routes location={location}>
         {/* Public routes */}
         <Route path="/" element={<Signup />} />
-        {/* <Route path="/login" element={<Login />} /> */}
-        {/* <Route path="/signup" element={<Signup />} /> */}
+        {/*<Route path="/login" element={<Login />} />*/}
+        {/*<Route path="/signup" element={<Signup />} />*/}
 
-        {/* Layout routes (no protection now) */}
+        {/* Protected routes inside Layout */}
         <Route element={<Layout />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
           <Route path="/library" element={<Library />} />
-          <Route path="/WishList" element={<WishList />} />
-          <Route
-            path="/Buddy_Recommendation"
-            element={<Buddy />}
-          />
+          <Route path="/WishBook" element={<WishList />} />
+          <Route path="/Buddy_Recommendation" element={<Buddy />} />
         </Route>
 
         {/* Catch-all redirect */}
