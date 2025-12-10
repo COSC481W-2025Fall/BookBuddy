@@ -256,13 +256,13 @@ const Signup: React.FC = () => {
                                 <li>Noah Schaible</li>
                                 <li>Benjamin Smith</li>
                             </ul>
-                            Teacher/Project manager:
+                            Professor/Project manager:
                             <ul>
                                 <li>Siyuan Jiang</li>
                             </ul>
                             Artists:
                             <ul>
-                                <li>Ben's Mom: BookBuddy character</li>
+                                <li>Cindy Smith: BookBuddy character</li>
                                 <li>Noah's friend: BookBuddy logo</li>
                             </ul>
                         </p>
