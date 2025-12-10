@@ -1,14 +1,11 @@
-
 /*Form CSS*/
 .pageBackground {
     width: 100vw;
     height: 100vh;
-
     background-image: url("buddyresultbackground.jpg");
     background-repeat: repeat;
     background-position: top left;
     background-size: auto;
-
     margin: 0;
     padding: 0;
     top: 0;
@@ -19,7 +16,7 @@
 
 .questions-container {
     max-width: 800px;
-    margin: 80px auto;
+    margin: 80px auto; /* Desktop margin */
     padding: 30px;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -138,7 +135,7 @@
 
 .resultContainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Desktop layout */
     gap: 2rem;
     align-items: flex-start;
     padding: 2rem;
@@ -155,14 +152,13 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    max-width: 400px;
+    min-width: 200px; /* Reduced width can cause issues on small screens */
     flex-shrink: 0;
 }
 
 .resultRight {
     flex: 1;
-    max-width: 400px;
-    min-width: 400px;
+    min-width: 0;
 }
 
 .refreshButton {
@@ -194,4 +190,50 @@
     display: inline-block;
     width: 100%;
     text-align: left;
+}
+
+@media (max-width: 480px) {
+
+    .questions-container {
+        margin: 50px 10px;
+        padding: 20px;
+    }
+
+
+    .pageBackground {
+        background-size: cover;
+    }
+
+
+    .resultContainer {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1.5rem;
+        max-width: 100%;
+        margin: 1rem auto;
+    }
+
+    .resultLeft {
+        min-width: 100%;
+
+    }
+
+
+    .aBox, .submitButton {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+
+    .refreshButton {
+        position: static;
+        margin: 15px auto 10px auto;
+    }
+
+    .questionLabel, .filterQuestionLabel {
+        font-size: 1rem;
+    }
+    .resultBox {
+        font-size: 18px;
+    }
 }
