@@ -132,27 +132,70 @@ const Signup: React.FC = () => {
     //////////////////////////// SIGNUP CODE ////////////////////////////
 
     return (
+
         // Main container with relative positioning and high Z-index to establish a stacking context
         <div className="flex w-full min-h-screen relative z-1">
 
-            <div className="wave-container absolute bottom-180 left-3/4 transform -translate-x-1/2 -translate-y-3/4 z-2.">
+            <div className="wave-container Welcome-message ">
+                <h1 className="wave-text">
+                    <span className="o-outline">Your Personal</span> <span className="o-outline">Literary Archive</span>
+                </h1>
+            </div>
+
+            <div
+                className="wave-container All-thebooks  ">
                 <h1 className="wave-text">
                     <span className={"welcome"}>Welcome</span><span className={"To"}>To</span><span>BookBuddy </span>
                 </h1>
             </div>
 
+            <button className="p-2 z-100 relative button-bubble left-25 top-2" type="button"
+                    onClick={async () => {
+                        if (!cycleStart) {
+                            setSeeLogin(true); // Action 1
+                            setSeeSignup(false);
+                            toggleSidebar();
+                            setCycleStart(true);
+                        } else {
+                            toggleSidebar();
+                            await sleep(700);
+                            setSeeLogin(true); // Action 1
+                            setSeeSignup(false);
+                            toggleSidebar();
+                        }
+                    }}
+                    disabled={seeLogin}>
+                Login
+            </button>
 
+            <button className="p-2 z-[100] relative button-bubble left-5 top-2" onClick={async () => {
+                if (!cycleStart) {
+                    setSeeLogin(false); // Action 1
+                    setSeeSignup(true);
+                    toggleSidebar();
+                    setCycleStart(true);
+                } else {
+                    toggleSidebar();
+                    await sleep(700);
+                    setSeeLogin(false); // Action 1
+                    setSeeSignup(true);
+                    toggleSidebar();
+                }
+            }}
+                    disabled={seeSignup}>
+                Signup
+                {/*signup {isOpen ? 'Close Sidebar' : 'Open Sidebar'}*/}
+            </button>
 
-            {/* --- TEXT CONTAINER: Now without a background color --- */}
-            <div
-                className="wave-container absolute top-1/2 left-50 transform -translate-x-1/2 -translate-y-1/2 z-2.">
-                <h1 className="wave-text">
-                    <span>Your </span><span> collection </span><span>all in one </span><span>place</span>
-                </h1>
-            </div>
+            {/*show info button */}
+            <button className="p-2 z-[100] absolute question-circle top-3 right-2"
+                    onClick={() => setShowinfo(!showinfo)}>
+                ?
+            </button>
 
             {showinfo && (
-                <div className="popup-overlay backdrop z-50 ">
+                <div className="popup-overlay backdrop z-50 " onClick={() => setShowinfo(false)}>
+
 
                     <div className="popup z-50 " >
                         <span className="close" onClick={() => setShowinfo(false)}>&times;</span>
@@ -233,68 +276,16 @@ const Signup: React.FC = () => {
                         <img
                             src={logo}
                             alt="BookBuddy"
-                            className="Cover_logo z-5 h-20 w-auto sm:h-65 sm:w-auto bg-white rounded-4xl "/>
+                            className="Cover_logo z-5 h-75  bg-white rounded-4xl "/>
                     </div>
                 </div>)}
 
-
             {/* ---------------------------- */}
-
 
             <div
                 className="flex-grow flex items-center justify-center gradient-background-books relative h-screen p-8 overflow-hidden z-[-2]">
-
-
-
-                <div className="absolute inset-0 bg-[rgba(255,255,255,0.8)] z-5"></div>
+                <div className="absolute inset-0 bg-[rgba(255,255,255,0.6)] z-5"></div>
                 {/* ------------------------- */}
-
-                <button className="p-2 z-[100] relative button-bubble left-25 top-2" type="button"
-                        onClick={async () => {
-                            if (!cycleStart) {
-                                setSeeLogin(true); // Action 1
-                                setSeeSignup(false);
-                                toggleSidebar();
-                                setCycleStart(true);
-                            } else {
-                                toggleSidebar();
-                                await sleep(700);
-                                setSeeLogin(true); // Action 1
-                                setSeeSignup(false);
-                                toggleSidebar();
-                            }
-                        }}
-                        disabled={seeLogin}>
-                    Login
-                </button>
-
-                <button className="p-2 z-[100] relative button-bubble left-5 top-2" onClick={async () => {
-                    if (!cycleStart) {
-                        setSeeLogin(false); // Action 1
-                        setSeeSignup(true);
-                        toggleSidebar();
-                        setCycleStart(true);
-                    } else {
-                        toggleSidebar();
-                        await sleep(700);
-                        setSeeLogin(false); // Action 1
-                        setSeeSignup(true);
-                        toggleSidebar();
-                    }
-                }}
-                        disabled={seeSignup}>
-                    Signup
-                    {/*signup {isOpen ? 'Close Sidebar' : 'Open Sidebar'}*/}
-                </button>
-
-                {/*show info button */}
-                <button className="p-2 z-[100] absolute question-circle top-3 left-45"
-                        onClick={() => setShowinfo(true)}>
-                    ?
-                </button>
-
-
-
 
                 <div className="book-scene ">
 
@@ -414,22 +405,14 @@ const Signup: React.FC = () => {
 
             <>
                 <div
-                    className={`
-                          w-vh
-                          bg-white 
-                          shadow-xl 
-                          fixed 
-                          top-0 
-                          h-full 
-                          transition-all 
-                          duration-700 
-                          ease-in-out
-                          ${isOpen ? 'right-0' : 'right-[-456px]'}  <-- **Crucial Change: Hide it fully**`}>
+                    className={` w-vh bg-white  shadow-xl   fixed  top-0  h-full  transition-all  duration-700    
+                                ease-in-out 
+                          ${isOpen ? 'right-0' : 'right-[-100vw]'} `}>
 
                     {seeSignup && (
 
 
-                        <div className="w-full h-full max-w-md m-2 p-2  z-5 ">
+                        <div className=" max-w-md  m-2 p-2  z-5 ">
 
                             {/* Header / Branding */}
                             <div
@@ -522,7 +505,7 @@ const Signup: React.FC = () => {
 
                     {seeLogin && (
 
-                        <div className="w-full h-full max-w-md m-2 p-2 z-5 signin-box">
+                        <div className="max-w-md m-2 p-2 z-5 signin-box">
                             {/* Header / Branding */}
                             <div
                                 className=" wave-container flex flex-col items-center text-center space-y-2 mb-6  ">
@@ -546,7 +529,7 @@ const Signup: React.FC = () => {
                                     </div>
                                 )}
 
-                                <form onSubmit={logIn} className="space-y-4">
+                                <form onSubmit={logIn} className="space-y-25">
                                     <div>
                                         <label htmlFor="nameLN" className="labelLN label font-bold text-xl ">
                                             Username
@@ -593,8 +576,13 @@ const Signup: React.FC = () => {
                                 </form>
 
 
+
+
                             </div>
-                        </div>)}
+
+
+                        </div>
+                    )}
                 </div>
             </>
 
