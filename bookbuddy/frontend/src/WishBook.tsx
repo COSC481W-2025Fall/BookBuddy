@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPortal } from "react-dom";
 import type { WishBookDto } from "./types/WishBookDto";
 import type { BookDto } from "./types/BookDto";
 import { getMyWishBook, removeFromWishlist } from "./api";
 import noCoverFound from "./logo/noCoverFound.png";
+import ModalPortal from "./components/ModalPortal";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
 type SortKey = "name" | "author" | "genre";
@@ -26,11 +26,16 @@ function compareStr(a?: string | null, b?: string | null, dir: SortDir = "asc") 
   return dir === "asc" ? res : -res;
 }
 
-const amazonSearchUrl = (title?: string | null) =>
-  `https://www.amazon.com/s?k=${encodeURIComponent(title ?? "").replace(
+const amazonSearchUrl = (
+  title?: string | null,
+  author?: string | null
+) => {
+  const searchQuery = `${title ?? ""} ${author ?? ""}`.trim();
+  return `https://www.amazon.com/s?k=${encodeURIComponent(searchQuery).replace(
     /%20/g,
     "+"
   )}&i=stripbooks`;
+};
 
 // Helper to chunk an array into rows
 function chunkArray<T>(items: T[], size: number): T[][] {
@@ -39,86 +44,6 @@ function chunkArray<T>(items: T[], size: number): T[][] {
     result.push(items.slice(i, i + size));
   }
   return result;
-}
-
-type DescriptionModalProps = {
-  book: WishBookDto;
-  onClose: () => void;
-  coverUrl: (coverid?: string | null) => string;
-  amazonSearchUrl: (title?: string | null) => string;
-};
-
-function DescriptionModal({
-  book,
-  onClose,
-  coverUrl,
-  amazonSearchUrl,
-}: DescriptionModalProps) {
-  if (typeof document === "undefined") return null;
-
-  return createPortal(
-    <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 p-4"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className="relative max-h-[80vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
-        <button
-          type="button"
-          className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
-          onClick={onClose}
-        >
-          Close
-        </button>
-
-        <div className="flex gap-4 border-b border-slate-100 p-4">
-          <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
-            <img
-              src={coverUrl(book.coverid)}
-              alt={`${book.bookname ?? "Book"} cover`}
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="flex flex-col justify-center gap-1">
-            <h2 className="text-lg font-semibold text-slate-900">
-              {book.bookname || "Untitled"}
-            </h2>
-            {book.author && (
-              <p className="text-sm text-slate-600">{book.author}</p>
-            )}
-            {book.genre && (
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                {book.genre}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
-          {book.description
-            ? book.description
-            : "No description available for this book."}
-        </div>
-
-        <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
-          <a
-            href={amazonSearchUrl(book.bookname)}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
-          >
-            View on Amazon
-          </a>
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
 }
 
 export default function WishBook() {
@@ -132,7 +57,17 @@ export default function WishBook() {
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
   // Which book's description is currently open in a modal
-  const [descriptionBook, setDescriptionBook] = useState<WishBookDto | null>(null);
+  const [descriptionBook, setDescriptionBook] = useState<WishBookDto | null>(
+    null
+  );
+  useEffect(() => {
+  if (descriptionBook) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
+}, [descriptionBook]);
+
 
   async function addToLibraryFromWishBook(w: WishBookDto): Promise<void> {
     const newBook: BookDto = {
@@ -261,18 +196,16 @@ export default function WishBook() {
           <TrashIcon className="h-5 w-5" />
         </button>
       )}
-
-      <div className="relative aspect-[2/3] w-full bg-slate-100">
+      <div className="relative w-full h-108 bg-slate-100 flex items-center justify-center overflow-hidden">
         <img
           src={coverUrl(b.coverid)}
           alt={`${b.bookname ?? "WishBook"} cover`}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
           }}
-          className="h-full w-full object-cover"
+          className="h-full w-auto object-cover"
         />
       </div>
-
       <div className="flex flex-1 flex-col gap-2 p-4">
         <h2 className="text-base font-semibold text-slate-900">
           {b.bookname || "Untitled"}
@@ -326,7 +259,7 @@ export default function WishBook() {
             </button>
 
             <a
-              href={amazonSearchUrl(b.bookname)}
+              href={amazonSearchUrl(b.bookname, b.author)}
               target="_blank"
               rel="noreferrer"
               className="flex flex-1 items-center justify-center rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-400 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 cursor-pointer"
@@ -374,7 +307,9 @@ export default function WishBook() {
               <button
                 type="button"
                 className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 cursor-pointer"
-                onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+                onClick={() =>
+                  setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+                }
               >
                 {sortDir === "asc" ? "A→Z" : "Z→A"}
               </button>
@@ -413,14 +348,75 @@ export default function WishBook() {
         </div>
       </div>
 
-      {/* Description Modal via portal */}
+      {/* Description Modal */}
       {descriptionBook && (
-        <DescriptionModal
-          book={descriptionBook}
-          onClose={() => setDescriptionBook(null)}
-          coverUrl={coverUrl}
-          amazonSearchUrl={amazonSearchUrl}
-        />
+        <ModalPortal>
+          <div
+            className="fixed inset-0 z-[9999] grid place-items-center bg-slate-900/60 p-4"
+            onClick={() => setDescriptionBook(null)}
+          >
+            <div
+              className="relative w-full max-w-lg max-h-[90svh] overflow-hidden rounded-2xl bg-white shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+            >
+              {/* Close button */}
+              <button
+                type="button"
+                className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200  cursor-pointer"
+                onClick={() => setDescriptionBook(null)}
+              >
+                Close
+              </button>
+
+              <div className="flex gap-4 border-b border-slate-100 p-4">
+                <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
+                  <img
+                    src={coverUrl(descriptionBook.coverid)}
+                    alt={`${descriptionBook.bookname ?? "Book"} cover`}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col justify-center gap-1">
+                  <h2 className="text-lg font-semibold text-slate-900">
+                    {descriptionBook.bookname || "Untitled"}
+                  </h2>
+                  {descriptionBook.author && (
+                    <p className="text-sm text-slate-600">
+                      {descriptionBook.author}
+                    </p>
+                  )}
+                  {descriptionBook.genre && (
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                      {descriptionBook.genre}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
+                {descriptionBook.description
+                  ? descriptionBook.description
+                  : "No description available for this book."}
+              </div>
+
+              <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
+                <a
+                  href={amazonSearchUrl(
+                    descriptionBook.bookname,
+                    descriptionBook.author
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
+                >
+                  View on Amazon
+                </a>
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
       )}
     </>
   );
