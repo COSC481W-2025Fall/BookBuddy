@@ -152,13 +152,14 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    min-width: 200px; /* Reduced width can cause issues on small screens */
+    min-width: 400px; /* Reduced width can cause issues on small screens */
     flex-shrink: 0;
 }
 
 .resultRight {
     flex: 1;
-    min-width: 0;
+    max-width: 400px;
+    min-width: 400px;
 }
 
 .refreshButton {
