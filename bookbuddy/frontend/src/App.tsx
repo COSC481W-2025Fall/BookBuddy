@@ -20,11 +20,11 @@ export default function App() {
       <Routes location={location}>
         {/* Public routes */}
         <Route path="/" element={<Signup />} />
-        {/*<Route path="/login" element={<Login />} />*/}
+        <Route path="/login" element={<Login />} />
         {/*<Route path="/signup" element={<Signup />} />*/}
 
         {/* Routes inside ProtectedRoutes */}
-        <Route element={ProtectedRoutes />}>
+        <Route element={<ProtectedRoutes />}>
         {/* Routes inside Layout */}
         <Route element={<Layout />}>
           <Route path="/profile" element={<Profile />} />
