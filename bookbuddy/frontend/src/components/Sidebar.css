@@ -15,7 +15,7 @@ body.sidebar-open {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, .7); /* Dim black color */
+    background-color: rgba(0, 0, 0, 0.7); /* Dim black color */
     z-index: 45; /* Sits beneath the sidebar (50) and above main content */
     opacity: 1;
     transition: opacity 0.3s ease, visibility 0.5s ease;
