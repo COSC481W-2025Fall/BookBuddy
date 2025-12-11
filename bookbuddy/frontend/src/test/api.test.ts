@@ -273,3 +273,185 @@ describe("API: addBook", () => {
     await expect(api.addBook(book)).rejects.toThrow(/Book addition failed: 400/);
   });
 });
+
+// Test to remove from library
+describe("API: removeFromLibrary", () => {
+  it("resolves on success", async () => {
+    (fetch as any).mockResolvedValueOnce({ ok: true, status: 200 });
+    await expect(api.removeFromLibrary("isbn123")).resolves.toBeUndefined();
+    expect(fetch).toHaveBeenCalledWith(
+        "/books/remove/isbn123",
+        expect.objectContaining({ method: "DELETE", credentials: "include" })
+    );
+  });
+
+  it("throws AUTH error on 401/403", async () => {
+    (fetch as any).mockResolvedValueOnce({ ok: false, status: 401 });
+    await expect(api.removeFromLibrary("isbn123")).rejects.toThrow("AUTH");
+
+    (fetch as any).mockResolvedValueOnce({ ok: false, status: 403 });
+    await expect(api.removeFromLibrary("isbn123")).rejects.toThrow("AUTH");
+  });
+
+  it("throws generic error on other failures", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      text: async () => "Bad request",
+    });
+    await expect(api.removeFromLibrary("isbn123")).rejects.toThrow(
+        "Failed to remove book: 400 - Bad request"
+    );
+  });
+});
+
+// Test to remove from wishlist
+describe("API: removeFromWishlist", () => {
+  it("resolves on success", async () => {
+    (fetch as any).mockResolvedValueOnce({ ok: true, status: 200 });
+    await expect(api.removeFromWishlist("isbnXYZ")).resolves.toBeUndefined();
+  });
+
+  it("throws AUTH error on 401/403", async () => {
+    (fetch as any).mockResolvedValueOnce({ ok: false, status: 401 });
+    await expect(api.removeFromWishlist("isbnXYZ")).rejects.toThrow("AUTH");
+
+    (fetch as any).mockResolvedValueOnce({ ok: false, status: 403 });
+    await expect(api.removeFromWishlist("isbnXYZ")).rejects.toThrow("AUTH");
+  });
+
+  it("throws generic error on other failures", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      text: async () => "Oops",
+    });
+    await expect(api.removeFromWishlist("isbnXYZ")).rejects.toThrow(
+        "Failed to remove wishlist book: 400 - Oops"
+    );
+  });
+});
+
+// Test to send questions to api
+describe("API: SendQeustions", () => {
+  it("returns JSON if content-type is application/json", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({ response: "ok" }),
+      headers: { get: () => "application/json" },
+    });
+    const result = await api.SendQeustions(["q1", "q2"]);
+    expect(result).toEqual({ response: "ok" });
+  });
+
+  it("returns text if content-type is not JSON", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      text: async () => "plain text",
+      headers: { get: () => "text/plain" },
+    });
+    const result = await api.SendQeustions(["q1"]);
+    expect(result).toEqual({ response: "plain text" });
+  });
+
+  it("throws error if response not ok", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      text: async () => "Server error",
+    });
+    await expect(api.SendQeustions(["q1"])).rejects.toThrow(
+        "Cant ask questions: 500 - Server error"
+    );
+  });
+});
+
+// Test to change user ai count
+describe("API: ChangeAiUse", () => {
+  it("returns JSON on success", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ aiEnabled: true }),
+    });
+    const result = await api.ChangeAiUse();
+    expect(result).toEqual({ aiEnabled: true });
+  });
+
+  it("throws error if response not ok", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: false,
+      text: async () => "Failed to change AI",
+    });
+    await expect(api.ChangeAiUse()).rejects.toThrow("Failed to change AI");
+  });
+});
+
+describe("API: addLogin", () => {
+  it("returns true when server returns '1'", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: true,
+      text: async () => "1",
+    });
+    const result = await api.addLogin({ username: "x", password: "y" } as any);
+    expect(result).toBe(true);
+  });
+
+  it("returns false when server returns '0'", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: true,
+      text: async () => "0",
+    });
+    const result = await api.addLogin({ username: "x", password: "y" } as any);
+    expect(result).toBe(false);
+  });
+
+  it("returns false when response not ok", async () => {
+    (fetch as any).mockResolvedValueOnce({ ok: false, status: 500 });
+    const result = await api.addLogin({ username: "x", password: "y" } as any);
+    expect(result).toBe(false);
+  });
+});
+
+// Test to get current user
+describe("API: getCurrentUser", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns account JSON on success", async () => {
+    const mockAccount = { accountId: 1, name: "testName" };
+    (fetch as any).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockAccount,
+      status: 200,
+    });
+
+    const result = await api.getCurrentUser();
+    expect(result).toEqual(mockAccount);
+    expect(fetch).toHaveBeenCalledWith("/Account/getCurrentUser", {
+      credentials: "include",
+    });
+  });
+
+  it("throws error on failed response", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      text: async () => "Not logged in",
+    });
+
+    await expect(api.getCurrentUser()).rejects.toThrow(
+        "GetCurrentUser failed: 401"
+    );
+  });
+
+  it("throws error on failed response", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: false,
+      text: async () => "Not logged in",
+    });
+    await expect(api.getCurrentUser()).rejects.toThrow("GetCurrentUser failed: undefined");
+  });
+});
