@@ -7,7 +7,7 @@ const ProtectedRoutes = () => {
     return (
         localStorage.getItem("accountId") ?
             <Outlet /> :
-            <Navigate to="/login" />
+            <Navigate to="/" />
     )
 }
 

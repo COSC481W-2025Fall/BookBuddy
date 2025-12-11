@@ -20,7 +20,7 @@ export default function App() {
       <Routes location={location}>
         {/* Public routes */}
         <Route path="/" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        {/*<Route path="/login" element={<Login />} />*/}
         {/*<Route path="/signup" element={<Signup />} />*/}
 
         {/* Routes inside ProtectedRoutes */}
