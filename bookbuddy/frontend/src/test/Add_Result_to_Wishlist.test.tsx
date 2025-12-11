@@ -1,5 +1,6 @@
-import { describe, it, vi, beforeEach, afterEach, expect } from 'vitest';
+import { describe, it, vi, beforeEach, afterEach,  expect } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import WishlistButton from '../Add_Result_to_Wishlist';
 
 //Tests made with help from ChatGPT
@@ -101,5 +102,20 @@ describe('WishlistButton', () => {
             expect(screen.getByText(/add to wishlist failed: 500/i))
         );
         */
+    });
+
+    it("shows an error if fetch throws", async () => {
+        const errorMessage = "Network exploded";
+
+        fetchMock.mockRejectedValueOnce(new Error(errorMessage));
+
+        render(<WishlistButton nameOfBook="Boom" />);
+
+        fireEvent.click(screen.getByRole("button", { name: /add to wishlist/i }));
+
+        // UI should show the catch block's status message
+        await waitFor(() => {
+            expect(screen.getByText(errorMessage)).toBeInTheDocument();
+        });
     });
 });
