@@ -5,7 +5,14 @@ body {
     width: 100%;
     height: 100%;
 
+
 }
+/* here to fix issue on mobile where you can scroll when side bar opens*/
+@media (max-width: 480px) {
+body.sidebar-signin {
+    position: fixed;
+}
+    }
 
 /* ======================================= */
 /* Mobile Phone Breakpoint (e.g., iPhone/Android) */
@@ -92,10 +99,6 @@ body {
 }
 
 .sidebar-open {
-    /* **Crucial Change:** Centers the element horizontally. */
-    /* 1. Start half the viewport width (50vw). */
-    /* 2. Subtract half the element's width (224px, which is 448px / 2). */
-
     transform: translateX(0);
 
     /* We use 50% here as the form is w-2/4 (50%) */
@@ -199,9 +202,7 @@ body {
     margin-left:10px;
 }
 .wave-text span {
-    /* *** REMOVE THESE TROUBLE SPOTS *** */
-    /* margin-top: 100%; */
-    /* margin-bottom: -100%; */
+
 
     /* Keep the display property */
     display: flex; /* This is key for arranging the spans */
@@ -248,20 +249,13 @@ body {
     }
 }
 
-/* ======================================= */
-/* 2. BOOK SCENE WRAPPER & ANIMATION       */
-/* ======================================= */
-/* This is the massive box that holds all the books and applies the infinite animation. */
 .book-scene {
     width: 50vw;
     height: 30vh;
     animation: book-pan 100s linear infinite alternate; /* 90s duration (adjust for speed) */
 }
 
-/* ======================================= */
-/* 3. REUSABLE BOOK COMPONENT (.book-3d)   */
-/* ======================================= */
-/* This is the parent anchor for each individual book */
+
 .book-3d {
     position: absolute; /* Allows for easy positioning within the huge .book-scene */
     /* Add custom positioning/rotation classes (like .book-1-pos) to this element */

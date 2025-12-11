@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { addAccount } from "./api";
 import { addLogin } from "./api";
@@ -30,6 +30,22 @@ const Signup: React.FC = () => {
     const [cycleStart, setCycleStart] = useState(false);
     const [showinfo, setShowinfo] = useState(false);
 
+
+/* here so you cant scroll when sidebar is open on mobile*/
+    useEffect(() => {
+        const body = document.body;
+        if (cycleStart) {
+            // When the sidebar is open, add the class to prevent scrolling
+            body.classList.add("sidebar-signin");
+        } else {
+            // When the sidebar is closed, remove the class to allow scrolling
+            body.classList.remove("sidebar-signin");
+        }
+
+        return () => {
+            body.classList.remove("sidebar-signin");
+        };
+    }, [cycleStart]);
 
     const sleep = (ms: number | undefined) => {
         return new Promise(resolve => setTimeout(resolve, ms));
