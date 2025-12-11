@@ -6,6 +6,7 @@ import { addLogin } from "./api";
 import type { AccountDto } from "./types/AccountDto";
 import type { LoginDto } from "./types/LoginDto";
 import logo from "./logo/bookbuddy-logo-mywristhurts.png";
+import Buddy from "./logo/BUDD.png";
 import "./Styling/signup.css";
 import "./Styling/AboutUS.css";
 
@@ -262,31 +263,46 @@ const Signup: React.FC = () => {
                         <h3>Credits </h3>
                         <p> This project was created with love for the teams computer science Capstone project at Eastern michigan
                             university. The team was composed of 6 passionate students who either
-                            are are readers themselves or have readers close to them. </p>
-                        <p>Team members:
-                            <ul>
-                                <li>Ryan Cleary</li>
-                                <li>Nicholas Hoshowski</li>
-                                <li>Bear Kennedy</li>
-                                <li>Ryan Retan</li>
-                                <li>Noah Schaible</li>
-                                <li>Benjamin Smith</li>
-                            </ul>
-                            Teacher/Project manager:
-                            <ul>
-                                <li>Siyuan Jiang</li>
-                            </ul>
-                            Artists:
-                            <ul>
-                                <li>Ben's Mom: BookBuddy character</li>
-                                <li>Noah's friend: BookBuddy logo</li>
-                            </ul>
-                        </p>
+                            are are readers themselves or have readers close to them.  </p>
+
+                        <div className="credits-layout">
+                            <div className="credits-text">
+                                <p>Team members:
+                                    <ul>
+                                        <li>Ryan Cleary</li>
+                                        <li>Nicholas Hoshowski</li>
+                                        <li>Bear Kennedy</li>
+                                        <li>Book Buddy ========&#62;</li>
+                                        <li>Ryan Retan</li>
+                                        <li>Noah Schaible</li>
+                                        <li>Benjamin Smith</li>
+
+                                    </ul>
+                                </p>
+                                <p>Teacher/Project manager:
+                                    <ul>
+                                        <li>Siyuan Jiang</li>
+                                    </ul>
+                                </p>
+                                <p>Artists:
+                                    <ul>
+                                        <li>Ben's Mom: BookBuddy character</li>
+                                        <li>Noah's friend: BookBuddy logo</li>
+                                    </ul>
+                                </p>
+                            </div>
+                            <img
+                                src={Buddy}
+                                alt="BookBuddy"
+                                className="h-2"
+                            />
+                        </div>
                         <p>We also want to thank everyone in this class who took the time to assist
                             us on this Journey. We also want to thank the teacher for her endless support, guidance and
                             patience with our team. Lastly we also would like to thank all of those who
                             were a part of beta testing, giving us input on how we can make this website the best it can
                             be. </p>
+                        {/* END OF NEW FLEX CONTAINER */}
                     </div>
                     <div className="wave-container ">
                         <img

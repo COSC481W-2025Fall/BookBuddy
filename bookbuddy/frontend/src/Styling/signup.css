@@ -636,6 +636,18 @@ vertical of 300
     }
 }
 
+.credits-layout {
+    display: flex;
+    gap: 0px;
+    align-items: flex-start;
+}
+
+
+.credits-layout img {
+    max-width: 200px;
+    height: auto;
+
+}
 
 
 
