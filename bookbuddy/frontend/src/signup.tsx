@@ -405,8 +405,8 @@ const Signup: React.FC = () => {
 
             <>
                 <div
-                    className={` w-vh bg-white  shadow-xl   fixed  top-0  h-full  transition-all  duration-700    
-                                ease-in-out 
+                    className={` w-vh bg-white  shadow-xl   fixed  top-0  h-full  transition-all  duration-700 h-screen overflow-y-auto 
+                                ease-in-out scroll-
                           ${isOpen ? 'right-0' : 'right-[-100vw]'} `}>
 
                     {seeSignup && (
