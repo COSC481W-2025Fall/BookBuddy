@@ -55,6 +55,7 @@ const Signup: React.FC = () => {
                 return;
             }
 
+            localStorage.setItem("accountId", username);
             navigate("/search");
 
         } catch (err: any) {
