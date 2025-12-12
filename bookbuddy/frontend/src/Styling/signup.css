@@ -1,6 +1,8 @@
 body {
     /* Only prevents horizontal scrolling */
     overflow-x: hidden;
+    font-family: Quicksand
+
 }
 
 /* ======================================= */
@@ -12,8 +14,8 @@ body {
 
     /* Reduce the Base Size of the Book */
     .book-3d .page {
-        width: 200px;
-        height: 300px;
+        width: 100vw;
+        height: 100vh;
         /* Re-calculate the overall 3D transformation scaling factor */
         transform: rotate(-45deg) skewX(10deg) scale(0.35); /* Apply smaller scale */
         box-shadow: -25px 25px 25px rgba(0, 0, 0, 0.4);
@@ -111,9 +113,80 @@ body {
     );
 }
 
-body {
 
-    font-family: Quicksand
+
+.Welcome-message {
+    /* 1. Set the positioning context */
+    position: fixed;
+
+    /* 2. Anchor it to the top edge */
+    top: -25vh;
+
+    /* 3. Anchor it to the right edge */
+    right: 0vh;
+
+    /* Optional: Add padding and background for visibility */
+    padding: 10px;
+
+    /* Optional: Ensure it stays on top of other content */
+    z-index: 0;
+}
+@media (max-width: 480px) {
+    .Welcome-message {
+        position: absolute;
+
+        /* 2. Anchor it to the top edge */
+        top: 20vh;
+
+        /* 3. Anchor it to the right edge */
+        left: 0vh;
+
+        /* Optional: Add padding and background for visibility */
+        padding: 10px;
+
+        /* Optional: Ensure it stays on top of other content */
+        z-index: 0;
+        font-size: 5rem;
+
+    }
+}
+
+
+.All-thebooks {
+    /* 1. Set the positioning context */
+    position: absolute;
+
+    /* 2. Anchor it to the top edge */
+    bottom: 35vh;
+
+    /* 3. Anchor it to the right edge */
+    left: 5vh;
+
+    /* Optional: Add padding and background for visibility */
+    padding: 10px;
+
+    /* Optional: Ensure it stays on top of other content */
+    z-index: 0;
+    font-size: 5rem;
+}
+@media (max-width: 480px) {
+    .All-thebooks {
+        position: absolute;
+
+        /* 2. Anchor it to the top edge */
+        top: -20vh;
+
+        /* 3. Anchor it to the right edge */
+        left: 15vh;
+
+        /* Optional: Add padding and background for visibility */
+        padding: 10px;
+
+        /* Optional: Ensure it stays on top of other content */
+        z-index: 0;
+        font-size: 5rem;
+
+    }
 }
 
 .Welcome-message {
@@ -547,18 +620,14 @@ vertical of 300
     transform: translate(-50%, -50%) rotate(5deg) scale(0.8);
 }
 
-.book-cover-twenty-seven .page {
-    background-image: url('') !important;
-}
+
 .book-plus-6-pos {
     top: -820px; /* One level higher than Book 1's -250px */
     left: -1600px; /* Further right */
     transform: translate(-50%, -50%) rotate(5deg) scale(0.8);
 }
 
-.book-cover-twenty-eight .page {
-    background-image: url('') !important;
-}
+
 
 .book-plus-7-pos {
     top: -820px; /* One level higher than Book 1's -250px */
@@ -566,9 +635,7 @@ vertical of 300
     transform: translate(-50%, -50%) rotate(5deg) scale(0.8);
 }
 
-.book-cover-twenty-nine .page {
-    background-image: url('') !important;
-}
+
 .book-plus-8-pos {
     top: -820px; /* One level higher than Book 1's -250px */
     left: -2350px; /* Further right */
@@ -590,9 +657,16 @@ vertical of 300
 
 .Cover_logo {
     position: fixed;
-   bottom:10vh;
+    bottom:10vh;
     right:1vw;
 }
+
+@media (max-width: 480px) {
+    .Cover_logo {
+        display: none;
+    }
+}
+
 
 
 

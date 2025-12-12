@@ -4,11 +4,10 @@ import type { BookDto } from "./types/BookDto";
 import { getMyLibrary, removeFromLibrary } from "./api";
 import "./components/Library.css";
 import noCoverFound from "./logo/noCoverFound.png";
-import tempAddBook from "./logo/tempAddBook.png";
 import tempSearchBook from "./logo/tempSearchBook.png";
 import CSVReader from "./addBooksViaCSV";
 import { TrashIcon } from "@heroicons/react/24/solid";
-import ModalPortal from "./components/ModalPortal";
+import { createPortal } from "react-dom";
 
 type SortKey = "name" | "author" | "genre";
 type SortDir = "asc" | "desc";
@@ -17,11 +16,7 @@ function norm(v?: string | null): string {
   return (v ?? "").toString().trim().toLowerCase();
 }
 
-function compareStr(
-  a?: string | null,
-  b?: string | null,
-  dir: SortDir = "asc"
-) {
+function compareStr(a?: string | null, b?: string | null, dir: SortDir = "asc") {
   const aa = norm(a);
   const bb = norm(b);
   if (!aa && !bb) return 0;
@@ -48,6 +43,82 @@ function chunkArray<T>(items: T[], size: number): T[][] {
   return result;
 }
 
+type DescriptionModalProps = {
+  book: BookDto;
+  onClose: () => void;
+  coverUrl: (coverid?: string) => string;
+  amazonSearchUrl: (title?: string | null, author?: string | null) => string;
+};
+
+function DescriptionModal({
+  book,
+  onClose,
+  coverUrl,
+  amazonSearchUrl,
+}: DescriptionModalProps) {
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 p-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="relative max-h-[80vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          type="button"
+          className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
+          onClick={onClose}
+        >
+          Close
+        </button>
+
+        <div className="flex gap-4 border-b border-slate-100 p-4">
+          <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
+            <img
+              src={coverUrl((book as any).coverid)}
+              alt={`${book.bookname ?? "Book"} cover`}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-1">
+            <h2 className="text-lg font-semibold text-slate-900">
+              {book.bookname || "Untitled"}
+            </h2>
+            {book.author && <p className="text-sm text-slate-600">{book.author}</p>}
+            {(book as any).genre && (
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                {(book as any).genre}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
+          {book.description ? book.description : "No description available for this book."}
+        </div>
+
+        <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
+          <a
+            href={amazonSearchUrl(book.bookname, book.author)}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
+          >
+            View on Amazon
+          </a>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 export default function Library() {
   const navigate = useNavigate();
   const [books, setBooks] = useState<BookDto[]>([]);
@@ -58,14 +129,14 @@ export default function Library() {
 
   // Which book is currently shown in the description modal
   const [descriptionBook, setDescriptionBook] = useState<BookDto | null>(null);
-  useEffect(() => {
-  if (descriptionBook) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "";
-  }
-}, [descriptionBook]);
 
+  // lock body scroll while modal open (from nick-deploy-off-main)
+  useEffect(() => {
+    document.body.style.overflow = descriptionBook ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [descriptionBook]);
 
   const coverUrl = (coverid?: string) =>
     coverid
@@ -102,11 +173,7 @@ export default function Library() {
             primary = compareStr(x.b.author, y.b.author, sortDir);
             break;
           case "genre":
-            primary = compareStr(
-              (x.b as any).genre,
-              (y.b as any).genre,
-              sortDir
-            );
+            primary = compareStr((x.b as any).genre, (y.b as any).genre, sortDir);
             break;
         }
         if (primary !== 0) return primary;
@@ -123,9 +190,7 @@ export default function Library() {
     return (
       <div className="min-h-[60vh] bg-slate-50">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-16">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-            My Library
-          </h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">My Library</h1>
           <p className="mt-4 text-sm text-slate-500">Loading your books…</p>
         </div>
       </div>
@@ -136,9 +201,7 @@ export default function Library() {
     return (
       <div className="min-h-[60vh] bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-10">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-            My Library
-          </h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">My Library</h1>
           <div className="mt-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
@@ -153,12 +216,11 @@ export default function Library() {
     );
   }
 
-  // Build all card items (books + CSV card) so we can chunk them into rows
   const cardItems = [
     ...sortedBooks.map((b, i) => (
       <li
         key={(b.isbn ?? "no-isbn") + "-" + i}
-        className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+        className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg w-full sm:w-auto min-h-[70vh]"
       >
         {/* Trash icon on hover */}
         {b.isbn && (
@@ -167,9 +229,7 @@ export default function Library() {
             onClick={async () => {
               try {
                 await removeFromLibrary(b.isbn!);
-                setBooks((prev) =>
-                  prev.filter((book) => book.isbn !== b.isbn)
-                );
+                setBooks((prev) => prev.filter((book) => book.isbn !== b.isbn));
               } catch (err: any) {
                 alert(err?.message ?? "Failed to remove book");
               }
@@ -181,25 +241,20 @@ export default function Library() {
           </button>
         )}
 
-        <div className="relative w-full h-108 bg-slate-100 flex items-center justify-center overflow-hidden">
+        <div className="relative aspect-[2/3] bg-slate-100 h-full sm:h-auto sm:aspect-[2/3]">
           <img
             src={coverUrl((b as any).coverid)}
             alt={`${b.bookname ?? "Book"} cover`}
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
             }}
-            className="h-full w-auto object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
 
-
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <h2 className="text-base font-semibold text-slate-900">
-            {b.bookname || "Untitled"}
-          </h2>
-          {b.author && (
-            <div className="text-sm text-slate-600">{b.author}</div>
-          )}
+          <h2 className="text-base font-semibold text-slate-900">{b.bookname || "Untitled"}</h2>
+          {b.author && <div className="text-sm text-slate-600">{b.author}</div>}
 
           {(b.isbn || (b as any).genre) && (
             <div className="mt-2 flex flex-wrap gap-2">
@@ -217,7 +272,6 @@ export default function Library() {
           )}
 
           <div className="mt-auto flex flex-col gap-2">
-            {/* Description button opens modal */}
             <button
               type="button"
               onClick={() => setDescriptionBook(b)}
@@ -230,26 +284,23 @@ export default function Library() {
       </li>
     )),
 
-    // Extra card for CSV import when you already have books
     <li
       key="csv-card"
-      className="rounded-2xl border border-dashed border-slate-200 bg-white text-center shadow-sm transition hover:shadow-lg cursor-pointer flex flex-col items-center justify-center p-4"
+      className="rounded-2xl border border-dashed border-slate-200 bg-white text-center shadow-sm transition hover:shadow-lg cursor-pointer flex flex-col items-center justify-center p-4 w-full sm:w-auto min-h-[70vh]"
     >
       <CSVReader />
     </li>,
   ];
 
-  const rows = chunkArray(cardItems, 4); // 4 per row for the lg:grid-cols-4 layout
+  const rows = chunkArray(cardItems, 4);
 
   return (
     <>
       <div className="min-h-[60vh] bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-10">
-          <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between min-w-[1120px]">
+          <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-                My Library
-              </h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-slate-900">My Library</h1>
               <p className="mt-1 text-sm text-slate-500">
                 Browse the books you've added to your collection.
               </p>
@@ -274,9 +325,7 @@ export default function Library() {
               <button
                 type="button"
                 className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-2 focus:ring-indigo-500 cursor-pointer"
-                onClick={() =>
-                  setSortDir((d) => (d === "asc" ? "desc" : "asc"))
-                }
+                onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
               >
                 {sortDir === "asc" ? "A→Z" : "Z→A"}
               </button>
@@ -290,7 +339,7 @@ export default function Library() {
                   <img
                     src={tempSearchBook}
                     alt="No books yet"
-                    className="w/full max-w-xs cursor-pointer rounded-2xl shadow-sm"
+                    className="w-full max-w-xs cursor-pointer rounded-2xl shadow-sm"
                     onClick={() => navigate("/search")}
                   />
                 </div>
@@ -302,7 +351,7 @@ export default function Library() {
                 </p>
                 <div className="mt-6 items-center gap-4">
                   <button
-                    className="w-4/5 cursor-pointer justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
+                    className="w-4/5 cursor-pointer justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500"
                     onClick={() => navigate("/search")}
                   >
                     Search for books
@@ -315,11 +364,10 @@ export default function Library() {
             </div>
           ) : (
             <>
-              {/* Books present: bookshelf grid with shelf under each row */}
               <ul className="mt-8 space-y-10">
                 {rows.map((row, rowIndex) => (
                   <li key={`row-${rowIndex}`} className="relative list-none">
-                    <ul className="grid grid-cols-1 gap-6 pb-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <ul className="flex flex-col items-center gap-6 pb-6 sm:grid sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
                       {row}
                     </ul>
 
@@ -333,77 +381,15 @@ export default function Library() {
         </div>
       </div>
 
-      {/* Description Modal */}
+      {/* Description Modal via portal */}
       {descriptionBook && (
-        <ModalPortal>
-          <div
-            className="fixed inset-0 z-[9999] grid place-items-center bg-slate-900/60 p-4"
-            onClick={() => setDescriptionBook(null)}
-          >
-            <div
-              className="relative w-full max-w-lg max-h-[90svh] overflow-hidden rounded-2xl bg-white shadow-xl"
-              onClick={(e) => e.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-            >
-              {/* Close button */}
-              <button
-                type="button"
-                className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
-                onClick={() => setDescriptionBook(null)}
-              >
-                Close
-              </button>
-
-              <div className="flex gap-4 border-b border-slate-100 p-4">
-                <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
-                  <img
-                    src={coverUrl((descriptionBook as any).coverid)}
-                    alt={`${descriptionBook.bookname ?? "Book"} cover`}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="flex flex-col justify-center gap-1">
-                  <h2 className="text-lg font-semibold text-slate-900">
-                    {descriptionBook.bookname || "Untitled"}
-                  </h2>
-                  {descriptionBook.author && (
-                    <p className="text-sm text-slate-600">
-                      {descriptionBook.author}
-                    </p>
-                  )}
-                  {(descriptionBook as any).genre && (
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      {(descriptionBook as any).genre}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
-                {descriptionBook.description
-                  ? descriptionBook.description
-                  : "No description available for this book."}
-              </div>
-
-              <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
-                <a
-                  href={amazonSearchUrl(
-                    descriptionBook.bookname,
-                    descriptionBook.author
-                  )}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
-                >
-                  View on Amazon
-                </a>
-              </div>
-            </div>
-          </div>
-        </ModalPortal>
+        <DescriptionModal
+          book={descriptionBook}
+          onClose={() => setDescriptionBook(null)}
+          coverUrl={coverUrl}
+          amazonSearchUrl={amazonSearchUrl}
+        />
       )}
-
     </>
   );
 }
