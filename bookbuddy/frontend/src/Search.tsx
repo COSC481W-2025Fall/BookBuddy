@@ -6,7 +6,7 @@ import "./components/Book_loading.css";
 import noCoverFound from "./logo/noCoverFound.png";
 import ToastHost from "./ToastHost";
 
-const BASE = ""; // keep empty, proxy or relative path handles backend
+const BASE = "";
 
 type ToastType = "success" | "error" | "info";
 
@@ -27,6 +27,21 @@ const SearchPage: React.FC = () => {
 
   const [toasts, setToasts] = useState<Toast[]>([]);
   const nextToastId = useRef(1);
+
+  // ✅ PRESS LIMITS (per book, per button)
+  const PRESS_LIMIT = 5;
+  const [libraryPressCount, setLibraryPressCount] = useState<Record<string, number>>(
+    {},
+  );
+  const [wishlistPressCount, setWishlistPressCount] = useState<Record<string, number>>(
+    {},
+  );
+
+  const getBookKey = (book: BookDto, fallbackIndex: number) =>
+    (book.isbn && `isbn-${book.isbn}`) ||
+    (book.coverid && `cover-${book.coverid}`) ||
+    (book.bookname && `title-${book.bookname}`) ||
+    `idx-${fallbackIndex}`;
 
   const showToast = (message: string, type: ToastType = "info") => {
     const id = nextToastId.current++;
@@ -67,10 +82,8 @@ const SearchPage: React.FC = () => {
       return;
     }
 
-    // User has initiated at least one search
     setHasSearched(true);
 
-    // Clear previous results and show loader
     setBookResults([]);
     setSearchStatus("");
     setIsSearching(true);
@@ -97,9 +110,7 @@ const SearchPage: React.FC = () => {
       );
     } catch (err: any) {
       console.error("Error searching books", err);
-      setSearchStatus(
-        "❌ Something went wrong while searching. Please try again.",
-      );
+      setSearchStatus("❌ Something went wrong while searching. Please try again.");
       setBookResults([]);
     } finally {
       setIsSearching(false);
@@ -116,9 +127,20 @@ const SearchPage: React.FC = () => {
     return noCoverFound;
   };
 
+  // ✅ Press limit enforced here (per book key)
   const addBookToLibrary =
-    (selected_book: BookDto) => async (e: React.FormEvent) => {
+    (selected_book: BookDto, bookKey: string) => async (e: React.FormEvent) => {
       e.preventDefault();
+
+      const current = libraryPressCount[bookKey] ?? 0;
+      if (current >= PRESS_LIMIT) {
+        showToast(
+          "Limit reached . You can’t press ‘Add to my library’ for this book anymore.",
+          "info",
+        );
+        return;
+      }
+      setLibraryPressCount((prev) => ({ ...prev, [bookKey]: current + 1 }));
 
       const newBook: BookDto = {
         bookname: selected_book.bookname ?? "Unknown",
@@ -157,9 +179,20 @@ const SearchPage: React.FC = () => {
       }
     };
 
+  // ✅ Press limit enforced here (per book key)
   const addBookToWishlist =
-    (selected_book: WishBookDto) => async (e: React.FormEvent) => {
+    (selected_book: WishBookDto, bookKey: string) => async (e: React.FormEvent) => {
       e.preventDefault();
+
+      const current = wishlistPressCount[bookKey] ?? 0;
+      if (current >= PRESS_LIMIT) {
+        showToast(
+          " You can’t press ‘Add to wishlist’ for this book anymore.",
+          "info",
+        );
+        return;
+      }
+      setWishlistPressCount((prev) => ({ ...prev, [bookKey]: current + 1 }));
 
       const newWishBook: WishBookDto = {
         bookname: selected_book.bookname ?? "Unknown",
@@ -181,16 +214,11 @@ const SearchPage: React.FC = () => {
         });
 
         if (!res.ok) {
-          throw new Error(
-            "This book is already in your wishlist, or add failed",
-          );
+          throw new Error("This book is already in your wishlist, or add failed");
         }
 
         const added = await res.json();
-        showToast(
-          `⭐ Added to wishlist: ${added.bookname} by ${added.author}.`,
-          "success",
-        );
+        showToast(`⭐ Added to wishlist: ${added.bookname} by ${added.author}.`, "success");
       } catch (err: any) {
         showToast(err?.message ?? "Error adding to wishlist.", "error");
       }
@@ -198,13 +226,10 @@ const SearchPage: React.FC = () => {
 
   return (
     <>
-      {/* Toasts rendered via portal so they're always in viewport */}
       <ToastHost toasts={toasts} closeToast={closeToast} />
 
-      {/* Main content layer */}
       <div className="relative min-h-screen">
         <div className="max-w-2xl mx-auto px-4 py-10">
-          {/* Search panel */}
           <div className="space-y-6 p-6 shadow-md rounded-xl border border-gray-200 bg-white min-h-[220px]">
             <div className="space-y-3">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900">
@@ -242,7 +267,6 @@ const SearchPage: React.FC = () => {
               </button>
             </form>
 
-            {/* Only show status text when we're NOT actively searching */}
             {searchStatus && !isSearching && (
               <div className="text-sm font-medium bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-gray-800">
                 {searchStatus}
@@ -250,7 +274,6 @@ const SearchPage: React.FC = () => {
             )}
           </div>
 
-          {/* Results */}
           <div className="mt-10 border-t pt-8 min-h-[260px]">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -259,17 +282,14 @@ const SearchPage: React.FC = () => {
                 </h2>
                 {bookResults.length > 0 && !isSearching && (
                   <p className="text-xs text-gray-500">
-                    Showing{" "}
-                    <span className="font-medium">{bookResults.length}</span>{" "}
+                    Showing <span className="font-medium">{bookResults.length}</span>{" "}
                     result{bookResults.length === 1 ? "" : "s"}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Different states: loading, initial, empty-after-search, results */}
             {isSearching ? (
-              // Loading state (book animation)
               <div
                 className="w-256 max-w-2xl mx-auto flex items-center justify-center py-16"
                 aria-live="polite"
@@ -285,27 +305,24 @@ const SearchPage: React.FC = () => {
                 <span className="sr-only">Loading results…</span>
               </div>
             ) : bookResults.length === 0 && !hasSearched ? (
-              // Initial state before any search
               <p className="text-2xl text-gray-600">
                 <span className="font-medium">
-                  No results to display yet. Try searching for a title above to
-                  see matching books.
+                  No results to display yet. Try searching for a title above to see
+                  matching books.
                 </span>
               </p>
             ) : bookResults.length === 0 && hasSearched ? (
-              // No results after a search; main message is in searchStatus
-              <p className="text-lg text-gray-600">
-                No books to show for this search.
-              </p>
+              <p className="text-lg text-gray-600">No books to show for this search.</p>
             ) : (
-              // Results list
               <ul className="space-y-4 pb-10">
                 {bookResults.map((book, index) => {
-                  const key =
-                    (book.isbn && `isbn-${book.isbn}`) ||
-                    (book.coverid && `cover-${book.coverid}`) ||
-                    (book.bookname && `title-${book.bookname}`) ||
-                    `idx-${index}`;
+                  const key = getBookKey(book, index);
+
+                  const libCount = libraryPressCount[key] ?? 0;
+                  const wishCount = wishlistPressCount[key] ?? 0;
+
+                  const libDisabled = libCount >= PRESS_LIMIT;
+                  const wishDisabled = wishCount >= PRESS_LIMIT;
 
                   return (
                     <li
@@ -403,18 +420,26 @@ const SearchPage: React.FC = () => {
                       <div className="mt-4 flex flex-wrap gap-3">
                         <button
                           type="button"
-                          className="btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
-                          onClick={addBookToLibrary(book)}
+                          className={`btn btn-primary bg-[#E2B4BD] hover:bg-[#DDA7B2] text-gray-900 font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer ${
+                            libDisabled ? "opacity-50 cursor-not-allowed hover:-translate-y-0" : ""
+                          }`}
+                          disabled={libDisabled}
+                          onClick={addBookToLibrary(book, key)}
                         >
-                          Add to my library
+                          Add to my library {libCount > 0 ? `` : ""}
                         </button>
 
                         <button
                           type="button"
-                          className="btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
-                          onClick={addBookToWishlist(book as WishBookDto)}
+                          className={`btn bg-[#8782ED] hover:bg-[#7670EB] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer ${
+                            wishDisabled
+                              ? "opacity-50 cursor-not-allowed hover:-translate-y-0"
+                              : ""
+                          }`}
+                          disabled={wishDisabled}
+                          onClick={addBookToWishlist(book as WishBookDto, key)}
                         >
-                          Add to wishlist
+                          Add to wishlist {wishCount > 0 ? `` : ""}
                         </button>
 
                         <button
@@ -422,13 +447,10 @@ const SearchPage: React.FC = () => {
                           onClick={() => {
                             const bookTitle = book.bookname ?? "";
                             const bookAuthor = book.author ?? "";
-
                             const searchQuery = `${bookTitle} ${bookAuthor}`.trim();
-
                             const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(
                               searchQuery,
                             ).replace(/%20/g, "+")}&i=stripbooks`;
-
                             window.open(amazonSearchUrl, "_blank");
                           }}
                           className="btn bg-[#ff9900] hover:bg-[#e68a00] text-white font-medium px-4 py-2 rounded-lg shadow-md transition-transform hover:-translate-y-[1px] cursor-pointer"
