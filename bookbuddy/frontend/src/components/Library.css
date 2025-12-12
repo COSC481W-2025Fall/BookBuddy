@@ -156,9 +156,57 @@
   box-shadow: none;
 }
 
+/* --- New Mobile Tweaks --- */
+@media (max-width: 480px) {
+    /*
+     * 1. Target the media container for the book cover.
+     * 2. Change the aspect ratio to a less 'tall' one, like 4/3 (landscape)
+     * or 16/9, or a more subtle portrait like 2/3.
+     * I'll use 2 / 3 as a compromise to make the covers visibly shorter.
+     */
+    .bb-card__media {
+        aspect-ratio: 2 / 3; /* Makes the cover shorter than 3:4 portrait */
+    }
+
+    /* Tweak padding for better use of space on small screens */
+    .bb-card__body {
+        padding: var(--bb-space-2); /* Reduced from 1rem (bb-space-3) to 0.75rem */
+    }
+
+    /* Make the grid columns smaller/fewer if needed, but minmax(240px, 1fr) is
+       already pretty good at adapting. If 240px is still too wide, you could
+       consider lowering it, but 240px usually ensures 1 or 2 columns nicely. */
+}
+
 /* Responsive tweaks */
-@media (max-width: 720px) {
+@media (max-width: 480px) {
   .wrap {
     padding: var(--bb-space-3);
   }
+}
+
+/* Tweak padding for general layout on smaller screens */
+@media (max-width: 480px) {
+    .wrap {
+        padding: var(--bb-space-3); /* Reduced from 1.5rem to 1rem */
+    }
+}
+
+/* Stack header elements and controls for very small screens */
+@media (max-width: 480px) {
+    .bb-lib__header {
+        flex-direction: column; /* Stacks the title/status above the controls */
+        align-items: flex-start;
+        gap: var(--bb-space-2); /* Reduced gap */
+    }
+
+    .bb-lib__controls {
+        flex-direction: column; /* Stacks the filter/sort elements */
+        align-items: stretch; /* Makes them fill the width */
+        width: 100%;
+    }
+
+    .bb-field {
+        width: 100%; /* Ensures fields take up full width when stacked */
+    }
 }
