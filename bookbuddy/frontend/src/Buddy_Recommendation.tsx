@@ -95,6 +95,15 @@ function Buddy() {
         loadQuestions();
     }, []);
 
+    useEffect(() => {
+        if (isResBoxVisible && isDivVisible && resultRef.current) {
+            resultRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    }, [isResBoxVisible, isDivVisible]);
+
     // Allow user to get a new random question for a specific slot
     const handleNewQuestion = async (questionIndexToReplace: number) => {
         if (questionlength === 0) {
@@ -162,14 +171,6 @@ function Buddy() {
 
         setResBoxVisible(true);
         setButtonPressed(true);
-
-        // Scroll to result box as soon as it appears
-        setTimeout(() => {
-            resultRef.current?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-            });
-        }, 0);
 
         // Concatenate each question with its answer
         const Q_A0 = `${Q0} ${RQ0}`;
