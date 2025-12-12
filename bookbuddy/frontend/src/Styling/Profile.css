@@ -5,9 +5,9 @@
     height: 100vh;
 
     background-image: url("./buddyresultbackground.jpg");
-    background-size: auto;
-    background-position: top left;
-    background-repeat: repeat;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 
     display: flex;
     align-items: center;   /* vertical center */
