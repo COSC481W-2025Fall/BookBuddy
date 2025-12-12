@@ -164,34 +164,35 @@ const CSVReader: React.FC = () => {
     return (
         <div>
             <div>
-                <label htmlFor="fileUpload" className="cursor-pointer w-full block">
+                <label htmlFor="fileUpload" className="cursor-pointer w-full block ">
                     <div className="flex justify-center">
                         <img
-                            className="max-w-xs w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover bg-slate-100"
+                            className="max-w-xs h-full w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover bg-slate-100"
                             src={tempAddBook}
                             alt="Upload Goodreads Library"
                         />
                     </div>
+                    <div className="flex flex-1 flex-col gap-2 p-4">
+                        <p className="mt-3 text-base font-semibold text-slate-900">
+                            Add your Goodreads™ Library!
+                        </p>
 
-                    <p className="mt-3 text-base font-semibold text-slate-900">
-                        Add your Goodreads™ Library!
-                    </p>
+                        <div className="mt-auto flex flex-col gap-2">
+                            <label
+                                htmlFor="fileUpload"
+                                className="flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 cursor-pointer whitespace-nowrap"
+                            >
+                                {fileName}
+                            </label>
 
-                    <div className="mt-6 flex items-center justify-center ">
-                        <label
-                            htmlFor="fileUpload"
-                            className="w-4/5 justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
-                        >
-                            {fileName}
-                        </label>
-
-                        <input
-                            id="fileUpload"
-                            type="file"
-                            accept=".csv"
-                            onChange={handleFileUpload}
-                            className="hidden"
-                        />
+                            <input
+                                id="fileUpload"
+                                type="file"
+                                accept=".csv"
+                                onChange={handleFileUpload}
+                                className="hidden"
+                            />
+                        </div>
                     </div>
                 </label>
             </div>

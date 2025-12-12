@@ -286,7 +286,7 @@ export default function Library() {
 
     <li
       key="csv-card"
-      className="rounded-2xl border border-dashed border-slate-200 bg-white text-center shadow-sm transition hover:shadow-lg cursor-pointer flex flex-col items-center justify-center p-4 w-full sm:w-auto min-h-[70vh]"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-dashed border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg w-full sm:w-auto min-h-[70vh]"
     >
       <CSVReader />
     </li>,
