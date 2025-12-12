@@ -44,7 +44,7 @@ test('submits the form correctly', () => {
     act(() => {
         fireEvent.change(inputName, { target: { value: 'TestUsername' } });
         fireEvent.change(inputPass, { target: { value: 'TestPassword'} });
-        fireEvent.click(screen.getByRole("button", { name: /sign in|signing in/i }));
+        fireEvent.click(screen.getByRole("button", { name: /Login/i }));
 
         // check that API was called
         expect(api.addLogin).toHaveBeenCalledWith({
@@ -65,7 +65,7 @@ test('submits the form correctly', () => {
     act(() => {
         fireEvent.change(inputName, { target: { value: '' } });
         fireEvent.change(inputPass, { target: { value: ''} });
-        fireEvent.click(screen.getByRole("button", { name: /sign in|signing in/i }));
+        fireEvent.click(screen.getByRole("button", { name: /Login/i }));
 
         //if the username and password do not exist inside the database
         return screen.findByText(/Please enter a valid username and password/i).then((message) => {

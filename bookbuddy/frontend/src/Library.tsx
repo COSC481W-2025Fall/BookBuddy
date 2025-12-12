@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createPortal } from "react-dom";
 import type { BookDto } from "./types/BookDto";
 import { getMyLibrary, removeFromLibrary } from "./api";
 import "./components/Library.css";
@@ -43,6 +44,86 @@ function chunkArray<T>(items: T[], size: number): T[][] {
     result.push(items.slice(i, i + size));
   }
   return result;
+}
+
+type DescriptionModalProps = {
+  book: BookDto;
+  onClose: () => void;
+  coverUrl: (coverid?: string) => string;
+  amazonSearchUrl: (title?: string | null) => string;
+};
+
+function DescriptionModal({
+  book,
+  onClose,
+  coverUrl,
+  amazonSearchUrl,
+}: DescriptionModalProps) {
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 p-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="relative max-h-[80vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          type="button"
+          className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
+          onClick={onClose}
+        >
+          Close
+        </button>
+
+        <div className="flex gap-4 border-b border-slate-100 p-4">
+          <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
+            <img
+              src={coverUrl((book as any).coverid)}
+              alt={`${book.bookname ?? "Book"} cover`}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-1">
+            <h2 className="text-lg font-semibold text-slate-900">
+              {book.bookname || "Untitled"}
+            </h2>
+            {book.author && (
+              <p className="text-sm text-slate-600">{book.author}</p>
+            )}
+            {(book as any).genre && (
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                {(book as any).genre}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
+          {book.description
+            ? book.description
+            : "No description available for this book."}
+        </div>
+
+        <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
+          <a
+            href={amazonSearchUrl(book.bookname)}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
+          >
+            View on Amazon
+          </a>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
 }
 
 export default function Library() {
@@ -322,70 +403,14 @@ export default function Library() {
         </div>
       </div>
 
-      {/* Description Modal */}
+      {/* Description Modal via portal */}
       {descriptionBook && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4"
-          onClick={() => setDescriptionBook(null)}
-        >
-          <div
-            className="relative max-h-[80vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-          >
-            {/* Close button */}
-            <button
-              type="button"
-              className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
-              onClick={() => setDescriptionBook(null)}
-            >
-              Close
-            </button>
-
-            <div className="flex gap-4 border-b border-slate-100 p-4">
-              <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
-                <img
-                  src={coverUrl((descriptionBook as any).coverid)}
-                  alt={`${descriptionBook.bookname ?? "Book"} cover`}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="flex flex-col justify-center gap-1">
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {descriptionBook.bookname || "Untitled"}
-                </h2>
-                {descriptionBook.author && (
-                  <p className="text-sm text-slate-600">
-                    {descriptionBook.author}
-                  </p>
-                )}
-                {(descriptionBook as any).genre && (
-                  <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                    {(descriptionBook as any).genre}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
-              {descriptionBook.description
-                ? descriptionBook.description
-                : "No description available for this book."}
-            </div>
-
-            <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
-              <a
-                href={amazonSearchUrl(descriptionBook.bookname)}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
-              >
-                View on Amazon
-              </a>
-            </div>
-          </div>
-        </div>
+        <DescriptionModal
+          book={descriptionBook}
+          onClose={() => setDescriptionBook(null)}
+          coverUrl={coverUrl}
+          amazonSearchUrl={amazonSearchUrl}
+        />
       )}
     </>
   );

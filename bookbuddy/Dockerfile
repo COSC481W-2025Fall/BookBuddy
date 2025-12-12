@@ -1,42 +1,52 @@
 # ===========================
-# Frontend Build
+# FRONTEND BUILD STAGE
 # ===========================
 FROM node:20 AS frontend-build
-WORKDIR /frontend
+WORKDIR /app/bookbuddy/frontend
 
-# Copy dependency files first for caching
-COPY ./frontend/package*.json ./
-RUN npm install
+# Copy package info and install dependencies
+COPY ./bookbuddy/frontend/package*.json ./
+RUN npm ci
 
-# Copy the rest of the frontend source and build
-COPY ./frontend ./
-RUN npm run build
-# 👉 Outputs static files into /frontend/dist
+# Copy frontend source
+COPY ./bookbuddy/frontend ./
 
-# ===========================
-# Backend Build
-# ===========================
-FROM maven:3.9.4-eclipse-temurin-17 AS backend-build
-WORKDIR /app
+# Clean any existing static folder (safety)
+RUN rm -rf ../src/main/resources/static/* || true
 
-# Copy Maven files and backend source
-COPY ./pom.xml ./
-COPY ./src ./src
-
-# Copy frontend build output into Spring Boot's static resources
-COPY --from=frontend-build /frontend/dist ./src/main/resources/static
-
-# Build backend JAR (skip tests for faster builds)
-RUN mvn clean package -DskipTests
+# Build React app (Vite)
+RUN echo "=== Starting frontend build ===" \
+ && npm run build \
+ && echo "=== Frontend build complete ===" \
+ && ls -la ../src/main/resources/static
 
 # ===========================
-# Runtime
+# BACKEND BUILD STAGE
+# ===========================
+FROM maven:3.9.8-eclipse-temurin-17 AS backend-build
+WORKDIR /app/bookbuddy
+
+# Copy full project (backend + built frontend)
+COPY . .
+
+# Build backend JAR
+RUN echo "=== Starting backend build ===" \
+ && mvn clean package -DskipTests \
+ && echo "=== Backend build complete ===" \
+ && ls -la target
+
+# ===========================
+# RUNTIME STAGE
 # ===========================
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
-# Copy only the built JAR (keep image small)
-COPY --from=backend-build /app/target/*.jar app.jar
+# Copy compiled JAR from backend build
+COPY --from=backend-build /app/bookbuddy/target/bookbuddy-0.0.1-SNAPSHOT.jar app.jar
 
-# Run Spring Boot
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+# Expose backend port
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
