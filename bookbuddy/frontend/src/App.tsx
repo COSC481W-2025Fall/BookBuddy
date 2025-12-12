@@ -18,7 +18,7 @@ export default function App() {
     <div key={location.pathname} className="page-fade">
       <Routes location={location}>
         {/* Public routes */}
-        <Route path="/" element={<Signup />} />
+        <Route path="/" element={<Library />} />
         {/*<Route path="/login" element={<Login />} />*/}
         {/*<Route path="/signup" element={<Signup />} />*/}
 
