@@ -167,13 +167,13 @@ const CSVReader: React.FC = () => {
                 <label htmlFor="fileUpload" className="cursor-pointer w-full block ">
                     <div className="flex justify-center">
                         <img
-                            className="max-w-xs h-full w-full rounded-2xl shadow-sm cursor-pointer aspect-[2/3] object-cover bg-slate-100"
+                            className="relative w-full h-108 bg-slate-100 flex items-center justify-center overflow-hidden"
                             src={tempAddBook}
                             alt="Upload Goodreads Library"
                         />
                     </div>
                     <div className="flex flex-1 flex-col gap-2 p-4">
-                        <p className="mt-3 text-base font-semibold text-slate-900">
+                        <p className="text-base font-semibold text-slate-900">
                             Add your Goodreads™ Library!
                         </p>
 
