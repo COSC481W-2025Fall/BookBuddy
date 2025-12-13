@@ -1,11 +1,12 @@
 
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { addAccount } from "./api";
 import { addLogin } from "./api";
 import type { AccountDto } from "./types/AccountDto";
 import type { LoginDto } from "./types/LoginDto";
 import logo from "./logo/bookbuddy-logo-mywristhurts.png";
+import Buddy from "./logo/BUDD.png";
 import "./Styling/signup.css";
 import "./Styling/AboutUS.css";
 
@@ -30,6 +31,22 @@ const Signup: React.FC = () => {
     const [cycleStart, setCycleStart] = useState(false);
     const [showinfo, setShowinfo] = useState(false);
 
+
+    /* here so you cant scroll when sidebar is open on mobile*/
+    useEffect(() => {
+        const body = document.body;
+        if (cycleStart) {
+            // When the sidebar is open, add the class to prevent scrolling
+            body.classList.add("sidebar-signin");
+        } else {
+            // When the sidebar is closed, remove the class to allow scrolling
+            body.classList.remove("sidebar-signin");
+        }
+
+        return () => {
+            body.classList.remove("sidebar-signin");
+        };
+    }, [cycleStart]);
 
     const sleep = (ms: number | undefined) => {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -246,31 +263,46 @@ const Signup: React.FC = () => {
                         <h3>Credits </h3>
                         <p> This project was created with love for the teams computer science Capstone project at Eastern michigan
                             university. The team was composed of 6 passionate students who either
-                            are are readers themselves or have readers close to them. </p>
-                        <p>Team members:
-                            <ul>
-                                <li>Ryan Cleary</li>
-                                <li>Nicholas Hoshowski</li>
-                                <li>Bear Kennedy</li>
-                                <li>Ryan Retan</li>
-                                <li>Noah Schaible</li>
-                                <li>Benjamin Smith</li>
-                            </ul>
-                            Teacher/Project manager:
-                            <ul>
-                                <li>Siyuan Jiang</li>
-                            </ul>
-                            Artists:
-                            <ul>
-                                <li>Ben's Mom: BookBuddy character</li>
-                                <li>Noah's friend: BookBuddy logo</li>
-                            </ul>
-                        </p>
+                            are are readers themselves or have readers close to them.  </p>
+
+                        <div className="credits-layout">
+                            <div className="credits-text">
+                                <p>Team members:
+                                    <ul>
+                                        <li>Ryan Cleary</li>
+                                        <li>Nicholas Hoshowski</li>
+                                        <li>Bear Kennedy</li>
+                                        <li>Book Buddy ========&#62;</li>
+                                        <li>Ryan Retan</li>
+                                        <li>Noah Schaible</li>
+                                        <li>Benjamin Smith</li>
+
+                                    </ul>
+                                </p>
+                                <p>Teacher/Project manager:
+                                    <ul>
+                                        <li>Siyuan Jiang</li>
+                                    </ul>
+                                </p>
+                                <p>Artists:
+                                    <ul>
+                                        <li>Ben's Mom: BookBuddy character</li>
+                                        <li>Noah's friend: BookBuddy logo</li>
+                                    </ul>
+                                </p>
+                            </div>
+                            <img
+                                src={Buddy}
+                                alt="BookBuddy"
+                                className="h-2"
+                            />
+                        </div>
                         <p>We also want to thank everyone in this class who took the time to assist
                             us on this Journey. We also want to thank the teacher for her endless support, guidance and
                             patience with our team. Lastly we also would like to thank all of those who
                             were a part of beta testing, giving us input on how we can make this website the best it can
                             be. </p>
+                        {/* END OF NEW FLEX CONTAINER */}
                     </div>
                     <div className="wave-container ">
                         <img
@@ -405,8 +437,8 @@ const Signup: React.FC = () => {
 
             <>
                 <div
-                    className={` w-vh bg-white  shadow-xl   fixed  top-0  h-full  transition-all  duration-700    
-                                ease-in-out 
+                    className={` w-vh bg-white  shadow-xl   fixed  top-0  h-full  transition-all  duration-700 h-screen overflow-y-auto 
+                                ease-in-out scroll-
                           ${isOpen ? 'right-0' : 'right-[-100vw]'} `}>
 
                     {seeSignup && (
