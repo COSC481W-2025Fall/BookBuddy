@@ -29,7 +29,7 @@ export default function Sidebar() {
     const links: { to: string; label: string }[] = [
         { to: "/search", label: "Search" },
         { to: "/library", label: "Library" },
-        { to: "/WishList", label: "WishList" },
+        { to: "/WishBook", label: "WishList" },
         { to: "/Buddy_Recommendation", label: "Ask a buddy" },
         { to: "/profile", label: "Profile" },
         { to: "/", label: "Sign Out" },
