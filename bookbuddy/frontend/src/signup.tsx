@@ -230,7 +230,7 @@ const Signup: React.FC = () => {
                             feeling the fear of missing out or guilt that comes with not reading the hottest new books
                             people are talking about.</p>
                         <h1>But what if I still want to find new books</h1>
-                        <h2>No Problem! just ask a Buddy™</h2>
+                        <h2>No Problem! Just ask a Buddy™</h2>
                         <p> With our Ask a buddy feature, you can get personalized book recommendations
                             based not only on what you read but also on how you read. No two readers are the same,
                             and whether you read for the thrill of a good story, something to wind you down for
@@ -263,7 +263,7 @@ const Signup: React.FC = () => {
                         <h3>Credits </h3>
                         <p> This project was created with love for the teams computer science Capstone project at Eastern michigan
                             university. The team was composed of 6 passionate students who either
-                            are are readers themselves or have readers close to them.  </p>
+                            are readers themselves or have readers close to them.  </p>
 
                         <div className="credits-layout">
                             <div className="credits-text">

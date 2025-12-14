@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
-
+import logo from "../logo/bookbuddy-logo-mywristhurts.png";
 
 // Sidebar component with navigation links
 export default function Sidebar() {
-
+    // State to manage sidebar visibility if wanted
     const [open, setOpen] = useState<boolean>(false);
 
     // Effect to control scrolling on the <body> element
@@ -24,17 +24,18 @@ export default function Sidebar() {
         };
     }, [open]);
 
+
     // Defines the navigation links, can be added to later
     const links: { to: string; label: string }[] = [
         { to: "/search", label: "Search" },
         { to: "/library", label: "Library" },
-        { to: "/WishBook", label: "WishList" },
-        { to: "/Buddy_Recommendation", label: "Ask a buddy"},
+        { to: "/WishList", label: "WishList" },
+        { to: "/Buddy_Recommendation", label: "Ask a buddy" },
         { to: "/profile", label: "Profile" },
-        { to: "/", label: "Sign Out" }
+        { to: "/", label: "Sign Out" },
     ];
 
-
+    // Render the sidebar with navigation links
     return (
         <>
             {/* Button to toggle sidebar visibility */}
@@ -57,8 +58,12 @@ export default function Sidebar() {
                 ></div>
             )}
 
+
             {/* The sidebar navigation */}
-            <nav className={`bb-sidebar ${open ? "open" : ""}`} aria-label="Main Navigation">
+            <nav
+                className={`bb-sidebar ${open ? "open" : ""}`}
+                aria-label="Main Navigation"
+            >
                 <div className="bb-sidebar_brand">BookBuddy</div>
                 {/* Navigation links */}
                 <ul className="bb-sidebar_links" role="menu">
@@ -71,7 +76,7 @@ export default function Sidebar() {
                                     isActive ? "bb-link bb-link--active" : "bb-link"
                                 }
                                 role="menuitem"
-                                onClick={() => setOpen(false)} // Closes sidebar on navigation
+                                onClick={() => setOpen(false)}
                             >
                                 {l.label}
                             </NavLink>
