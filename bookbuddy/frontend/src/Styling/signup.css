@@ -1,8 +1,17 @@
 body {
     /* Only prevents horizontal scrolling */
     overflow-x: hidden;
-    font-family: Quicksand
+    font-family: Quicksand;
+    width: 100%;
+    height: 100%;
 
+
+}
+/* here to fix issue on mobile where you can scroll when side bar opens*/
+@media (max-width: 480px) {
+    body.sidebar-signin {
+        position: fixed;
+    }
 }
 
 /* ======================================= */
@@ -90,10 +99,6 @@ body {
 }
 
 .sidebar-open {
-    /* **Crucial Change:** Centers the element horizontally. */
-    /* 1. Start half the viewport width (50vw). */
-    /* 2. Subtract half the element's width (224px, which is 448px / 2). */
-
     transform: translateX(0);
 
     /* We use 50% here as the form is w-2/4 (50%) */
@@ -120,10 +125,10 @@ body {
     position: fixed;
 
     /* 2. Anchor it to the top edge */
-    top: -25vh;
+    top: 20vh;
 
     /* 3. Anchor it to the right edge */
-    right: 0vh;
+    right: 3vh;
 
     /* Optional: Add padding and background for visibility */
     padding: 10px;
@@ -136,7 +141,7 @@ body {
         position: absolute;
 
         /* 2. Anchor it to the top edge */
-        top: 20vh;
+        top: 70vh;
 
         /* 3. Anchor it to the right edge */
         left: 0vh;
@@ -157,7 +162,7 @@ body {
     position: absolute;
 
     /* 2. Anchor it to the top edge */
-    bottom: 35vh;
+    bottom: 10vh;
 
     /* 3. Anchor it to the right edge */
     left: 5vh;
@@ -174,7 +179,7 @@ body {
         position: absolute;
 
         /* 2. Anchor it to the top edge */
-        top: -20vh;
+        top: 20vw;
 
         /* 3. Anchor it to the right edge */
         left: 15vh;
@@ -189,42 +194,6 @@ body {
     }
 }
 
-.Welcome-message {
-    /* 1. Set the positioning context */
-    position: fixed;
-
-    /* 2. Anchor it to the top edge */
-    top: -20vh;
-
-    /* 3. Anchor it to the right edge */
-    right: 0vh;
-
-    /* Optional: Add padding and background for visibility */
-    padding: 10px;
-
-    /* Optional: Ensure it stays on top of other content */
-    z-index: 0;
-}
-
-.All-thebooks {
-    /* 1. Set the positioning context */
-    position: absolute;
-
-    /* 2. Anchor it to the top edge */
-    bottom: 35vh;
-
-    /* 3. Anchor it to the right edge */
-    left: 5vh;
-
-    /* Optional: Add padding and background for visibility */
-    padding: 10px;
-
-    /* Optional: Ensure it stays on top of other content */
-    z-index: 0;
-    font-size: 5rem;
-}
-
-
 .To {
     margin-left:75px;
 
@@ -233,12 +202,19 @@ body {
     margin-left:10px;
 }
 .wave-text span {
-    margin-top: 100%;
-    margin-bottom: -100%;
-    display: flex;
+
+
+    /* Keep the display property */
+    display: flex; /* This is key for arranging the spans */
+
+    /* Ensure the text is vertically centered or aligned within its own line */
+    /* You may want to control vertical spacing here: */
+    line-height: 1.2; /* Adjust this value if the text is too spread out vertically */
+
     font-size: 3rem;
     animation: wave 6s ease-in-out infinite;
-
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 
@@ -273,20 +249,13 @@ body {
     }
 }
 
-/* ======================================= */
-/* 2. BOOK SCENE WRAPPER & ANIMATION       */
-/* ======================================= */
-/* This is the massive box that holds all the books and applies the infinite animation. */
 .book-scene {
     width: 50vw;
     height: 30vh;
     animation: book-pan 100s linear infinite alternate; /* 90s duration (adjust for speed) */
 }
 
-/* ======================================= */
-/* 3. REUSABLE BOOK COMPONENT (.book-3d)   */
-/* ======================================= */
-/* This is the parent anchor for each individual book */
+
 .book-3d {
     position: absolute; /* Allows for easy positioning within the huge .book-scene */
     /* Add custom positioning/rotation classes (like .book-1-pos) to this element */
@@ -667,6 +636,18 @@ vertical of 300
     }
 }
 
+.credits-layout {
+    display: flex;
+    gap: 0px;
+    align-items: flex-start;
+}
+
+
+.credits-layout img {
+    max-width: 200px;
+    height: auto;
+
+}
 
 
 

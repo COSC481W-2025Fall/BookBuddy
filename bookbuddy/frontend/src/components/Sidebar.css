@@ -5,6 +5,28 @@
     --bb-accent: #3b82f6;
     --bb-muted: #94a3b8;
 }
+
+body.sidebar-open {
+    overflow: hidden;
+}
+
+.bb-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); /* Dim black color */
+    z-index: 45; /* Sits beneath the sidebar (50) and above main content */
+    opacity: 1;
+    transition: opacity 0.3s ease, visibility 0.5s ease;
+}
+
+.bb-layout.open .bb-backdrop {
+    opacity: 1;
+    visibility: visible;
+}
+
 .bookmark.icon {
     /* Position & Base Size */
     position: absolute;
@@ -139,6 +161,7 @@
 
 
 .bb-main {
+    padding-left: var(--bb-sidebar-width);
     flex: 2;
     display: flex;
     justify-content: center;
