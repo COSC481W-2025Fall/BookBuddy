@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";  // ✅ add Link import
+import { useNavigate, Link } from "react-router-dom";  //  add Link import
 import { addLogin } from "./api";
 import type { LoginDto } from "./types/LoginDto";
 import logo from "./logo/bookbuddy-logo-mywristhurts.png";
@@ -27,8 +27,12 @@ const Login: React.FC = () => {
       const ok = await addLogin(body);
 
       if (ok) {
-        navigate("/search"); // ✅ login successful
+          console.log(" Login OK, about to set localStorage");
+          localStorage.setItem("accountId", username);
+          console.log("accountId now:", localStorage.getItem("accountId"));
+          navigate("/search"); // login successful
       } else {
+          console.log(" Login returned ok = false");
         setMessage("Invalid username or password");
       }
     } catch (error) {
