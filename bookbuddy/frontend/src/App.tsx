@@ -20,7 +20,7 @@ export default function App() {
       <Routes location={location}>
         {/* Public routes */}
         <Route path="/" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        {/*<Route path="/login" element={<Login />} />*/}
         {/*<Route path="/signup" element={<Signup />} />*/}
 
           <Route element={<ProtectedRoutes />}>
@@ -33,8 +33,8 @@ export default function App() {
                   <Route path="/Buddy_Recommendation" element={<Buddy />} />
               </Route>
           </Route>
-        {/* Catch-all redirect */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Catch-all (non-destructive) */}
+          <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
   );
