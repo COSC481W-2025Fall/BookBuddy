@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 import logo from "../logo/bookbuddy-logo-mywristhurts.png";
@@ -7,6 +7,23 @@ import logo from "../logo/bookbuddy-logo-mywristhurts.png";
 export default function Sidebar() {
     // State to manage sidebar visibility if wanted
     const [open, setOpen] = useState<boolean>(false);
+
+    // Effect to control scrolling on the <body> element
+    useEffect(() => {
+        const body = document.body;
+        if (open) {
+            // When the sidebar is open, add the class to prevent scrolling
+            body.classList.add("sidebar-open");
+        } else {
+            // When the sidebar is closed, remove the class to allow scrolling
+            body.classList.remove("sidebar-open");
+        }
+
+        return () => {
+            body.classList.remove("sidebar-open");
+        };
+    }, [open]);
+
 
     // Defines the navigation links, can be added to later
     const links: { to: string; label: string }[] = [
@@ -29,6 +46,18 @@ export default function Sidebar() {
             >
                 <div className={"bookmark icon"}></div>
             </button>
+
+            {open && (
+                <div
+                    className="bb-backdrop"
+                    onClick={() => setOpen(false)}
+                    role="button"
+                    tabIndex={0}
+                    aria-hidden={!open}
+                    aria-label="Close menu"
+                ></div>
+            )}
+
 
             {/* The sidebar navigation */}
             <nav
@@ -54,6 +83,9 @@ export default function Sidebar() {
                         </li>
                     ))}
                 </ul>
+                <div className="bb-sidebar_footer">
+                    &copy; 2025 BookBuddy
+                </div>
             </nav>
         </>
     );
