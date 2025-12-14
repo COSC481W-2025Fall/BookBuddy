@@ -23,7 +23,7 @@ export default function App() {
         {/*<Route path="/login" element={<Login />} />*/}
         {/*<Route path="/signup" element={<Signup />} />*/}
 
-          <Route element={<ProtectedRoutes />}>
+          {/*<Route element={<ProtectedRoutes />}>*/}
               {/* Routes inside Layout */}
               <Route element={<Layout />}>
                   <Route path="/profile" element={<Profile />} />
@@ -32,7 +32,7 @@ export default function App() {
                   <Route path="/WishBook" element={<WishList />} />
                   <Route path="/Buddy_Recommendation" element={<Buddy />} />
               </Route>
-          </Route>
+          {/*</Route>*/}
           {/* Catch-all (non-destructive) */}
           <Route path="*" element={<Navigate to="/" />} />
       </Routes>
