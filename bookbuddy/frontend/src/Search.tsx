@@ -290,10 +290,10 @@ const SearchPage: React.FC = () => {
             </div>
 
             {isSearching ? (
-              <div
-                className="w-256 max-w-2xl mx-auto flex items-center justify-center py-16"
-                aria-live="polite"
-              >
+                <div
+                    className="flex items-center justify-center w-full max-w-2xl mx-auto py-16"
+                    aria-live="polite"
+                >
                 <div className="book" aria-hidden="true">
                   <div className="book__pg-shadow" />
                   <div className="book__pg" />
