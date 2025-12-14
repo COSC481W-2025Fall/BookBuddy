@@ -72,7 +72,7 @@ const Signup: React.FC = () => {
                 return;
             }
 
-            navigate("/search");
+            navigate("/library");
 
         } catch (err: any) {
             setErrorLN(err?.message ?? "Login failed. Please check your credentials.");
