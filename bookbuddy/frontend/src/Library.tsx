@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPortal } from "react-dom";
 import type { BookDto } from "./types/BookDto";
 import { getMyLibrary, removeFromLibrary } from "./api";
 import "./components/Library.css";
@@ -9,6 +8,7 @@ import tempAddBook from "./logo/tempAddBook.png";
 import tempSearchBook from "./logo/tempSearchBook.png";
 import CSVReader from "./addBooksViaCSV";
 import { TrashIcon } from "@heroicons/react/24/solid";
+import ModalPortal from "./components/ModalPortal";
 
 type SortKey = "name" | "author" | "genre";
 type SortDir = "asc" | "desc";
@@ -31,11 +31,13 @@ function compareStr(
     return dir === "asc" ? res : -res;
 }
 
-const amazonSearchUrl = (title?: string | null) =>
-    `https://www.amazon.com/s?k=${encodeURIComponent(title ?? "").replace(
+const amazonSearchUrl = (title?: string | null, author?: string | null) => {
+    const searchQuery = `${title ?? ""} ${author ?? ""}`.trim();
+    return `https://www.amazon.com/s?k=${encodeURIComponent(searchQuery).replace(
         /%20/g,
         "+"
     )}&i=stripbooks`;
+};
 
 // Helper to chunk an array into rows
 function chunkArray<T>(items: T[], size: number): T[][] {
@@ -44,86 +46,6 @@ function chunkArray<T>(items: T[], size: number): T[][] {
         result.push(items.slice(i, i + size));
     }
     return result;
-}
-
-type DescriptionModalProps = {
-    book: BookDto;
-    onClose: () => void;
-    coverUrl: (coverid?: string) => string;
-    amazonSearchUrl: (title?: string | null) => string;
-};
-
-function DescriptionModal({
-                              book,
-                              onClose,
-                              coverUrl,
-                              amazonSearchUrl,
-                          }: DescriptionModalProps) {
-    if (typeof document === "undefined") return null;
-
-    return createPortal(
-        <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 p-4"
-            onClick={onClose}
-            role="dialog"
-            aria-modal="true"
-        >
-            <div
-                className="relative max-h-[80vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl"
-                onClick={(e) => e.stopPropagation()}
-            >
-                {/* Close button */}
-                <button
-                    type="button"
-                    className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
-                    onClick={onClose}
-                >
-                    Close
-                </button>
-
-                <div className="flex gap-4 border-b border-slate-100 p-4">
-                    <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
-                        <img
-                            src={coverUrl((book as any).coverid)}
-                            alt={`${book.bookname ?? "Book"} cover`}
-                            className="h-full w-full object-cover"
-                        />
-                    </div>
-                    <div className="flex flex-col justify-center gap-1">
-                        <h2 className="text-lg font-semibold text-slate-900">
-                            {book.bookname || "Untitled"}
-                        </h2>
-                        {book.author && (
-                            <p className="text-sm text-slate-600">{book.author}</p>
-                        )}
-                        {(book as any).genre && (
-                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                                {(book as any).genre}
-                            </p>
-                        )}
-                    </div>
-                </div>
-
-                <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
-                    {book.description
-                        ? book.description
-                        : "No description available for this book."}
-                </div>
-
-                <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
-                    <a
-                        href={amazonSearchUrl(book.bookname)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
-                    >
-                        View on Amazon
-                    </a>
-                </div>
-            </div>
-        </div>,
-        document.body
-    );
 }
 
 export default function Library() {
@@ -136,6 +58,14 @@ export default function Library() {
 
     // Which book is currently shown in the description modal
     const [descriptionBook, setDescriptionBook] = useState<BookDto | null>(null);
+    useEffect(() => {
+        if (descriptionBook) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+    }, [descriptionBook]);
+
 
     const coverUrl = (coverid?: string) =>
         coverid
@@ -228,8 +158,7 @@ export default function Library() {
         ...sortedBooks.map((b, i) => (
             <li
                 key={(b.isbn ?? "no-isbn") + "-" + i}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200
-         bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg w-full sm:w-auto min-h-[70vh]"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
             >
                 {/* Trash icon on hover */}
                 {b.isbn && (
@@ -252,17 +181,20 @@ export default function Library() {
                     </button>
                 )}
 
-                <div className="relative aspect-[2/3] bg-slate-100 h-full sm:h-auto sm:aspect-[2/3]">
+                {/* Adjusted height for mobile: h-80 by default, higher on large screens */}
+                <div className="relative w-full h-80 lg:h-108 bg-slate-100 flex items-center justify-center overflow-hidden">
                     <img
                         src={coverUrl((b as any).coverid)}
                         alt={`${b.bookname ?? "Book"} cover`}
                         onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src =
-                                "/hobbit-placeholder.jpg";
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore: We know this exists
+                            (e.currentTarget as HTMLImageElement).src = "/hobbit-placeholder.jpg";
                         }}
-                        className="h-full w-full object-cover"
+                        className="h-full w-auto object-cover"
                     />
                 </div>
+
 
                 <div className="flex flex-1 flex-col gap-2 p-4">
                     <h2 className="text-base font-semibold text-slate-900">
@@ -304,18 +236,21 @@ export default function Library() {
         // Extra card for CSV import when you already have books
         <li
             key="csv-card"
-            className="rounded-2xl border border-dashed border-slate-200 bg-white text-center shadow-sm transition hover:shadow-lg cursor-pointer flex flex-col items-center justify-center p-4 w-full sm:w-auto min-h-[70vh]"
+            // Ensure card flex properties stack correctly
+            className="rounded-2xl border border-dashed border-slate-200 bg-white text-center shadow-sm transition hover:shadow-lg cursor-pointer flex flex-col items-center justify-center p-4 min-h-[300px]"
         >
             <CSVReader />
         </li>,
     ];
 
-    const rows = chunkArray(cardItems, 4); // 4 per row for the lg:grid-cols-4 layout
+    // Note: The chunk size is 4, which aligns with the lg:grid-cols-4 layout
+    const rows = chunkArray(cardItems, 4);
 
     return (
         <>
             <div className="min-h-[60vh] bg-slate-50">
                 <div className="mx-auto max-w-6xl px-4 py-10">
+                    {/* MOBILE FIX 1: Removed min-w-[1120px] to allow fluid width */}
                     <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
                         <div>
                             <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
@@ -326,11 +261,12 @@ export default function Library() {
                             </p>
                         </div>
 
+                        {/* Controls stack vertically on small screens (due to flex-col default on parent) */}
                         <div className="flex flex-wrap items-center gap-3">
                             <label className="flex items-center gap-2 text-sm text-slate-600">
-                <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                  Sort by
-                </span>
+                                <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                                    Sort by
+                                </span>
                                 <select
                                     className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                                     value={sortKey}
@@ -355,13 +291,15 @@ export default function Library() {
                     </div>
 
                     {sortedBooks.length === 0 ? (
+                        /* MOBILE FIX 2: Empty state grid stacks items (1 col default) */
                         <div className="mt-8 grid items-center gap-5 md:grid-cols-2">
+                            {/* Search card */}
                             <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:shadow-lg">
                                 <div className="flex justify-center">
                                     <img
                                         src={tempSearchBook}
                                         alt="No books yet"
-                                        className="w-full max-w-xs cursor-pointer rounded-2xl shadow-sm"
+                                        className="w/full max-w-xs cursor-pointer rounded-2xl shadow-sm"
                                         onClick={() => navigate("/search")}
                                     />
                                 </div>
@@ -373,13 +311,15 @@ export default function Library() {
                                 </p>
                                 <div className="mt-6 items-center gap-4">
                                     <button
-                                        className="w-4/5 cursor-pointer justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
+                                        // Made button full width on mobile
+                                        className="w-full justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 cursor-pointer"
                                         onClick={() => navigate("/search")}
                                     >
                                         Search for books
                                     </button>
                                 </div>
                             </div>
+                            {/* CSV card */}
                             <div className="cursor-pointer rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:shadow-lg">
                                 <CSVReader />
                             </div>
@@ -390,7 +330,9 @@ export default function Library() {
                             <ul className="mt-8 space-y-10">
                                 {rows.map((row, rowIndex) => (
                                     <li key={`row-${rowIndex}`} className="relative list-none">
-                                        <ul className="flex flex-col items-center gap-6 pb-6 sm:grid sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">                      {row}
+                                        {/* Grid is responsive: 1 col (mobile), 2 (small), 4 (large) */}
+                                        <ul className="grid grid-cols-1 gap-6 pb-6 sm:grid-cols-2 lg:grid-cols-4">
+                                            {row}
                                         </ul>
 
                                         {/* Shelf bar under this row */}
@@ -403,15 +345,77 @@ export default function Library() {
                 </div>
             </div>
 
-            {/* Description Modal via portal */}
+            {/* Description Modal is already responsive */}
             {descriptionBook && (
-                <DescriptionModal
-                    book={descriptionBook}
-                    onClose={() => setDescriptionBook(null)}
-                    coverUrl={coverUrl}
-                    amazonSearchUrl={amazonSearchUrl}
-                />
+                <ModalPortal>
+                    <div
+                        className="fixed inset-0 z-[9999] grid place-items-center bg-slate-900/60 p-4"
+                        onClick={() => setDescriptionBook(null)}
+                    >
+                        <div
+                            className="relative w-full max-w-lg max-h-[90svh] overflow-hidden rounded-2xl bg-white shadow-xl"
+                            onClick={(e) => e.stopPropagation()}
+                            role="dialog"
+                            aria-modal="true"
+                        >
+                            {/* Close button */}
+                            <button
+                                type="button"
+                                className="absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
+                                onClick={() => setDescriptionBook(null)}
+                            >
+                                Close
+                            </button>
+
+                            <div className="flex gap-4 border-b border-slate-100 p-4">
+                                <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-md bg-slate-100">
+                                    <img
+                                        src={coverUrl((descriptionBook as any).coverid)}
+                                        alt={`${descriptionBook.bookname ?? "Book"} cover`}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
+                                <div className="flex flex-col justify-center gap-1">
+                                    <h2 className="text-lg font-semibold text-slate-900">
+                                        {descriptionBook.bookname || "Untitled"}
+                                    </h2>
+                                    {descriptionBook.author && (
+                                        <p className="text-sm text-slate-600">
+                                            {descriptionBook.author}
+                                        </p>
+                                    )}
+                                    {(descriptionBook as any).genre && (
+                                        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                                            {(descriptionBook as any).genre}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="max-h-[48vh] overflow-y-auto px-4 py-3 text-sm text-slate-700">
+                                {descriptionBook.description
+                                    ? descriptionBook.description
+                                    : "No description available for this book."}
+                            </div>
+
+                            <div className="flex items-center justify-end gap-3 border-t border-slate-100 px-4 py-3">
+                                <a
+                                    href={amazonSearchUrl(
+                                        descriptionBook.bookname,
+                                        descriptionBook.author
+                                    )}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-amber-400"
+                                >
+                                    View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </ModalPortal>
             )}
+
         </>
     );
 }
