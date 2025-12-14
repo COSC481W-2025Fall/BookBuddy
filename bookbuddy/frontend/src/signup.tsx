@@ -72,6 +72,7 @@ const Signup: React.FC = () => {
                 return;
             }
 
+            localStorage.setItem("accountId", formLN.name.trim());
             navigate("/library");
 
         } catch (err: any) {
