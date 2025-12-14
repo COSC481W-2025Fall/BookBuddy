@@ -305,8 +305,8 @@ export default function WishBook() {
                                     value={sortKey}
                                     onChange={(e) => setSortKey(e.target.value as SortKey)}
                                 >
-                                    <option value="name">Name (Title)</option>
-                                    <option value="author">Author</option>
+                                    <option value="name">Book Title</option>
+                                    <option value="author">Author Last Name</option>
                                     <option value="genre">Genre</option>
                                 </select>
                             </label>
