@@ -8,6 +8,7 @@ import Library from "./Library";
 import WishList from "./WishBook";
 import Buddy from "./Buddy_Recommendation";
 import Profile from "./Profile";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 export default function App() {
     const location = useLocation();
@@ -22,13 +23,16 @@ export default function App() {
                 {/*<Route path="/login" element={<Login />} />*/}
                 {/*<Route path="/signup" element={<Signup />} />*/}
 
-                {/* Routes inside Layout */}
-                <Route element={<Layout />}>
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/search" element={<Search />} />
-                    <Route path="/library" element={<Library />} />
-                    <Route path="/WishBook" element={<WishList />} />
-                    <Route path="/Buddy_Recommendation" element={<Buddy />} />
+                {/* Protected Routes inside Layout */}
+                <Route element={<ProtectedRoutes />}>
+                    {/* Routes inside Layout */}
+                    <Route element={<Layout />}>
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/search" element={<Search />} />
+                        <Route path="/library" element={<Library />} />
+                        <Route path="/WishBook" element={<WishList />} />
+                        <Route path="/Buddy_Recommendation" element={<Buddy />} />
+                    </Route>
                 </Route>
 
                 {/* Catch-all redirect */}
