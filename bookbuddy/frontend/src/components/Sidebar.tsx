@@ -76,7 +76,17 @@ export default function Sidebar() {
                                     isActive ? "bb-link bb-link--active" : "bb-link"
                                 }
                                 role="menuitem"
-                                onClick={() => setOpen(false)}
+                                onClick={() => {
+                                    // Close sidebar
+                                    setOpen(false);
+
+                                    // If user clicks "Sign Out", clear auth
+                                    if (l.label === "Sign Out") {
+                                        localStorage.removeItem("accountId");
+                                    }
+                                }}
+
+
                             >
                                 {l.label}
                             </NavLink>
